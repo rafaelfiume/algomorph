@@ -1,0 +1,7 @@
+# S.O.
+.DS_Store
+
+# IDE
+.idea/
+
+target/

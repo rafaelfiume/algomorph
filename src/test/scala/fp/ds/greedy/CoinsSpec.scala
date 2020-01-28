@@ -1,6 +1,6 @@
 package fp.ds.greedy
 
-import fp.ds.greedy.Coins.change
+import Coins.change
 import org.scalatest.{ FlatSpec, Matchers }
 
 class CoinsSpec extends FlatSpec with Matchers {

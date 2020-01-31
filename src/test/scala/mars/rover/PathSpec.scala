@@ -32,7 +32,7 @@ class PathSpec extends FlatSpec with Matchers {
 //   | (3,0) | (3,1) | (3,2) |
 //   |-------|-------|-------|
   it should "find shortest distance when there are obstacles and the target is reachable" in {
-    val gridWithObstacles = Grid(rows = 4, columns = 3, Some(List((1,1), (1,2))))
+    val gridWithObstacles = Grid(rows = 4, columns = 3, obstacles = List((1,1), (1,2)))
 
     val result = shortestPath(start = (2,2), end = (0,1), gridWithObstacles)
 
@@ -47,7 +47,7 @@ class PathSpec extends FlatSpec with Matchers {
 //   | ##### | (2,1) | ##### | (2,3) |
 //   |-------|-------|-------|-------|
   it should "return an empty path when there's no path to the target" in {
-    val obstacles = Some(List((0,0), (1,0), (2,0), (0,2), (1,2), (2,2)))
+    val obstacles = List((0,0), (1,0), (2,0), (0,2), (1,2), (2,2))
     val noWayOut = Grid(rows = 3, columns = 4, obstacles = obstacles)
 
     val result = shortestPath(start = (0,1), end = (1,3), noWayOut)

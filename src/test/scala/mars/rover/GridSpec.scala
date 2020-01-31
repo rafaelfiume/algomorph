@@ -38,7 +38,7 @@ A Grid may have obstacles:
 |-------|-------|-------|
   """ }
   it should "have no connections where there are obstacles" in {
-    val aGridWithObstacles = Grid(rows = 3, columns = 3, obstacles = Some(List((2,0), (0,2), (1,2))))
+    val aGridWithObstacles = Grid(rows = 3, columns = 3, obstacles = List((2,0), (0,2), (1,2)))
 
     aGridWithObstacles shouldBe Vector(
       (0,0) -> List((1,0), (0,1)), (0,1) -> List((0,0), (2,1), (1,1)),

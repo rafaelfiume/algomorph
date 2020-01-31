@@ -3,6 +3,7 @@ package mars.rover
 import Grid.{ Grid, Node }
 
 import scala.annotation.tailrec
+import scala.collection.immutable.Queue
 
 object Path {
 
@@ -25,21 +26,22 @@ object Path {
 
     @tailrec
     def bdf(searched: List[Node],
-            queue: List[Node],
-            parents: Parents): Parents = queue match {
-      case Nil => parents
-      case x :: _ if x == end => parents
-      case x :: xs =>
-        val updatedSearched = x :: searched
-        val nodeNeighbours = neighbours(x, grid).filterNot(n => updatedSearched.contains(n) || queue.contains(n))
-        val neighboursParent = nodesParent(nodeNeighbours, parent = x)
-        bdf(updatedSearched, xs ++ nodeNeighbours, parents ++ neighboursParent)
+            queue: Queue[Node],
+            parents: Parents): Parents = {
+      if (queue.isEmpty) return parents
+      if (queue.head == end) return parents
+
+      val (next, dequeued) = queue.dequeue
+      val updatedSearched = next :: searched
+      val nodeNeighbours = neighbours(next, grid).filterNot(n => updatedSearched.contains(n) || queue.contains(n))
+      val neighboursParent = nodesParent(nodeNeighbours, parent = next)
+      bdf(updatedSearched, dequeued.enqueueAll(nodeNeighbours), parents ++ neighboursParent)
     }
 
     val neighboursFromStart = neighbours(start, grid)
     val startNeighboursParent = nodesParent(neighboursFromStart, parent = start)
 
-    val parents = bdf(List(start), neighboursFromStart, startNeighboursParent)
+    val parents = bdf(List(start), Queue(neighboursFromStart: _*), startNeighboursParent)
     val pathToEnd = pathTo(end, through = parents)
     if (pathToEnd.isEmpty) List.empty else (end :: pathToEnd).reverse
   }

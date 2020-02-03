@@ -1,13 +1,13 @@
 package mars.rover
 
-import Grid.{ Grid, Node }
+import mars.rover.Grid.{ Node, UnweightedGrid }
 
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
 
 object Path {
 
-  def shortestPath(start: Node, end: Node, grid: Grid): List[Node] = {
+  def shortestPath(start: Node, end: Node, grid: UnweightedGrid): List[Node] = {
     type Parents = Map[Node, Node]
 
     def pathTo(node: Node, through: Parents): List[Node] = through.get(node) match {
@@ -19,7 +19,7 @@ object Path {
       nodes.foldLeft(Map.empty[Node, Node]) { case (parents, n) => parents.updated(n, parent) }
     }
 
-    def neighbours(node: Node, grid: Grid): List[Node] = grid
+    def neighbours(node: Node, grid: UnweightedGrid): List[Node] = grid
       .find { case (n, _) => n == node }
       .map (_._2)
       .getOrElse (List.empty)

@@ -24,7 +24,7 @@ object WC {
   }
 
   def countWords(s: String): Int = {
-    def unstash(s: String) = if (s.isBlank) 0 else 1
+    def unstash(s: String) = if (s.trim.isEmpty) 0 else 1
     def toWC(c: Char) = if (c == ' ') Part(" ", 0, " ") else Stub(c.toString)
 
     foldMapV(s, wcMonoid)(toWC) match {

@@ -1,4 +1,4 @@
-name := "algorithms-area"
+name := "playground-scala"
 
 version := "0.1"
 

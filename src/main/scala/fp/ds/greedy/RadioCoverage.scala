@@ -2,10 +2,6 @@ package fp.ds.greedy
 
 import scala.annotation.tailrec
 
-// 1. Check the states to cover
-// 2. Pick up the station that covers more state (local optimal solution)
-// 3. Add it to the list bestStations and remove it from available stations
-// 4. Are there states uncovered? If so, repeat the process
 object RadioCoverage {
 
   type Radio = String
@@ -31,3 +27,13 @@ object RadioCoverage {
   }
 
 }
+
+/*
+ * Here's a brief description of this algorithm:
+ *
+ * 1. Check the states to cover
+ * 2. Pick up the station that covers more state (local optimal solution)
+ * 3. Add it to the list bestStations and remove it from available stations
+ * 4. Are there states uncovered? If so, repeat the process
+ *
+ */

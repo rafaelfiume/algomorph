@@ -6,9 +6,9 @@ object Coins {
 
   type Coin = Int
 
+  // coins must be in desc order
   def change(coins: List[Coin], amount: Int): List[Coin] = {
-    // coins should be in desc order
-    if (amount <= 0) return List.empty
+    if (amount <= 0) return Nil
 
     @tailrec
     def go(coins: List[Coin], amount: Int, result: List[Coin]): List[Coin] = coins match {
@@ -17,6 +17,6 @@ object Coins {
       case x :: _                => go(coins, amount - x, x :: result)
     }
 
-    go(coins, amount, List.empty)
+    go(coins, amount, Nil)
   }
 }

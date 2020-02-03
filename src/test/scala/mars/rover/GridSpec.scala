@@ -1,6 +1,6 @@
 package mars.rover
 
-import mars.rover.Edges.printPath
+import mars.rover.Grid.{ Edge, printPath }
 import org.scalatest.{ FlatSpec, Matchers }
 
 class GridSpec extends FlatSpec with Matchers {
@@ -44,6 +44,31 @@ A Grid may have obstacles:
       (0,0) -> List((1,0), (0,1)), (0,1) -> List((0,0), (2,1), (1,1)),
       (1,0) -> List((0,0), (1,1)), (1,1) -> List((1,0), (0,1), (2,1)),
                                    (2,1) -> List((1,1), (0,1), (2,2)), (2,2) -> List((2,1))
+    )
+  }
+
+  markup {"""
+A Grid may be weighted (default weight is 1):
+
+            |-------|-------|
+            | (0,0) | **2** |
+            |-------|-------|
+            | (1,0) | **3** |
+            |-------|-------|
+            | (2,0) | (2,1) |
+            |-------|-------|
+  """ }
+  it should "have weights where specified" in {
+    val aGrid = Grid.weighted(
+      rows = 3,
+      columns = 2,
+      weights = List(Edge((0,1), w = 2), Edge((1,1), w = 3))
+    )
+
+    aGrid shouldBe Vector(
+      (0,0) -> List(Edge((0,1), w=2), Edge((2,0), w=1), Edge((1,0), w=1), Edge((0,1), w=2)), (0,1) -> List(Edge((0,0), w=1), Edge((2,1), w=1), Edge((1,1), w=3), Edge((0,0), w=1)),
+      (1,0) -> List(Edge((1,1), w=3), Edge((0,0), w=1), Edge((2,0), w=1), Edge((1,1), w=3)), (1,1) -> List(Edge((1,0), w=1), Edge((0,1), w=2), Edge((2,1), w=1), Edge((1,0), w=1)),
+      (2,0) -> List(Edge((2,1), w=1), Edge((1,0), w=1), Edge((0,0), w=1), Edge((2,1), w=1)), (2,1) -> List(Edge((2,0), w=1), Edge((1,1), w=3), Edge((0,1), w=2), Edge((2,0), w=1))
     )
   }
 

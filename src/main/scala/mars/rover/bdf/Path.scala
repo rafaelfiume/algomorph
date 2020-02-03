@@ -1,4 +1,4 @@
-package mars.rover
+package mars.rover.bdf
 
 import mars.rover.Grid.{ Node, UnweightedGrid }
 

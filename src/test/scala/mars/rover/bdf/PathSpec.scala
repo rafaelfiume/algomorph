@@ -1,6 +1,7 @@
-package mars.rover
+package mars.rover.bdf
 
-import mars.rover.Path.shortestPath
+import mars.rover.Grid
+import mars.rover.bdf.Path.shortestPath
 import org.scalatest.{ FlatSpec, Matchers }
 
 class PathSpec extends FlatSpec with Matchers {

@@ -43,7 +43,7 @@ object Path {
 
     val parents = bdf(List(start), Queue(neighboursFromStart: _*), startNeighboursParent)
     val pathToEnd = pathTo(end, through = parents)
-    if (pathToEnd.isEmpty) List.empty else (end :: pathToEnd).reverse
+    if (pathToEnd.isEmpty) Nil else (end :: pathToEnd).reverse
   }
 
 }

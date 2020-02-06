@@ -25,17 +25,17 @@ object Path {
       .getOrElse (List.empty)
 
     @tailrec
-    def bdf(searched: List[Node],
+    def bdf(visited: List[Node],
             queue: Queue[Node],
             parents: Parents): Parents = {
       if (queue.isEmpty) return parents
       if (queue.head == end) return parents
 
       val (next, dequeued) = queue.dequeue
-      val updatedSearched = next :: searched
-      val nodeNeighbours = neighbours(next, grid).filterNot(n => updatedSearched.contains(n) || queue.contains(n))
+      val updatedVisited = next :: visited
+      val nodeNeighbours = neighbours(next, grid).filterNot(n => updatedVisited.contains(n) || queue.contains(n))
       val neighboursParent = nodesParent(nodeNeighbours, parent = next)
-      bdf(updatedSearched, dequeued.enqueueAll(nodeNeighbours), parents ++ neighboursParent)
+      bdf(updatedVisited, dequeued.enqueueAll(nodeNeighbours), parents ++ neighboursParent)
     }
 
     val neighboursFromStart = neighbours(start, grid)

@@ -4,6 +4,8 @@ import java.lang.Integer.MAX_VALUE
 
 import mars.rover.Grid.{ Edges, Grid, Node }
 
+import scala.annotation.tailrec
+
 object Path {
 
   def shortestPath(start: Node, end: Node, grid: Grid): List[Node] = {
@@ -34,6 +36,7 @@ object Path {
       case Some(p) => p :: pathTo(p, through)
     }
 
+    @tailrec
     def dijkstra(visited: List[Node], costs: Costs, parents: Parents): Parents = {
       if (visited.contains(end)) return parents
 

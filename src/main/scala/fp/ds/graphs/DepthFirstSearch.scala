@@ -13,9 +13,9 @@ object DepthFirstSearch {
 
     @tailrec
     def dfs(stack: List[Node], visited: List[Node]): List[Node] = stack match {
-      case Nil                            => visited
-      case x :: xs if visited.contains(x) => dfs(xs, visited)
-      case x :: xs                        => dfs(neighbours(x) ++ xs, x :: visited)
+      case Nil                                  => visited
+      case next :: xs if visited.contains(next) => dfs(xs, visited)
+      case next :: xs                           => dfs(neighbours(next) ++ xs, next :: visited)
     }
 
     dfs(List(start), Nil).reverse
@@ -24,7 +24,7 @@ object DepthFirstSearch {
 
 // Follows an implementation of dfs that avoids list appending, but that it's not tail safe
 // def dfs(stack: List[Node], visited: List[Node]): List[Node] = stack match {
-//   case Nil                            => visited
-//   case x :: xs if visited.contains(x) => dfs(xs, visited)
-//   case x :: xs                        => dfs(xs, dfs(neighbours(x), x :: visited))
+//   case Nil                                  => visited
+//   case next :: xs if visited.contains(next) => dfs(xs, visited)
+//   case next :: xs                           => dfs(xs, dfs(neighbours(next), next :: visited))
 // }

@@ -1,7 +1,6 @@
 package red.book.ch11
 
 import red.book.ch06.State
-import red.book.ch07.Nonblocking.Par
 import red.book.ch12.Applicative
 
 import scala.collection.immutable.List.empty
@@ -105,11 +104,6 @@ trait Monad[F[_]] extends Applicative[F] {
  */
 
 object Monads {
-
-  val parMonad = new Monad[Par] {
-    override def unit[A](a: => A): Par[A] = Par.unit(a)
-    override def flatMap[A, B](fa: Par[A])(f: A => Par[B]): Par[B] = Par.flatMap(fa)(f)
-  }
 
   val optionMonad: Monad[Option] = new Monad[Option] {
     override def unit[A](a: => A): Option[A] = Some(a)

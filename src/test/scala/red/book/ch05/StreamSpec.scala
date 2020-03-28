@@ -1,12 +1,13 @@
 package red.book.ch05
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import red.book.ch04._
 import red.book.ch05.Stream._
 
-import scala.{ None => _, Option => _, Some => _ }
+import scala.{None => _, Option => _, Some => _}
 
-class StreamSpec extends FlatSpec with Matchers {
+class StreamSpec extends AnyFlatSpec with Matchers {
 
   "toList" should "force evaluation and convert stream to list" in {
     Stream(1,2,3,4,5).toList shouldBe List(1,2,3,4,5)

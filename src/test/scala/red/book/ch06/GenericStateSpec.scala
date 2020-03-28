@@ -1,12 +1,13 @@
 package red.book.ch06
 
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import red.book.ch06.Machine.simulateMachine
 import red.book.ch06.RNG.Simple
 import red.book.ch06.RngState._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{ FlatSpec, Matchers }
 
-class GenericStateSpec extends FlatSpec with GeneratorDrivenPropertyChecks with Matchers {
+class GenericStateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Matchers {
 
   "double" should "generate the next double between 0 and 1" in {
     forAll { seed: Int =>

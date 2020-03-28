@@ -1,9 +1,11 @@
 package red.book.ch12
 
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class ApplicativeSpec extends FlatSpec with GeneratorDrivenPropertyChecks with Matchers {
+
+class ApplicativeSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Matchers {
 
   "map2BasedOnProductAndMap" should "lift a function and apply its two arguments to that function" in {
     val F = ApplicativeInstances.optionApplicative

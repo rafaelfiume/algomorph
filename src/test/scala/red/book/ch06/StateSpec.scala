@@ -1,14 +1,15 @@
 package red.book.ch06
 
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import red.book.ch06.RNG.Simple
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{ FlatSpec, Matchers }
 
 import scala.Int.MaxValue
 
-class StateSpec extends FlatSpec with GeneratorDrivenPropertyChecks with Matchers {
+class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Matchers {
 
-  implicit override val generatorDrivenConfig = PropertyCheckConfig(minSuccessful = 100)
+  implicit override val generatorDrivenConfig = PropertyCheckConfiguration(minSuccessful = 100)
 
   "nonNegativeInt" should "generate a random integer between 0 and Int.MaxValue" in {
     forAll { seed: Int =>

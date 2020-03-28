@@ -2,8 +2,6 @@ package red.book.ch10
 
 import java.lang.Integer.parseInt
 
-import red.book.ch07.Nonblocking.Par
-import red.book.ch07.Nonblocking.Par.asyncF
 import red.book.ch10.Monoids._
 
 trait Monoid[A] {
@@ -68,17 +66,6 @@ object Monoids {
 
     val (seq1, seq2) = as.splitAt(as.size / 2)
     m.op(foldMapV(seq1, m)(f), foldMapV(seq2, m)(f))
-  }
-
-  def par[A](m: Monoid[A]): Monoid[Par[A]] = new Monoid[Par[A]] {
-    override def op(a1: Par[A], a2: Par[A]): Par[A] = Par.map2(a1, a2)(m.op)
-    override def zero: Par[A] = Par.unit(m.zero)
-  }
-
-  def parFoldMap[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] = {
-    Par.flatMap(Par.lazyUnit(as)) { vec => // authors use Par.parMap...
-      foldMapV(vec, par(m))(asyncF(f)) // ... then just pass a function that wraps a value here.
-    }
   }
 
   /////////// Ex 10.9 ////////////////////////////////////////////////////////////

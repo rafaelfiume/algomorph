@@ -2,7 +2,7 @@ name := "playground-scala"
 
 version := "0.1"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.2"
 
 val ScalaCWarnings = Seq(
   "-deprecation", // Emit warning and location for usages of deprecated APIs.

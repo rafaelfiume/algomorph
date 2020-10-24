@@ -3,9 +3,10 @@ package mars.rover.dijkstra
 import mars.rover.Grid
 import mars.rover.Grid.Edge
 import mars.rover.dijkstra.Path.shortestPath
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class PathSpec extends FlatSpec with Matchers {
+class PathSpec extends AnyFlatSpec with Matchers {
 
   //   |-------|-------|-------|-------|-------|
   //   | (0,0) | (0,1) | **4** | (0,3) | **3** |

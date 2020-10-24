@@ -1,11 +1,12 @@
 package red.book.ch04
 
-import org.scalatest.{ FlatSpec, Matchers }
 import red.book.ch04.Either._
 
 import scala.util.control.NonFatal
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class EitherSpec extends FlatSpec with Matchers {
+class EitherSpec extends AnyFlatSpec with Matchers {
 
   "map" should "apply function f on the right side of an element" in {
     Right(2) map (_ * 3) shouldBe Right(6)

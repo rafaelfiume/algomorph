@@ -1,9 +1,10 @@
 package cracking.ch02
 
 import cracking.ch02.LinkedLists._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class LinkedListsSpec extends FlatSpec with Matchers {
+class LinkedListsSpec extends AnyFlatSpec with Matchers {
 
   "removeDups" should "remove any duplications from list" in {
     removeDups(List(1, 1, 2, 2, 3, 4, 3, 1)) shouldBe List(1, 2, 3, 4)

@@ -1,8 +1,9 @@
 package fp.ds
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class BinTreeSpec extends FlatSpec with Matchers {
+class BinTreeSpec extends AnyFlatSpec with Matchers {
 
   private val ofABinTree = Tree(List(1, 2, 3, 4, 5, 6, 7, 8))
 

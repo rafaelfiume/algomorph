@@ -1,9 +1,10 @@
 package cracking.ch01
 
 import cracking.ch01.Matrix._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class MatrixSpec extends FlatSpec with Matchers {
+class MatrixSpec extends AnyFlatSpec with Matchers {
 
   //  Current Matrix:               90d Rotated Matrix:
   //  1 | 2 | 3 | 4                 3 | 9 | 5 | 1

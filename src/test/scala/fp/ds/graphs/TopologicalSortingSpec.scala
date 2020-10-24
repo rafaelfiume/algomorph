@@ -1,9 +1,10 @@
 package fp.ds.graphs
 
 import fp.ds.graphs.TopologicalSorting._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class TopologicalSortingSpec extends FlatSpec with Matchers {
+class TopologicalSortingSpec extends AnyFlatSpec with Matchers {
 
   "topological sorting" should "give us the correct order of performing a task" in {
     val tasks = List(

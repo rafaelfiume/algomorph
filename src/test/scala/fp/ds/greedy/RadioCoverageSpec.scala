@@ -1,8 +1,9 @@
 package fp.ds.greedy
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class RadioCoverageSpec extends FlatSpec with Matchers {
+class RadioCoverageSpec extends AnyFlatSpec with Matchers {
 
   "bestCoverage" should "return the minimum number of radio stations that covers all the required states" in {
     val statesNeeded = Set("mt", "wa", "or", "id", "nv", "ut", "ca", "az")

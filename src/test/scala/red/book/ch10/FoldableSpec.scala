@@ -7,7 +7,8 @@ import red.book.ch08.Gen.{ choose, stringN }
 import red.book.ch08.Prop.forAll
 import red.book.ch10.Foldable.{ foldableList, foldableTree }
 import red.book.ch10.Monoids.intAddition
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 object FoldableSpec extends App {
 
@@ -35,7 +36,7 @@ object FoldableSpec extends App {
 
 }
 
-class TreeFoldableSpec extends FlatSpec with Matchers {
+class TreeFoldableSpec extends AnyFlatSpec with Matchers {
 
 //  "Tree foldable" should "be able to reconstruct tree" in {
 //    def zz: Tree[Int] => Tree[Int] = t => t // the id function

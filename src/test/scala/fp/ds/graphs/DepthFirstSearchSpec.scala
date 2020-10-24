@@ -1,9 +1,10 @@
 package fp.ds.graphs
 
 import fp.ds.graphs.DepthFirstSearch.traverse
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class DepthFirstSearchSpec extends FlatSpec with Matchers {
+class DepthFirstSearchSpec extends AnyFlatSpec with Matchers {
 
   "dsf" should "traverse a graph visiting nodes children first" in {
     val graph = List(("m", "n"), ("m", "o"), ("m", "p"),

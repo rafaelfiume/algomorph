@@ -65,7 +65,7 @@ trait Stream[+A] {
 
   def tails: Stream[Stream[A]] = unfold(this) {
     case Empty => None
-    case stream => Some(stream, stream drop 1)
+    case stream => Some(stream -> (stream drop 1))
   } append Stream(empty)
 
   def hasSubsequence[B](sub: Stream[B]): Boolean = tails exists(_ startsWith sub)
@@ -77,7 +77,7 @@ trait Stream[+A] {
 
   def scanLeft[AA >: A](z: AA)(op: (AA, AA) => AA): Stream[AA] = Stream(z).append {
     unfold(z -> this) {
-      case (acc, Cons(h, t)) => val newAcc = op(acc, h()); Some(newAcc, newAcc -> t())
+      case (acc, Cons(h, t)) => val newAcc = op(acc, h()); Some(newAcc -> (newAcc -> t()))
       case _ => None
     }
   }
@@ -100,26 +100,26 @@ trait Stream[+A] {
   }
 
   def take_u(n: Int): Stream[A] = unfold((n, this)) {
-    case (i, Cons(h,t)) if i > 0 => Some(h() -> (i-1, t()))
+    case (i, Cons(h,t)) if i > 0 => Some(h() -> ((i-1) -> t()))
     case _ => None
   }
 
   def takeWhile_u(p: A => Boolean): Stream[A] = unfold(this) {
-    case Cons(h,t) if p(h()) => Some(h(), t())
+    case Cons(h,t) if p(h()) => Some(h() -> t())
     case _ => None
   }
 
   def zipWith[B, C](other: Stream[B])(op: (A, B) => C): Stream[C] = unfold(this -> other) {
-    case (Cons(h1, t1), Cons(h2, t2)) => Some(op(h1(), h2()) -> (t1(), t2()))
+    case (Cons(h1, t1), Cons(h2, t2)) => Some(op(h1(), h2()) -> (t1() -> t2()))
     case _ => None
   }
 
   def zip[B](other: Stream[B]): Stream[(A, B)] = zipWith(other)((_,_))
 
   def zipAllWith[B,C](other: Stream[B])(op: (Option[A],Option[B]) => C): Stream[C] = unfold(this -> other) {
-    case (Cons(h1, t1), Cons(h2, t2)) => Some(op(Some(h1()),Some(h2())) -> (t1(), t2()))
-    case (Empty, Cons(h2, t2)) => Some(op(None,Some(h2())) -> (Empty, t2()))
-    case (Cons(h1, t1), Empty) => Some(op(Some(h1()), None) -> (t1(), Empty))
+    case (Cons(h1, t1), Cons(h2, t2)) => Some(op(Some(h1()),Some(h2())) -> (t1() -> t2()))
+    case (Empty, Cons(h2, t2)) => Some(op(None,Some(h2())) -> (Empty -> t2()))
+    case (Cons(h1, t1), Empty) => Some(op(Some(h1()), None) -> (t1() -> Empty))
     case _ => None
   }
 
@@ -175,12 +175,12 @@ object Stream {
 
   // Using unfold
 
-  def fibs_u(): Stream[Int] = unfold((0, 1)) { case (f0, f1) => Some(f0 -> (f1, f0+f1)) }
+  def fibs_u(): Stream[Int] = unfold((0, 1)) { case (f0, f1) => Some(f0 -> (f1 -> (f0+f1))) }
 
-  def from_u(n: Int): Stream[Int] = unfold(n) { s => Some(s, s+1) }
+  def from_u(n: Int): Stream[Int] = unfold(n) { s => Some(s -> (s+1)) }
 
-  def constant_u[A](a: A): Stream[A] = unfold(a)(_ => Some(a, a))
+  def constant_u[A](a: A): Stream[A] = unfold(a)(_ => Some(a -> a))
 
-  def ones_u(): Stream[Int] = unfold(1)(_ => Some(1, 1))
+  def ones_u(): Stream[Int] = unfold(1)(_ => Some(1 -> 1))
 
 }

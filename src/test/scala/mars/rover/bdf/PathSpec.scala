@@ -2,9 +2,10 @@ package mars.rover.bdf
 
 import mars.rover.Grid
 import mars.rover.bdf.Path.shortestPath
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class PathSpec extends FlatSpec with Matchers {
+class PathSpec extends AnyFlatSpec with Matchers {
 
 //   |-------|-------|-------|-------|-------|
 //   | (0,0) | (0,1) | (0,2) | (0,3) | (0,4) |

@@ -45,7 +45,7 @@ object MonoidLaws extends App {
     i2 <- ints
     r <- choose(1, 5)
     maybeNone = r % 5 == 1
-  } yield if (maybeNone) None else Some(i1, i2, i1 <= i2)
+  } yield if (maybeNone) None else Some((i1, i2, i1 <= i2))
 
   /////////////// WC ////////////////////
 

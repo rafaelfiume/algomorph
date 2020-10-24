@@ -1,8 +1,9 @@
 package red.book.ch10
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class WordsSpec extends FlatSpec with Matchers {
+class WordsSpec extends AnyFlatSpec with Matchers {
 
 //  "string" should "be converted to WC" in {
 //    WC("lorem") shouldEqual Stub("lorem")

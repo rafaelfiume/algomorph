@@ -3,9 +3,10 @@ package cracking.ch01
 import java.util
 
 import cracking.ch01.ImperativeStrings._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ImperativeStringsSpec extends FlatSpec with Matchers {
+class ImperativeStringsSpec extends AnyFlatSpec with Matchers {
 
   "isUniqueChars" should "tell if String has unique chars only (ASCII chars only" in {
     isUniqueChars("Aabcdefgh") shouldBe true

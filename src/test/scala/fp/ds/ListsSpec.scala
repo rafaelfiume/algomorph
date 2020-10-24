@@ -1,9 +1,10 @@
 package fp.ds
 
 import fp.ds.Lists._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ListsSpec extends FlatSpec with Matchers {
+class ListsSpec extends AnyFlatSpec with Matchers {
 
   "frequency" should "tell the number of times a word appears in a list" in {
     frequency(List("this", "is", "a", "that", "is", "a")) should contain theSameElementsAs Map("is" -> 2, "that" -> 1, "a" -> 2, "this" -> 1)

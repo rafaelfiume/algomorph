@@ -72,19 +72,19 @@ class StreamSpec extends AnyFlatSpec with Matchers {
   }
 
   "unfold" should "build a stream using an initial state and a function to generate the next state and value" in {
-    unfold(6)(s => Some(s, s+1)).take(3).toList shouldBe List(6,7,8)
+    unfold(6)(s => Some(s -> (s+1))).take(3).toList shouldBe List(6,7,8)
   }
 
   "unfoldViaMap" should "build a stream using an initial state and a function to generate the next state and value" in {
-    unfoldViaMap(6)(s => Some(s, s+1)).take(3).toList shouldBe List(6,7,8)
+    unfoldViaMap(6)(s => Some(s -> (s+1))).take(3).toList shouldBe List(6,7,8)
   }
 
   "unfoldViaStreamFold" should "build a stream using an initial state and a function to generate the next state and value" in {
-    unfoldViaStreamFold(6)(s => Some(s, s+1)).take(3).toList shouldBe List(6,7,8)
+    unfoldViaStreamFold(6)(s => Some(s -> (s+1))).take(3).toList shouldBe List(6,7,8)
   }
 
   "unfoldViaFold" should "build a stream using an initial state and a function to generate the next state and value" in {
-    unfoldViaFold(6)(s => Some(s, s+1)).take(3).toList shouldBe List(6,7,8)
+    unfoldViaFold(6)(s => Some(s -> (s+1))).take(3).toList shouldBe List(6,7,8)
   }
 
   "fibs_u" should "generate an infinite stream of Fibonacci numbers" in {
@@ -121,7 +121,7 @@ class StreamSpec extends AnyFlatSpec with Matchers {
 
   "zipWith" should "accept two streams and construct a new one by applying a function on corresponding elements" in {
     Stream(1,2,3,4,5).zipWith(Stream(6,7,8,9))(_ + _).toList shouldBe List(7,9,11,13)
-    Stream(1,2,3,4,5).zipWith(Stream.empty)(_ + _).toList shouldBe Nil
+    Stream(1,2,3,4,5).zipWith(Stream.empty[Int])(_ + _).toList shouldBe Nil
     Stream.empty[Int].zipWith(Stream(6,7,8,9))(_ + _).toList shouldBe Nil
   }
 

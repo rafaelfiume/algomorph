@@ -1,9 +1,10 @@
 package mars.rover
 
 import mars.rover.Grid.{ Edge, printPath }
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class GridSpec extends FlatSpec with Matchers {
+class GridSpec extends AnyFlatSpec with Matchers {
 
   markup {"""
 Rover will always try to turn 'left' first, then 'up', 'down' and, finally, 'right'.

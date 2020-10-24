@@ -110,9 +110,9 @@ object Monads {
     override def flatMap[A, B](fa: Option[A])(f: A => Option[B]): Option[B] = fa flatMap f
   }
 
-  val streamMonad = new Monad[Stream] {
-    override def unit[A](a: => A): Stream[A] = Stream.continually(a)
-    override def flatMap[A, B](fa: Stream[A])(f: A => Stream[B]): Stream[B] = fa flatMap f
+  val streamMonad = new Monad[LazyList] {
+    override def unit[A](a: => A): LazyList[A] = LazyList.continually(a)
+    override def flatMap[A, B](fa: LazyList[A])(f: A => LazyList[B]): LazyList[B] = fa flatMap f
   }
 
   val listMonad = new Monad[List] {

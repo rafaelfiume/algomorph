@@ -1,9 +1,10 @@
 package fp.ds.bits
 
 import fp.ds.bits.Bits._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class BitsSpec extends FlatSpec with Matchers {
+class BitsSpec extends AnyFlatSpec with Matchers {
 
   "add" should "add two binary numbers" in {
     add(List(1,1), List.empty) shouldBe List(1,1)

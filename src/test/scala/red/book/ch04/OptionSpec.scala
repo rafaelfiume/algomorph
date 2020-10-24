@@ -1,9 +1,10 @@
 package red.book.ch04
 
 import red.book.ch04.Option._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class OptionSpec extends FlatSpec with Matchers {
+class OptionSpec extends AnyFlatSpec with Matchers {
 
   "map" should "transform value if Some is defined" in {
     Some(5) map (_ * 2) shouldBe Some(10)

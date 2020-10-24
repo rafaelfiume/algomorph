@@ -1,9 +1,10 @@
 package fp.ds.greedy
 
 import Coins.change
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CoinsSpec extends FlatSpec with Matchers {
+class CoinsSpec extends AnyFlatSpec with Matchers {
 
   "change" should "select coins so a given amount is made" in {
     change(coins = List(7,2), amount = 16) shouldBe List(2,7,7)

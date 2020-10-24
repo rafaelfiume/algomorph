@@ -1,9 +1,10 @@
 package red.book.ch03
 
-import org.scalatest.{ FlatSpec, Matchers }
 import red.book.ch03.List._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ListSpec extends FlatSpec with Matchers {
+class ListSpec extends AnyFlatSpec with Matchers {
 
   "x" should "be == 3" in {
     x shouldBe 3

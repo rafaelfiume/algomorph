@@ -1,9 +1,10 @@
 package red.book.ch01
 
 import red.book.ch01.MyModule.fib
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class MyModuleSpec extends FlatSpec with Matchers {
+class MyModuleSpec extends AnyFlatSpec with Matchers {
 
   "fib" should "retrieve the nth number in a fibonacy sequence (0,1,1,2,3,5,8..)" in {
 //    fib(-1) shouldBe 0 // invalid

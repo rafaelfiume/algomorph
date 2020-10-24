@@ -1,10 +1,11 @@
 package red.book.ch11
 
 import red.book.ch11.Monads._
-import org.scalatest.{ FlatSpec, Matchers }
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class MonadSpec extends FlatSpec with ScalaCheckDrivenPropertyChecks with Matchers {
+class MonadSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Matchers {
 
   "sequence" should "---- describe what sequence does here -----" in {
     val options = List(Some(1), Some(2), None, Some(4), Some(5), Some(6))

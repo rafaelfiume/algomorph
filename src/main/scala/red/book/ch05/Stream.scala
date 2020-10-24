@@ -73,6 +73,7 @@ trait Stream[+A] {
   def scanRight[AA >: A](z: AA)(op: (AA, AA) => AA): Stream[AA] = foldRight(empty[AA]) { // This is being strictly consumed
     case (x, Empty) => cons(op(z,x), empty)
     case (x, s@Cons(h, _)) => cons(op(x, h()), s)
+    case v => throw new RuntimeException(s"ops! Unexpected value $v")
   } append Stream(z)
 
   def scanLeft[AA >: A](z: AA)(op: (AA, AA) => AA): Stream[AA] = Stream(z).append {

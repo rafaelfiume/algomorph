@@ -1,1 +1,1 @@
-addSbtPlugin("com.artima.supersafe" % "sbtplugin" % "1.1.3")
+addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.1.14")

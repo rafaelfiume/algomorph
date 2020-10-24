@@ -12,7 +12,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   implicit override val generatorDrivenConfig = PropertyCheckConfiguration(minSuccessful = 100)
 
   "nonNegativeInt" should "generate a random integer between 0 and Int.MaxValue" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val result = RNG.nextNonNegativeInt(rng)._1
@@ -32,7 +32,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "double" should "generate the next double between 0 and 1" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val result = RNG.double(rng)._1
@@ -42,7 +42,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "doubleViaMap" should "generate the next double between 0 and 1" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val result = RNG._double(rng)._1
@@ -52,7 +52,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "intDouble" should "generate a pair of an int and a double " in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val ((rInt, rDouble), _) = RNG.intDouble(rng)
@@ -63,7 +63,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "_intDouble (via map2)" should "generate a pair of an int and a double " in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val ((rInt, rDouble), _) = RNG._intDouble(rng)
@@ -74,7 +74,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "doubleInt" should "generate a pair of a double and an int " in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val ((rDouble, rInt), _) = RNG.doubleInt(rng)
@@ -85,7 +85,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "_doubleInt via (map2)" should "generate a pair of a double and an int " in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val ((rDouble, rInt), _) = RNG._doubleInt(rng)
@@ -96,7 +96,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "double3" should "generate a 3-tuple of doubles" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val ((r1, r2, r3), _) = RNG.double3(rng)
@@ -109,7 +109,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
 
   // TODO Improve this property based test
   "ints" should "generate a list of random integers" in {
-    forAll { (seed: Int, size: Int) =>
+    forAll { (seed: Long, size: Int) =>
       whenever (size >= 0 && size < 100) {
         val rng = Simple(seed)
 
@@ -121,7 +121,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "_ints (via sequence)" should "generate a list of random integers" in {
-    forAll { (seed: Int, size: Int) =>
+    forAll { (seed: Long, size: Int) =>
       whenever (size >= 0 && size < 100) {
         val rng = Simple(seed)
 
@@ -133,7 +133,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "nonNegativeLessThan" should "generate random integers between 0 (inclusive) and n (exclusive)" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val (result, _) = RNG.nonNegativeLessThan(4)(rng)
@@ -143,7 +143,7 @@ class StateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Mat
   }
 
   "rollDie" should "return values from 1 to 6 included" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val (result, _) = RollingDie.rollDie(rng)

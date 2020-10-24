@@ -10,7 +10,7 @@ object QuickSort {
   } yield ()
 
   private def partition[S](arr: STArray[S, Int], n: Int, r: Int, pivot: Int): ST[S, Int] = for {
-    pivotVal <- arr.read(pivot)
+    _ <- arr.read(pivot)
     _ <- swap(arr, pivot, r)
     j = n
     // TODO OOOOOOOOOOo

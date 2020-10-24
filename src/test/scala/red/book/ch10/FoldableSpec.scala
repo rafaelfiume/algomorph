@@ -1,11 +1,10 @@
 package red.book.ch10
 
-import red.book.ch03.Tree.fold
-import red.book.ch03.{ Branch, Leaf, Tree }
-import red.book.ch08.{ Gen, Prop }
-import red.book.ch08.Gen.{ choose, stringN }
+import red.book.ch03.{Branch, Leaf, Tree}
+import red.book.ch08.Gen.{choose, stringN}
 import red.book.ch08.Prop.forAll
-import red.book.ch10.Foldable.{ foldableList, foldableTree }
+import red.book.ch08.{Gen, Prop}
+import red.book.ch10.Foldable.foldableList
 import red.book.ch10.Monoids.intAddition
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

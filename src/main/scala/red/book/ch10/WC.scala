@@ -29,6 +29,7 @@ object WC {
 
     foldMapV(s, wcMonoid)(toWC) match {
       case Part(l, n, r) => unstash(l) + n + unstash(r)
+      case v => throw new RuntimeException(s"ops! Unexpected value $v")
     }
   }
 }

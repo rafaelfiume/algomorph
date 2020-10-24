@@ -9,7 +9,7 @@ object ImperativeStrings {
 
     val chars_set = new Array[Boolean](128)
     for (i <- 0 until s.length) {
-      val charVal = s.charAt(i)
+      val charVal = s.charAt(i).toInt
       if (chars_set(charVal)) {
         return false
       } else {

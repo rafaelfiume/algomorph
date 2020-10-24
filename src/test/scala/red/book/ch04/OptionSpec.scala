@@ -29,9 +29,9 @@ class OptionSpec extends AnyFlatSpec with Matchers {
   }
 
   "filter" should "return Some value if predicate is true, and None otherwise" in {
-    Some(5) filter ((a: Int) => a > 1) shouldBe Some(5)
-    Some(5) filter ((a: Int) => a % 2 == 0) shouldBe None
-    None filter (_ => true) shouldBe None
+    Some(5) filter (_ > 1) shouldBe Some(5)
+    Some(5) filter (_ % 2 == 0) shouldBe None
+    Option.none[Int] filter (_ => true) shouldBe None
   }
 
   "sequence" should "return an option list from a list of option" in new OptionSpecContext {

@@ -21,7 +21,7 @@ class EitherSpec extends AnyFlatSpec with Matchers {
   "flatMap" should "apply function f (which return an Either) on the right side of the element" in {
     Right(2) flatMap (x => Right(x * 3)) shouldBe Right(6)
     Right(2) flatMap (_ => Left("error")) shouldBe Left("error")
-    Left("error") flatMap (_ => Left("error")) shouldBe Left("error")
+    Either.left[String]("error") flatMap (_ => Right("success")) shouldBe Left("error")
   }
 
   "map2" should "lift a function so it can be used with Either instances" in new EitherSpecContext {

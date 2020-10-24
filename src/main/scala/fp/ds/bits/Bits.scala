@@ -17,5 +17,6 @@ object Bits {
     case (0, xs) => xs
     case (1, Nil) => List(1)
     case (1, x :: xs) => (1-x) :: carry(x, xs)
+    case v => throw new RuntimeException(s"ops! Unexpected value $v")
   }
 }

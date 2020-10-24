@@ -10,6 +10,7 @@ object MyModule {
         case (n, Nil) => fibAcc(n-1, List(0))
         case (n, l@0::_) => fibAcc(n-1, 1::l)
         case (n, l@x1::x2::_) => fibAcc(n-1, x1+x2 :: l)
+        case v => throw new RuntimeException(s"ops! Unexpected value $v")
       }
 
     fibAcc(n, List.empty)

@@ -78,4 +78,6 @@ object Option {
 
   def some[A](v: A): Option[A] = Some(v)
 
+  def none[A]: Option[A] = None
+
 }

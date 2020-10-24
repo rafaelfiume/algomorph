@@ -10,7 +10,7 @@ import red.book.ch06.RngState._
 class GenericStateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks with Matchers {
 
   "double" should "generate the next double between 0 and 1" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val (result, _) = double.run(rng)
@@ -20,7 +20,7 @@ class GenericStateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks w
   }
 
   "doubleViaMap" should "generate the next double between 0 and 1" in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val result = _double.run(rng)._1
@@ -30,7 +30,7 @@ class GenericStateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks w
   }
 
   "intDouble" should "generate a pair of an int and a double " in {
-    forAll { seed: Int =>
+    forAll { seed: Long =>
       val rng = Simple(seed)
 
       val ((rInt, rDouble), _) = intDouble.run(rng)
@@ -41,7 +41,7 @@ class GenericStateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks w
   }
 
   "ints (via sequence)" should "generate a list of random integers" in {
-    forAll { (seed: Int, size: Int) =>
+    forAll { (seed: Long, size: Int) =>
       whenever (size >= 0 && size < 100) {
         val rng = Simple(seed)
 
@@ -53,7 +53,7 @@ class GenericStateSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks w
   }
 
   "nonNegativeLessThan" should "generate random integers between 0 (inclusive) and n (exclusive)" in {
-    forAll { (seed: Int, noLessThan: Int) =>
+    forAll { (seed: Long, noLessThan: Int) =>
       whenever(noLessThan > 0) {
         val rng = Simple(seed)
 

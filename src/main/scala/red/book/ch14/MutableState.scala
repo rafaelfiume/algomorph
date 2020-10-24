@@ -55,7 +55,7 @@ trait RunnableST[A] {
   def apply[S]: ST[S, A]
 }
 
-sealed abstract class STArray[S, A](implicit manifest: Manifest[A]) {
+sealed abstract class STArray[S, A]() {
   protected def value: Array[A]
 
   def size: ST[S, Int] = ST(value.length)

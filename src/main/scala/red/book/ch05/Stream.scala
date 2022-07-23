@@ -7,7 +7,7 @@ import scala.annotation.tailrec
 import scala.language.postfixOps
 import scala.{ Either => _, None => _, Option => _, Some => _ }
 
-trait Stream[+A] {
+sealed trait Stream[+A] {
 
   def foldRight[B](z: => B)(f: (A, => B) => B): B = // The arrow `=>` in front of the argument type `B` means that the function `f` takes its second argument by name and may choose not to evaluate it.
     this match {
@@ -27,7 +27,7 @@ trait Stream[+A] {
   final def take(n: Int): Stream[A] = this match {
     case Cons(h, _) if n == 1 => cons(h(), empty)
     case Cons(h, t) if n > 1 => cons(h(), t().take(n - 1))
-    case _ => Empty
+    case _ => empty // TODO test this
   }
 
   @tailrec

@@ -2,10 +2,10 @@ package mars.rover.bdf
 
 import mars.rover.Grid
 import mars.rover.bdf.Path.shortestPath
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import munit.Assertions.*
+import munit.FunSuite
 
-class PathSpec extends AnyFlatSpec with Matchers {
+class PathSpec extends FunSuite:
 
 //   |-------|-------|-------|-------|-------|
 //   | (0,0) | (0,1) | (0,2) | (0,3) | (0,4) |
@@ -16,12 +16,12 @@ class PathSpec extends AnyFlatSpec with Matchers {
 //   |-------|-------|-------|-------|-------|
   private val aGrid = Grid.unweighted(rows = 3, columns = 5)
 
-  "shortestPath" should "find the shortest path from one point of the grid to the other" in {
-    shortestPath(start = (0,0), end = (2,4), aGrid) shouldBe List((0,0), (0,4), (2,4))
-    shortestPath(start = (1,4), end = (0,1), aGrid) shouldBe List((1,4), (0,4), (0,0), (0,1))
-    shortestPath(start = (2,0), end = (1,1), aGrid) shouldBe List((2,0), (1,0), (1,1))
-    shortestPath(start = (2,4), end = (2,1), aGrid) shouldBe List((2,4), (2,0), (2,1))
-    shortestPath(start = (2,2), end = (0,4), aGrid) shouldBe List((2,2), (0,2), (0,3), (0,4))
+  test("shortestPath finds the shortest path from one point of the grid to the other") {
+    assertEquals(shortestPath(start = (0, 0), end = (2, 4), aGrid), List((0, 0), (0, 4), (2, 4)))
+    assertEquals(shortestPath(start = (1, 4), end = (0, 1), aGrid), List((1, 4), (0, 4), (0, 0), (0, 1)))
+    assertEquals(shortestPath(start = (2, 0), end = (1, 1), aGrid), List((2, 0), (1, 0), (1, 1)))
+    assertEquals(shortestPath(start = (2, 4), end = (2, 1), aGrid), List((2, 4), (2, 0), (2, 1)))
+    assertEquals(shortestPath(start = (2, 2), end = (0, 4), aGrid), List((2, 2), (0, 2), (0, 3), (0, 4)))
   }
 
 //   |-------|-------|-------|
@@ -33,12 +33,12 @@ class PathSpec extends AnyFlatSpec with Matchers {
 //   |-------|-------|-------|
 //   | (3,0) | (3,1) | (3,2) |
 //   |-------|-------|-------|
-  it should "find shortest distance when there are obstacles and the target is reachable" in {
-    val gridWithObstacles = Grid.unweighted(rows = 4, columns = 3, obstacles = List((1,1), (1,2)))
+  test("find shortest distance when there are obstacles and the target is reachable") {
+    val gridWithObstacles = Grid.unweighted(rows = 4, columns = 3, obstacles = List((1, 1), (1, 2)))
 
-    val result = shortestPath(start = (2,2), end = (0,1), gridWithObstacles)
+    val result = shortestPath(start = (2, 2), end = (0, 1), gridWithObstacles)
 
-    result shouldBe List((2,2), (2,1), (3,1), (0,1))
+    assertEquals(result, List((2, 2), (2, 1), (3, 1), (0, 1)))
   }
 
 //   |-------|-------|-------|-------|
@@ -48,18 +48,16 @@ class PathSpec extends AnyFlatSpec with Matchers {
 //   |-------|-------|-------|-------|
 //   | ##### | (2,1) | ##### | (2,3) |
 //   |-------|-------|-------|-------|
-  it should "return an empty path when there's no path to the target" in {
-    val obstacles = List((0,0), (1,0), (2,0), (0,2), (1,2), (2,2))
+  test("return an empty path when there's no path to the target") {
+    val obstacles = List((0, 0), (1, 0), (2, 0), (0, 2), (1, 2), (2, 2))
     val noWayOut = Grid.unweighted(rows = 3, columns = 4, obstacles = obstacles)
 
-    val result = shortestPath(start = (0,1), end = (1,3), noWayOut)
+    val result = shortestPath(start = (0, 1), end = (1, 3), noWayOut)
 
-    result shouldBe empty
+    assertEquals(result, Nil)
   }
 
-  it should "return an empty path when start or end nodes are not part of the grid" in {
-    shortestPath(start = (0,0), end = (8,8), aGrid) shouldBe empty
-    shortestPath(start = (8,8), end = (0,0), aGrid) shouldBe empty
+  test("return an empty path when start or end nodes are not part of the grid") {
+    assertEquals(shortestPath(start = (0, 0), end = (8, 8), aGrid), Nil)
+    assertEquals(shortestPath(start = (8, 8), end = (0, 0), aGrid), Nil)
   }
-
-}

@@ -2,45 +2,44 @@ package cracking.ch01
 
 import java.util
 
-import cracking.ch01.ImperativeStrings._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import cracking.ch01.ImperativeStrings.*
+import munit.Assertions.*
+import munit.FunSuite
+import org.scalacheck.Prop.forAll
 
-class ImperativeStringsSpec extends AnyFlatSpec with Matchers {
+class ImperativeStringsSpec extends FunSuite:
 
-  "isUniqueChars" should "tell if String has unique chars only (ASCII chars only" in {
-    isUniqueChars("Aabcdefgh") shouldBe true
-    isUniqueChars("aabcddefgh") shouldBe false
+  test("isUniqueChars tells if String has unique chars only (ASCII chars only") {
+    assert(isUniqueChars("Aabcdefgh"))
+    assert(!isUniqueChars("aabcddefgh"))
   }
 
-  "checkPermutation" should "tell if two strings have the same characters in different order" in {
-    permutation("Joana", "Joana") shouldBe true
-    permutation("Joana ", "Joana") shouldBe false
-    permutation("joana ", "Joana") shouldBe false
-    permutation("Rafael", "laefRa") shouldBe true
-    permutation("Rafael", "Nicolas") shouldBe false
-    permutation("Amelind", "Nicolas") shouldBe false
+  test("checkPermutation tells if two strings have the same characters in different order") {
+    assert(permutation("Joana", "Joana"))
+    assert(permutation("Rafael", "laefRa"))
+    assert(!permutation("Joana ", "Joana"))
+    assert(!permutation("joana ", "Joana"))
+    assert(!permutation("Rafael", "Nicolas"))
+    assert(!permutation("Amelind", "Nicolas"))
   }
 
-  "encodeSpace" should "replace ' ' by '%20'" ignore {
+  test("encodeSpace replaces ' ' by '%20'".ignore) { // TODO
     val s = "Mr 3ohn Smith                    Mrs Joanna"
     val array = util.Arrays.copyOf(s.toCharArray, 100)
 
     val result = encodeSpace(array, 43)
 
-    new String(result) shouldBe "Mr%203ohn%20Smith%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Mrs%20Joanna"
+    assertEquals(new String(result), "Mr%203ohn%20Smith%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Mrs%20Joanna")
   }
 
   // skipping palindrome here (see Strings)
 
-  "isOneWay" should "tell if a string is one edit (insert, delete, replace) away from another" in {
-    isOneWay("pale", "pae") shouldBe true
-    isOneWay("pale", "pales") shouldBe true
-    isOneWay("pale", "bale") shouldBe true
-    isOneWay("pale", "pie") shouldBe false
-    isOneWay("pale", "bake") shouldBe false
+  test("isOneWay tells if a string is one edit (insert, delete, replace) away from another") {
+    assert(isOneWay("pale", "pae"))
+    assert(isOneWay("pale", "pales"))
+    assert(isOneWay("pale", "bale"))
+    assert(!isOneWay("pale", "pie"))
+    assert(!isOneWay("pale", "bake"))
   }
 
-  // skipping isRotation (1.9) here
-
-}
+// skipping isRotation (1.9) here

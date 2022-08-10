@@ -1,55 +1,49 @@
 package fp.ds.graphs
 
-import fp.ds.graphs.TopologicalSorting._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import fp.ds.graphs.TopologicalSorting.*
+import munit.Assertions.*
+import munit.FunSuite
 
-class TopologicalSortingSpec extends AnyFlatSpec with Matchers {
+class TopologicalSortingSpec extends FunSuite:
 
-  "topological sorting" should "give us the correct order of performing a task" in {
+  test("topological sorting returns the correct order of performing a task") {
     val tasks = List(
-      "getup"           -> "shower",
-      "shower"          -> "breakfast",
-      "breakfast"       -> "dress",
-      "dress"           -> "office",
-      "office"          -> "dinner",
-
-      "breakfast"       -> "leisurely_lunch",
+      "getup" -> "shower",
+      "shower" -> "breakfast",
+      "breakfast" -> "dress",
+      "dress" -> "office",
+      "office" -> "dinner",
+      "breakfast" -> "leisurely_lunch",
       "leisurely_lunch" -> "movie",
-      "movie"           -> "dinner",
-
-      "dinner"          -> "bed"
+      "movie" -> "dinner",
+      "dinner" -> "bed"
     )
 
     val result = topsort(tasks)
 
-    result shouldBe List("getup", "shower", "breakfast", "leisurely_lunch", "movie", "dress", "office", "dinner", "bed")
+    assertEquals(
+      result,
+      List("getup", "shower", "breakfast", "leisurely_lunch", "movie", "dress", "office", "dinner", "bed")
+    )
   }
 
-  it should "detect cycle" in {
+  test("detect cycle") {
     val tasks = List(
-      "getup"           -> "shower",
-      "shower"          -> "breakfast",
-      "breakfast"       -> "dress",
-      "dress"           -> "office",
-      "office"          -> "dinner",
-
-      "breakfast"       -> "leisurely_lunch",
+      "getup" -> "shower",
+      "shower" -> "breakfast",
+      "breakfast" -> "dress",
+      "dress" -> "office",
+      "office" -> "dinner",
+      "breakfast" -> "leisurely_lunch",
       "leisurely_lunch" -> "movie",
-      "movie"           -> "dinner",
-      "dinner"          -> "movie", // cycle
-
-      "dinner"          -> "bed"
+      "movie" -> "dinner",
+      "dinner" -> "movie", // cycle
+      "dinner" -> "bed"
     )
-
-    val result = intercept[IllegalArgumentException] {
+    interceptMessage[IllegalArgumentException]("detected cycle at dinner") {
       topsort(tasks)
     }
-
-    result.getMessage shouldBe "detected cycle at dinner"
   }
-
-}
 
 /*
  * Cycle detection - no cycles:

@@ -1,12 +1,12 @@
 package mars.rover
 
-import mars.rover.Grid.{ Edge, printPath }
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import mars.rover.Grid.{Edge, printPath}
+import munit.Assertions.*
+import munit.FunSuite
 
-class GridSpec extends AnyFlatSpec with Matchers {
+class GridSpec extends FunSuite:
 
-  markup {"""
+  /*
 Rover will always try to turn 'left' first, then 'up', 'down' and, finally, 'right'.
 
             |-------|-------|-------|-------|-------|
@@ -16,18 +16,33 @@ Rover will always try to turn 'left' first, then 'up', 'down' and, finally, 'rig
             |-------|-------|-------|-------|-------|
             | (2,0) | (2,1) | (2,2) | (2,3) | (2,4) |
             |-------|-------|-------|-------|-------|
-  """ }
-  "Grid apply" should "create a grid (adjacency list) with R x C size" in {
+   */
+  test("Grid apply creates a grid (adjacency list) with R x C size") {
     val aGrid = Grid.unweighted(rows = 3, columns = 5)
 
-    aGrid shouldBe Vector(
-      (0,0) -> List((0,4), (2,0), (1,0), (0,1)), (0,1) -> List((0,0), (2,1), (1,1), (0,2)), (0,2) -> List((0,1), (2,2), (1,2), (0,3)), (0,3) -> List((0,2), (2,3), (1,3), (0,4)), (0,4) -> List((0,3), (2,4), (1,4), (0,0)),
-      (1,0) -> List((1,4), (0,0), (2,0), (1,1)), (1,1) -> List((1,0), (0,1), (2,1), (1,2)), (1,2) -> List((1,1), (0,2), (2,2), (1,3)), (1,3) -> List((1,2), (0,3), (2,3), (1,4)), (1,4) -> List((1,3), (0,4), (2,4), (1,0)),
-      (2,0) -> List((2,4), (1,0), (0,0), (2,1)), (2,1) -> List((2,0), (1,1), (0,1), (2,2)), (2,2) -> List((2,1), (1,2), (0,2), (2,3)), (2,3) -> List((2,2), (1,3), (0,3), (2,4)), (2,4) -> List((2,3), (1,4), (0,4), (2,0))
+    assertEquals(
+      aGrid,
+      Vector(
+        (0, 0) -> List((0, 4), (2, 0), (1, 0), (0, 1)),
+        (0, 1) -> List((0, 0), (2, 1), (1, 1), (0, 2)),
+        (0, 2) -> List((0, 1), (2, 2), (1, 2), (0, 3)),
+        (0, 3) -> List((0, 2), (2, 3), (1, 3), (0, 4)),
+        (0, 4) -> List((0, 3), (2, 4), (1, 4), (0, 0)),
+        (1, 0) -> List((1, 4), (0, 0), (2, 0), (1, 1)),
+        (1, 1) -> List((1, 0), (0, 1), (2, 1), (1, 2)),
+        (1, 2) -> List((1, 1), (0, 2), (2, 2), (1, 3)),
+        (1, 3) -> List((1, 2), (0, 3), (2, 3), (1, 4)),
+        (1, 4) -> List((1, 3), (0, 4), (2, 4), (1, 0)),
+        (2, 0) -> List((2, 4), (1, 0), (0, 0), (2, 1)),
+        (2, 1) -> List((2, 0), (1, 1), (0, 1), (2, 2)),
+        (2, 2) -> List((2, 1), (1, 2), (0, 2), (2, 3)),
+        (2, 3) -> List((2, 2), (1, 3), (0, 3), (2, 4)),
+        (2, 4) -> List((2, 3), (1, 4), (0, 4), (2, 0))
+      )
     )
   }
 
-  markup {"""
+  /*
 A Grid may have obstacles:
 
             |-------|-------|-------|
@@ -37,18 +52,24 @@ A Grid may have obstacles:
             |-------|-------|-------|
             | ##### | (2,1) | (2,2) |
             |-------|-------|-------|
-  """ }
-  it should "have no connections where there are obstacles (i.e. rover shouldn't be able pass through obstacles)" in {
-    val aGridWithObstacles = Grid.unweighted(rows = 3, columns = 3, obstacles = List((2,0), (0,2), (1,2)))
+   */
+  test("no connections where there are obstacles (i.e. rover shouldn't be able pass through obstacles)") {
+    val aGridWithObstacles = Grid.unweighted(rows = 3, columns = 3, obstacles = List((2, 0), (0, 2), (1, 2)))
 
-    aGridWithObstacles shouldBe Vector(
-      (0,0) -> List((1,0), (0,1)), (0,1) -> List((0,0), (2,1), (1,1)),
-      (1,0) -> List((0,0), (1,1)), (1,1) -> List((1,0), (0,1), (2,1)),
-                                   (2,1) -> List((1,1), (0,1), (2,2)), (2,2) -> List((2,1))
+    assertEquals(
+      aGridWithObstacles,
+      Vector(
+        (0, 0) -> List((1, 0), (0, 1)),
+        (0, 1) -> List((0, 0), (2, 1), (1, 1)),
+        (1, 0) -> List((0, 0), (1, 1)),
+        (1, 1) -> List((1, 0), (0, 1), (2, 1)),
+        (2, 1) -> List((1, 1), (0, 1), (2, 2)),
+        (2, 2) -> List((2, 1))
+      )
     )
   }
 
-  markup {"""
+  /*
 A Grid may be weighted (default weight is 1):
 
             |-------|-------|
@@ -58,23 +79,28 @@ A Grid may be weighted (default weight is 1):
             |-------|-------|
             | (2,0) | (2,1) |
             |-------|-------|
-  """ }
-  it should "have weights where specified" in {
+   */
+  test("weights where specified") {
     val aGrid = Grid.weighted(
       rows = 3,
       columns = 2,
-      weights = List(Edge((0,1), w = 2), Edge((1,1), w = 3))
+      weights = List(Edge((0, 1), w = 2), Edge((1, 1), w = 3))
     )
 
-    aGrid shouldBe Vector(
-      (0,0) -> List(Edge((0,1), w=2), Edge((2,0), w=1), Edge((1,0), w=1), Edge((0,1), w=2)), (0,1) -> List(Edge((0,0), w=1), Edge((2,1), w=1), Edge((1,1), w=3), Edge((0,0), w=1)),
-      (1,0) -> List(Edge((1,1), w=3), Edge((0,0), w=1), Edge((2,0), w=1), Edge((1,1), w=3)), (1,1) -> List(Edge((1,0), w=1), Edge((0,1), w=2), Edge((2,1), w=1), Edge((1,0), w=1)),
-      (2,0) -> List(Edge((2,1), w=1), Edge((1,0), w=1), Edge((0,0), w=1), Edge((2,1), w=1)), (2,1) -> List(Edge((2,0), w=1), Edge((1,1), w=3), Edge((0,1), w=2), Edge((2,0), w=1))
+    assertEquals(
+      aGrid,
+      Vector(
+        (0, 0) -> List(Edge((0, 1), w = 2), Edge((2, 0), w = 1), Edge((1, 0), w = 1), Edge((0, 1), w = 2)),
+        (0, 1) -> List(Edge((0, 0), w = 1), Edge((2, 1), w = 1), Edge((1, 1), w = 3), Edge((0, 0), w = 1)),
+        (1, 0) -> List(Edge((1, 1), w = 3), Edge((0, 0), w = 1), Edge((2, 0), w = 1), Edge((1, 1), w = 3)),
+        (1, 1) -> List(Edge((1, 0), w = 1), Edge((0, 1), w = 2), Edge((2, 1), w = 1), Edge((1, 0), w = 1)),
+        (2, 0) -> List(Edge((2, 1), w = 1), Edge((1, 0), w = 1), Edge((0, 0), w = 1), Edge((2, 1), w = 1)),
+        (2, 1) -> List(Edge((2, 0), w = 1), Edge((1, 1), w = 3), Edge((0, 1), w = 2), Edge((2, 0), w = 1))
+      )
     )
   }
 
-  "printPath" should "print the path from one node to another" in {
-    printPath(List((0,0), (0,4), (2,4))) shouldBe "(0,0) -> (0,4) -> (2,4)"
-    printPath(List.empty) shouldBe ""
+  test("printPath prints the path from one node to another") {
+    assertEquals(printPath(List((0, 0), (0, 4), (2, 4))), "(0,0) -> (0,4) -> (2,4)")
+    assertEquals(printPath(List.empty), "")
   }
-}

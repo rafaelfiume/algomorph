@@ -1,162 +1,212 @@
 package red.book.ch03
 
-import red.book.ch03.List._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import munit.Assertions.*
+import munit.FunSuite
+import org.scalacheck.Prop.forAll
+import red.book.ch03.List.*
 
-class ListSpec extends AnyFlatSpec with Matchers {
+class ListSpec extends FunSuite:
 
-  "x" should "be == 3" in {
-    x shouldBe 3
+  test("tail removes the first element of a list") {
+    assert(tail(List(1, 2, 3, 4)) == List(2, 3, 4))
+    assert(tail(Nil) == Nil)
+    assert(tail(List(1)) == Nil)
   }
 
-  "tail" should "remove the first element of a list" in {
-    tail(List(1,2,3,4)) shouldBe List(2,3,4)
-    tail(Nil) shouldBe Nil
-    tail(List(1)) shouldBe Nil
+  test("setHead replaces the first element of a list") {
+    assert(setHead(List(1, 2, 3, 4), 9) == List(9, 2, 3, 4))
+    assert(setHead(Nil, 9) == Nil)
   }
 
-  "setHead" should "replace the first element of a list" in {
-    setHead(List(1,2,3,4), 9) shouldBe List(9,2,3,4)
-    setHead(Nil, 9) shouldBe Nil
+  test("drop drops the nth element of a list") {
+    assert(drop(List(1, 2, 3, 4), 2) == List(3, 4))
+    assert(drop(Nil, 1) == Nil)
+    assert(drop(List(1, 2, 3, 4), 0) == List(1, 2, 3, 4))
   }
 
-  "drop" should "drop the nth element of a list" in {
-    drop(List(1,2,3,4), 2) shouldBe List(3,4)
-    drop(Nil, 1) shouldBe Nil
-    drop(List(1,2,3,4), 0) shouldBe List(1,2,3,4)
-  }
-
-  "dropWhile" should "remove elements from the list while they match predicate" in {
-    dropWhile(List(-1, -2, 0, 1,2,3,4), (x: Int) => x < 0) shouldBe List(0,1,2,3,4)
-    dropWhile(List(1,2,3,4), (x: Int) => x > 0) shouldBe Nil
-    dropWhile(Nil, (x: Int) => x > 0) shouldBe Nil
-    dropWhile(List(1,2,3,4), (x: Int) => x < 0) shouldBe List(1,2,3,4)
+  test("dropWhile removes elements from the list while they match predicate") {
+    assert(dropWhile(List(-1, -2, 0, 1, 2, 3, 4), (x: Int) => x < 0) == List(0, 1, 2, 3, 4))
+    assert(dropWhile(List(1, 2, 3, 4), (x: Int) => x > 0) == Nil)
+    assert(dropWhile(Nil, (x: Int) => x > 0) == Nil)
+    assert(dropWhile(List(1, 2, 3, 4), (x: Int) => x < 0) == List(1, 2, 3, 4))
   }
 
   // stopped accepting Nil where it doesn't make sense
 
-  "init" should "return all but the last element of the list" in {
-    init(List(1,2,3,4)) shouldBe List(1,2,3)
-    init(List(1)) shouldBe Nil
+  test("init returns all but the last element of the list") {
+    assert(init(List(1, 2, 3, 4)) == List(1, 2, 3))
+    assert(init(List(1)) == Nil)
   }
 
-  "shortCircuitProduct" should "calculate product by stop if it finds 0" in {
-    shortCircuitProduct(List(1,2,3,4)) shouldBe 24
-    shortCircuitProduct(List(1,0,3,4)) shouldBe 0
+  test("shortCircuitProduct calculates product by stop if it finds 0") {
+    assert(shortCircuitProduct(List(1, 2, 3, 4)) == 24)
+    assert(shortCircuitProduct(List(1, 0, 3, 4)) == 0)
   }
 
-  "passing Cons and Nil to foldRight" should "return the same list" ignore { // implementation is pending
-    foldRight_l1(List(1,2,3,4), Nil:List[Int])(Cons(_, _)) shouldBe List(1,2,3,4)
-    foldRight_l2(List(1,2,3,4), Nil:List[Int])(Cons(_, _)) shouldBe List(1,2,3,4)
+  test("passing Cons and Nil to foldRight returns the same list".ignore) { // implementation is pending
+    assertEquals(
+      foldRight_l1(List(1, 2, 3, 4), Nil: List[Int])(Cons(_, _)),
+      List(1, 2, 3, 4)
+    )
+    assertEquals(
+      foldRight_l2(List(1, 2, 3, 4), Nil: List[Int])(Cons(_, _)),
+      List(1, 2, 3, 4)
+    )
   }
 
-  "length" should "calculate the length of a list" in {
-    myLength(Nil) shouldBe 0
-    myLength(List(1)) shouldBe 1
-    myLength(List(1,2,3,4)) shouldBe 4
+  test("length calculates the length of a list") {
+    assert(myLength(Nil) == 0)
+    assert(myLength(List(1)) == 1)
+    assert(myLength(List(1, 2, 3, 4)) == 4)
   }
 
-  "sumLeft, productLeft and lengthLeft" should "do the usual stuff but with a foldLeft implementation" in {
-    productLeft(List(1,2,3,4)) shouldBe 24
-    productLeft(List(1,0,3,4)) shouldBe 0
+  test("sumLeft, productLeft and lengthLeft do the usual stuff but with a foldLeft implementation") {
+    assert(productLeft(List(1, 0, 3, 4)) == 0)
+    assert(productLeft(List(1, 2, 3, 4)) == 24)
 
-    sumLeft(List(1,2,3,4)) shouldBe 10
-    sumLeft(List(1,0,3,4)) shouldBe 8
+    assert(sumLeft(List(1, 2, 3, 4)) == 10)
+    assert(sumLeft(List(1, 0, 3, 4)) == 8)
 
-    lengthLeft(List('R', 'a', 'f', 'a', 'e', 'l')) shouldBe 6
-    lengthLeft(List('c')) shouldBe 1
+    assert(lengthLeft(List('R', 'a', 'f', 'a', 'e', 'l')) == 6)
+    assert(lengthLeft(List('c')) == 1)
   }
 
-  "reverse" should "return the reverse of a list" in {
-    myReverse(List(1,2,3,4)) shouldBe List(4,3,2,1)
-    myReverse(List(1)) shouldBe List(1)
+  test("reverse returns the reverse of a list") {
+    assertEquals(
+      myReverse(List(1, 2, 3, 4)),
+      List(4, 3, 2, 1)
+    )
+    assertEquals(
+      myReverse(List(1)),
+      List(1)
+    )
   }
 
-  "myappend" should "append one list to another" in {
-    myappend(List(1,2,3), List(4,5,6)) shouldBe List(1,2,3,4,5,6)
-    myappend(Nil, List(1)) shouldBe List(1)
+  test("myappend appends one list to another") {
+    assertEquals(
+      myappend(List(1, 2, 3), List(4, 5, 6)),
+      List(1, 2, 3, 4, 5, 6)
+    )
+    assertEquals(
+      myappend(Nil, List(1)),
+      List(1)
+    )
   }
 
-  "concat" should "concatenate a list of list into a single list" in {
-    concat(List(List(1,2), List(3,4), List(5,6,7))) shouldBe List(1,2,3,4,5,6,7)
+  test("concat concatenates a list of list into a single list") {
+    assertEquals(
+      concat(List(List(1, 2), List(3, 4), List(5, 6, 7))),
+      List(1, 2, 3, 4, 5, 6, 7)
+    )
   }
 
-  "plus1" should "transform a list of integers by adding 1 to each element" in {
-    plus1(List(1,2,3,4,5)) shouldBe List(2,3,4,5,6)
+  test("plus1 transforms a list of integers by adding 1 to each element") {
+    assertEquals(
+      plus1(List(1, 2, 3, 4, 5)),
+      List(2, 3, 4, 5, 6)
+    )
   }
 
-  "doubleToString" should "turn each element in a list into a String" in {
-    doubleToString(List(1.0, 2.1, 3.8, 4.9)) shouldBe List("1.0", "2.1", "3.8", "4.9")
+  test("doubleToString turns each element in a list into a String") {
+    assertEquals(
+      doubleToString(List(1.0, 2.1, 3.8, 4.9)),
+      List("1.0", "2.1", "3.8", "4.9")
+    )
   }
 
-  "map" should "generalize each element in a list while preserving its structure" in {
-    map(List(1,2,3,4))(_.toString) shouldBe List("1","2","3","4")
-    map(List(1,2,3,4))(_ - 1) shouldBe List(0,1,2,3)
+  test("map generalizes each element in a list while preserving its structure") {
+    assertEquals(
+      map(List(1, 2, 3, 4))(_.toString),
+      List("1", "2", "3", "4")
+    )
+    assertEquals(
+      map(List(1, 2, 3, 4))(_ - 1),
+      List(0, 1, 2, 3)
+    )
   }
 
-  "filter" should "remove all elements that don't satisfy a predicate" in {
-    filter(List(0,1,2,3,4,5,6,7,8,9))(_ % 2 == 0) shouldBe List(0,2,4,6,8)
+  test("filter removes all elements that don't satisfy a predicate") {
+    assertEquals(
+      filter(List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))(_ % 2 == 0),
+      List(0, 2, 4, 6, 8)
+    )
   }
 
-  "flatMap" should "works like a map, but take a function that returns a list, and append that list in the final result" in {
-    flatMap(List(1,2,3,4))(e => List(e, e)) shouldBe List(1,1,2,2,3,3,4,4)
+  test("flatMap works like a map, but take a function that returns a list, and append that list in the final result") {
+    assertEquals(
+      flatMap(List(1, 2, 3, 4))(e => List(e, e)),
+      List(1, 1, 2, 2, 3, 3, 4, 4)
+    )
   }
 
-  "filterWithFlatMap" should "remove all elements that don't satisfy a predicate" in {
-    filterWithFlatMap(List(0,1,2,3,4,5,6,7,8,9))(_ % 2 == 0) shouldBe List(0,2,4,6,8)
+  test("filterWithFlatMap removes all elements that don't satisfy a predicate") {
+    assertEquals(
+      filterWithFlatMap(List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))(_ % 2 == 0),
+      List(0, 2, 4, 6, 8)
+    )
   }
 
-  "addPairWise" should "accept two lists and create a new one by adding corresponding elements" in {
-    addPairWise(List(1,2,3), List(6,7,8)) shouldBe List(7,9,11)
-    addPairWise(List(1,2), List(6,7,8)) shouldBe List(7,9)
-    addPairWise(List(1,2,3), List(6,7)) shouldBe List(7,9)
+  test("addPairWise accepts two lists and create a new one by adding corresponding elements") {
+    assertEquals(
+      addPairWise(List(1, 2, 3), List(6, 7, 8)),
+      List(7, 9, 11)
+    )
+    assertEquals(
+      addPairWise(List(1, 2), List(6, 7, 8)),
+      List(7, 9)
+    )
+    assertEquals(
+      addPairWise(List(1, 2, 3), List(6, 7)),
+      List(7, 9)
+    )
   }
 
-  "zipWith" should "accept two lists and construct a new one by applying a function on corresponding elements" in {
-    zipWith(List(1,2,3), List(6,7,8))(_ + _) shouldBe List(7,9,11)
-    zipWith(List("Rafael ", "Jordana E "), List("Fiume", "Fiume"))(_ + _) shouldBe List("Rafael Fiume", "Jordana E Fiume")
+  test("zipWith accepts two lists and construct a new one by applying a function on corresponding elements") {
+    assertEquals(
+      zipWith(List(1, 2, 3), List(6, 7, 8))(_ + _),
+      List(7, 9, 11)
+    )
+    assertEquals(
+      zipWith(List("Rafael ", "Jordana E "), List("Fiume", "Fiume"))(_ + _),
+      List("Rafael Fiume", "Jordana E Fiume")
+    )
   }
 
-  "myStartWith" should "check if a list starts with a subsequence" in {
-    myStartWith(List(1,2,3), List(1)) shouldBe true
-    myStartWith(List(1,2,3), List(1, 2)) shouldBe true
-    myStartWith(List(1,2,3), List(1,3)) shouldBe false
-    myStartWith(List(1,2,3), List(5)) shouldBe false
-    myStartWith(List(1,2,3), List(1,2,3,4)) shouldBe false
+  test("myStartWith checks if a list starts with a subsequence") {
+    assert(myStartWith(List(1, 2, 3), List(1)))
+    assert(myStartWith(List(1, 2, 3), List(1, 2)))
+    assert(!myStartWith(List(1, 2, 3), List(1, 3)))
+    assert(!myStartWith(List(1, 2, 3), List(5)))
+    assert(!myStartWith(List(1, 2, 3), List(1, 2, 3, 4)))
   }
 
-  "hasSubsequence" should "check if a List container another List as a subsequence" in {
-    hasSubsequence(List(1, 2, 3, 4), List(1)) shouldBe true
-    hasSubsequence(List(1, 2, 3, 4), List(2, 3)) shouldBe true
-    hasSubsequence(Nil, Nil) shouldBe true
-    hasSubsequence(List(1, 2, 3, 4), List(2, 2)) shouldBe false
+  test("hasSubsequence checks if a List container another List as a subsequence") {
+    assert(hasSubsequence(List(1, 2, 3, 4), List(1)))
+    assert(hasSubsequence(List(1, 2, 3, 4), List(2, 3)))
+    assert(hasSubsequence(Nil, Nil))
+    assert(!hasSubsequence(List(1, 2, 3, 4), List(2, 2)))
   }
 
-  "startWith and hasSubsequence" should "obey the following properties" in {
+  test("startWith and hasSubsequence obeys the following properties") {
     /*
      xs startsWith Nil
      */
-    val xs = List(4,5,6,10)
-    val ys = List(8,9,7)
+    val xs = List(4, 5, 6, 10)
+    val ys = List(8, 9, 7)
     val zs = List(2)
 
     // xs startsWith Nil
-    myStartWith(xs, Nil:List[Int]) shouldBe true
+    assert(myStartWith(xs, Nil: List[Int]))
 
     // Nil startWith Nil
-    myStartWith(Nil, Nil) shouldBe true
+    assert(myStartWith(Nil, Nil))
 
     // (xs append ys) startsWith xs
-    myStartWith(append(xs, ys), xs)
+    assert(myStartWith(append(xs, ys), xs))
 
     // (xs append ys append zs) hasSubsequence ys
-    hasSubsequence(append(zs, append(xs, ys)), zs)
+    assert(hasSubsequence(append(zs, append(xs, ys)), zs))
 
     // xs hasSubsequence Nil
-    hasSubsequence(xs, Nil: List[Int]) shouldBe true
-
+    assert(hasSubsequence(xs, Nil: List[Int]))
   }
-
-
-}

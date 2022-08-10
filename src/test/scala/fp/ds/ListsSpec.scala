@@ -1,18 +1,19 @@
 package fp.ds
 
-import fp.ds.Lists._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import fp.ds.Lists.*
+import munit.Assertions.*
+import munit.FunSuite
 
-class ListsSpec extends AnyFlatSpec with Matchers {
+class ListsSpec extends FunSuite:
 
-  "frequency" should "tell the number of times a word appears in a list" in {
-    frequency(List("this", "is", "a", "that", "is", "a")) should contain theSameElementsAs Map("is" -> 2, "that" -> 1, "a" -> 2, "this" -> 1)
+  test("frequency returns the number of times a word appears in a list") {
+    assertEquals(
+      frequency(List("this", "is", "a", "that", "is", "a")),
+      Map("is" -> 2, "that" -> 1, "a" -> 2, "this" -> 1)
+    )
   }
 
-  "setElem" should "set element e in the n position in a list (0 based)" in {
-    setElem(List(1,2,3,4,5), 1, 8) shouldBe List(1,8,3,4,5)
-
-    setElem(List(1,2,3,4,5), -1, 8) shouldBe List(1,2,3,4,5)
+  test("set element e in the n position in a list (0 based)") {
+    assertEquals(setElem(List(1, 2, 3, 4, 5), -1, 8), List(1, 2, 3, 4, 5))
+    assertEquals(setElem(List(1, 2, 3, 4, 5), 1, 8), List(1, 8, 3, 4, 5))
   }
-}

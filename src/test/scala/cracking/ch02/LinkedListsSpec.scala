@@ -1,44 +1,43 @@
 package cracking.ch02
 
-import cracking.ch02.LinkedLists._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import cracking.ch02.LinkedLists.*
+import munit.Assertions.*
+import munit.FunSuite
 
-class LinkedListsSpec extends AnyFlatSpec with Matchers {
+class LinkedListsSpec extends FunSuite:
 
-  "removeDups" should "remove any duplications from list" in {
-    removeDups(List(1, 1, 2, 2, 3, 4, 3, 1)) shouldBe List(1, 2, 3, 4)
-    removeDups(List(2, 3)) shouldBe List(2, 3)
-    removeDups(List.empty[Int]) shouldBe empty
+  test("remove duplications from list") {
+    assertEquals(removeDups(List(1, 1, 2, 2, 3, 4, 3, 1)), List(1, 2, 3, 4))
+    assertEquals(removeDups(List(2, 3)), List(2, 3))
+    assertEquals(removeDups(List.empty[Int]), Nil)
 
-    removeDupsWithBuffer(List(1, 1, 2, 2, 3, 4, 3, 1)) shouldBe List(1, 2, 3, 4)
-    removeDupsWithBuffer(List(2, 3)) shouldBe List(2, 3)
-    removeDupsWithBuffer(List.empty[Int]) shouldBe empty
+    assertEquals(removeDupsWithBuffer(List(1, 1, 2, 2, 3, 4, 3, 1)), List(1, 2, 3, 4))
+    assertEquals(removeDupsWithBuffer(List(2, 3)), List(2, 3))
+    assertEquals(removeDupsWithBuffer(List.empty[Int]), Nil)
   }
 
-  "kthToLast" should "return a list with kth to the last element" in {
-    kthToLast(4, List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)) shouldBe List(7, 8, 9, 10)
-    kthToLast(0, List(1, 2, 3, 4, 5, 6, 7)) shouldBe empty
-    kthToLast(3, List.empty) shouldBe empty
+  test("return a list with kth to the last element") {
+    assertEquals(kthToLast(4, List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), List(7, 8, 9, 10))
+    assertEquals(kthToLast(0, List(1, 2, 3, 4, 5, 6, 7)), Nil)
+    assertEquals(kthToLast(3, List.empty), Nil)
 
-    kthToLast2(4, List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)) shouldBe List(7, 8, 9, 10)
-    kthToLast2(0, List(1, 2, 3, 4, 5, 6, 7)) shouldBe empty
-    kthToLast2(3, List.empty) shouldBe empty
+    assertEquals(kthToLast2(4, List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), List(7, 8, 9, 10))
+    assertEquals(kthToLast2(0, List(1, 2, 3, 4, 5, 6, 7)), Nil)
+    assertEquals(kthToLast2(3, List.empty), Nil)
   }
 
   // note that the behaviour here is slightest different to the one in the book
-  "removeNode" should "remove element e from the list" in {
-    removeNode(9, List(1, 9, 7)) shouldBe List(1, 7)
-    removeNode(2, List(1, 9, 7)) shouldBe List(1, 9, 7)
-    removeNode(2, List.empty) shouldBe empty
+  test("remove element e from the list") {
+    assertEquals(removeNode(9, List(1, 9, 7)), List(1, 7))
+    assertEquals(removeNode(2, List(1, 9, 7)), List(1, 9, 7))
+    assertEquals(removeNode(2, List.empty), Nil)
   }
 
-  "partition" should "put all elements less than e before all elements greater or equal x" ignore {
+  test("partition puts all elements less than e before all elements greater or equal x".ignore) {
     val aList = List(3, 5, 8, 5, 10, 2, 1)
 
     val result = partition(5, aList)
 
-    result shouldBe List(3, 2, 1, 5, 8, 5, 10)
-    aList.startsWith(result.filter(_ < 5)) shouldBe true
+    assertEquals(result, List(3, 2, 1, 5, 8, 5, 10))
+    assert(aList.startsWith(result.filter(_ < 5)))
   }
-}

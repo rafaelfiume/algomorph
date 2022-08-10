@@ -1,56 +1,58 @@
 package cracking.ch01
 
-import cracking.ch01.Strings._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import cracking.ch01.Strings.*
+import munit.Assertions.*
+import munit.FunSuite
 
-class StringsSpec extends AnyFlatSpec with Matchers {
+class StringsSpec extends FunSuite:
 
-  "isUniqueChars" should "tell if String has unique chars only (ASCII chars only" in {
-    isUniqueChars("Aabcdefgh") shouldBe true
-    isUniqueChars("abcddefgh") shouldBe false
+  test("isUniqueChars tells if String has unique chars only (ASCII chars only") {
+    assert(isUniqueChars("Aabcdefgh"))
+    assert(!isUniqueChars("abcddefgh"))
   }
 
-  "checkPermutation" should "tell if two strings have the same characters in different order" in {
-    permutation("Joana", "Joana") shouldBe true
-    permutation("Joana ", "Joana") shouldBe false
-    permutation("joana ", "Joana") shouldBe false
-    permutation("Rafael", "laefRa") shouldBe true
-    permutation("Rafael", "Nicolas") shouldBe false
-    permutation("Amelind", "Nicolas") shouldBe false
+  test("checkPermutation tells if two strings have the same characters in different order") {
+    assert(permutation("Joana", "Joana"))
+    assert(permutation("Rafael", "laefRa"))
+    assert(!permutation("Joana ", "Joana"))
+    assert(!permutation("joana ", "Joana"))
+    assert(!permutation("Rafael", "Nicolas"))
+    assert(!permutation("Amelind", "Nicolas"))
   }
 
-  "encodeSpace" should "replace ' ' by '%20'" in {
-    encodeSpace("Mr 3ohn Smith                    Mrs Joanna") shouldBe "Mr%203ohn%20Smith%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Mrs%20Joanna"
+  test("encodeSpace replaces ' ' by '%20'") {
+    assertEquals(
+      encodeSpace("Mr 3ohn Smith                    Mrs Joanna"),
+      "Mr%203ohn%20Smith%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Mrs%20Joanna"
+    )
   }
 
-  "palindrome" should "if string is a permutation of a palindrome" in {
-    isPalindrome("Tact Coa") shouldBe true
-    isPalindrome("Red rum, sir, is murder") shouldBe true
-    isPalindrome("Was it a cat I saw") shouldBe true
-    isPalindrome("Rafael") shouldBe false
+  test("palindrome says if string is a permutation of a palindrome") {
+    assert(isPalindrome("Tact Coa"))
+    assert(isPalindrome("Red rum, sir, is murder"))
+    assert(isPalindrome("Was it a cat I saw"))
+    assert(!isPalindrome("Rafael"))
   }
 
-  "isOneWay" should "tell if a string is one edit (insert, delete, replace) away from another" in {
-    isOneWay("pale", "pae") shouldBe true
-    isOneWay("pale", "pales") shouldBe true
-    isOneWay("pale", "bale") shouldBe true
-    isOneWay("pale", "pie") shouldBe false
-    isOneWay("pale", "bake") shouldBe false
+  test("isOneWay tells if a string is one edit (insert, delete, replace) away from another") {
+    assert(isOneWay("pale", "pae"))
+    assert(isOneWay("pale", "pales"))
+    assert(isOneWay("pale", "bale"))
+    assert(!isOneWay("pale", "pie"))
+    assert(!isOneWay("pale", "bake"))
   }
 
-  "compress" should "compress a string" in {
-    compress("aabcccccaaa") shouldBe "a2b1c5a3"
-    compress("aabcccccaaaaaaaaaa") shouldBe "a2b1c5a10"
-    compress("abc") shouldBe "abc"
+  test("compress a string") {
+    assertEquals(compress("aabcccccaaa"), "a2b1c5a3")
+    assertEquals(compress("aabcccccaaaaaaaaaa"), "a2b1c5a10")
+    assertEquals(compress("abc"), "abc")
   }
 
   // skipping rotateMatrix (1.8) here
 
-  "isRotation" should "say is a string is a rotation of the other" in {
-    isRotation("waterbottle", "erbottlewat") shouldBe true
-    isRotation("abracadabra", "abracadabra") shouldBe true
-    isRotation("bla", "bli") shouldBe false
-    isRotation("", "") shouldBe false
+  test("isRotation says is a string is a rotation of the other") {
+    assert(isRotation("waterbottle", "erbottlewat"))
+    assert(isRotation("abracadabra", "abracadabra"))
+    assert(!isRotation("bla", "bli"))
+    assert(!isRotation("", ""))
   }
-}

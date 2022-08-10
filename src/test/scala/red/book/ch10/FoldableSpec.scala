@@ -6,10 +6,8 @@ import red.book.ch08.Prop.forAll
 import red.book.ch08.{Gen, Prop}
 import red.book.ch10.Foldable.foldableList
 import red.book.ch10.Monoids.intAddition
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 
-object FoldableSpec extends App {
+object FoldableSpec extends App:
 
   ///////////// List foldable properties /////////////
 
@@ -27,17 +25,15 @@ object FoldableSpec extends App {
 
   def ssize: Gen[Int] = choose(0, 40)
 
-  def stringLists: Gen[List[String]] = for {
-     ls <- ssize
-     ss <- ssize
-     list <- Gen.listOfN(ls, stringN(ss))
-  } yield list
+  def stringLists: Gen[List[String]] = for
+    ls <- ssize
+    ss <- ssize
+    list <- Gen.listOfN(ls, stringN(ss))
+  yield list
 
-}
+class TreeFoldableSpec:
 
-class TreeFoldableSpec extends AnyFlatSpec with Matchers {
-
-//  "Tree foldable" should "be able to reconstruct tree" in {
+//  "Tree foldable" should "be able to reconstruct tree") {
 //    def zz: Tree[Int] => Tree[Int] = t => t // the id function
 //
 //    def ff(v: Int, t: Tree[Int]): Tree[Int] => Tree[Int] = t match {
@@ -45,16 +41,10 @@ class TreeFoldableSpec extends AnyFlatSpec with Matchers {
 //      case Branch(l, f) => t => Branch(l, f)
 //    }
 //    val r: Tree[Int] = foldableTree(aTree)(zz)(zz)
-//    r shouldBe aTree
+//    r == aTree
 //  }
 
   val aTree: Tree[Int] = Branch(
-    left = Branch(
-      left = Leaf(1),
-      right = Branch(left = Leaf(2), right = Leaf(3))),
-    right = Branch(
-      left = Leaf(7),
-      right = Leaf(8))
+    left = Branch(left = Leaf(1), right = Branch(left = Leaf(2), right = Leaf(3))),
+    right = Branch(left = Leaf(7), right = Leaf(8))
   )
-
-}

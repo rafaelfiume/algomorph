@@ -1,5 +1,6 @@
 # S.O.
 .DS_Store
+.bsp/*
 
 # IDE
 .idea/

@@ -2,14 +2,14 @@ package red.book.ch08
 
 import java.util.concurrent.{ExecutorService, Executors}
 
-import red.book.ch08.Dsl._
-import red.book.ch08.Gen._
-import red.book.ch08.MoreGens._
+import red.book.ch08.Dsl.*
+import red.book.ch08.Gen.*
+import red.book.ch08.MoreGens.*
 import red.book.ch08.Prop.forAll
 
-import scala.Ordering._
+import scala.Ordering.*
 
-object SomeExamples extends App {
+object SomeExamples extends App:
 
   println("There should be no items in the list greater than max")
   val smallInt = Gen.choose(-10, 10)
@@ -29,36 +29,40 @@ object SomeExamples extends App {
   }
   val sortedElements = forAll(listOf(smallInt)) { ns =>
     val sorted = ns.sorted
-    sorted.isEmpty || (sorted zip sorted.tail forall { case (a, b) => a <= b })
+    sorted.isEmpty || sorted.zip(sorted.tail).forall { case (a, b) => a <= b }
   }
   Prop.run(sameSizeSortedListProp && sameElementsProp && sortedElements)
 
-  /******************************************** Pars ********************************************/
+  /**
+   * ****************************************** Pars *******************************************
+   */
 
   val S: Gen[ExecutorService] = weighted(
     choose(20, 25).map(Executors.newFixedThreadPool) -> 0.75,
     unit(Executors.newCachedThreadPool()) -> 0.25
   )
 
-  /******************************************** takeWhile ********************************************/
+  /**
+   * ****************************************** takeWhile *******************************************
+   */
 
-  val listOfInts = choose(-100,100).listOfN(choose(0, 30))
+  val listOfInts = choose(-100, 100).listOfN(choose(0, 30))
 
   println("takeWhile only return elements that holds predicate")
   val p: Int => Boolean = i => i % 2 == 0
   val holdsPredicate = forAll(listOfInts) { list =>
-    list takeWhile p forall p
+    list.takeWhile(p).forall(p)
   }
   Prop.run(holdsPredicate)
 
   val holdsPredicate2 = forAll(listOfInts ** intToBooleanGen) { case list ** p =>
-    println(list takeWhile p)
-    list takeWhile p forall p
+    println(list.takeWhile(p))
+    list.takeWhile(p).forall(p)
   }
   val firstElementOfRemainderListDoesNotMatchPredicate = forAll(listOfInts ** intToBooleanGen) { case list ** p =>
-    val taken = list takeWhile p size
+    val taken = list.takeWhile(p).size
 
-    where (taken > list.size) {
+    where(taken > list.size) {
       !p(list.drop(taken).head)
     }
   }
@@ -67,5 +71,3 @@ object SomeExamples extends App {
   // TODO 8.15......
 
   System.exit(0)
-
-}

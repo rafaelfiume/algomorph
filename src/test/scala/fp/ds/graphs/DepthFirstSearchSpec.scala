@@ -1,18 +1,15 @@
 package fp.ds.graphs
 
 import fp.ds.graphs.DepthFirstSearch.traverse
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import munit.Assertions.*
+import munit.FunSuite
 
-class DepthFirstSearchSpec extends AnyFlatSpec with Matchers {
+class DepthFirstSearchSpec extends FunSuite:
 
-  "dsf" should "traverse a graph visiting nodes children first" in {
-    val graph = List(("m", "n"), ("m", "o"), ("m", "p"),
-                     ("n", "q"), ("o", "r"), ("p", "q"),
-                     ("q", "r"), ("q", "s"))
+  test("traverse a graph visiting nodes children first") {
+    val graph = List(("m", "n"), ("m", "o"), ("m", "p"), ("n", "q"), ("o", "r"), ("p", "q"), ("q", "r"), ("q", "s"))
 
     val result = traverse("m", graph)
 
-    result shouldBe List("m", "n", "q", "r", "s", "o", "p")
+    assertEquals(result, List("m", "n", "q", "r", "s", "o", "p"))
   }
-}

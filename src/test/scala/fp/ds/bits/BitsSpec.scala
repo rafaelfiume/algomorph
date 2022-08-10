@@ -1,24 +1,21 @@
 package fp.ds.bits
 
-import fp.ds.bits.Bits._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import fp.ds.bits.Bits.*
+import munit.Assertions.*
+import munit.FunSuite
 
-class BitsSpec extends AnyFlatSpec with Matchers {
+class BitsSpec extends FunSuite:
 
-  "add" should "add two binary numbers" in {
-    add(List(1,1), List.empty) shouldBe List(1,1)
-    add(List.empty, List(1,1)) shouldBe List(1,1)
-    add(List(1), List(1)) shouldBe List(1,0)
-    add(List(1,1,1,1,0),
-        List(0,1,0,1,1)) shouldBe List(1,0,1,0,0,1)
-    add(List(    1,1),
-        List(1,1,0,1)) shouldBe List(1,0,0,0,0)
+  test("add two binary numbers") {
+    assertEquals(add(List(1, 1), List.empty), List(1, 1))
+    assertEquals(add(List.empty, List(1, 1)), List(1, 1))
+    assertEquals(add(List(1), List(1)), List(1, 0))
+    assertEquals(add(List(1, 1, 1, 1, 0), List(0, 1, 0, 1, 1)), List(1, 0, 1, 0, 0, 1))
+    assertEquals(add(List(1, 1), List(1, 1, 0, 1)), List(1, 0, 0, 0, 0))
   }
 
-  "carry" should "perform the carry operation on an inverted list (left to right, for performance reasons)" in {
-    carry(1, List(0)) shouldBe List(1)
-    carry(1, List(1)) shouldBe List(0,1)
-    carry(1, List(1,1,0,1)) shouldBe List(0,0,1,1)
+  test("carry on an inverted list (left to right, for performance reasons)") {
+    assertEquals(carry(1, List(0)), List(1))
+    assertEquals(carry(1, List(1)), List(0, 1))
+    assertEquals(carry(1, List(1, 1, 0, 1)), List(0, 0, 1, 1))
   }
-}

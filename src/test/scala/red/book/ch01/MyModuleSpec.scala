@@ -1,20 +1,19 @@
 package red.book.ch01
 
 import red.book.ch01.MyModule.fib
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import munit.Assertions.*
+import munit.FunSuite
 
-class MyModuleSpec extends AnyFlatSpec with Matchers {
+class MyModuleSpec extends FunSuite:
 
-  "fib" should "retrieve the nth number in a fibonacy sequence (0,1,1,2,3,5,8..)" in {
-//    fib(-1) shouldBe 0 // invalid
-//    fib(0) shouldBe 0 // invalid
-    fib(1) shouldBe 0
-    fib(2) shouldBe 1
-    fib(3) shouldBe 1
-    fib(4) shouldBe 2
-    fib(5) shouldBe 3
-    fib(6) shouldBe 5
-    fib(7) shouldBe 8
+  test("fib retrieves the nth number in a fibonacy sequence (0,1,1,2,3,5,8..)") {
+//    assertEquals(fib(-1), 0) // invalid
+//    assertEquals(fib(0), 0) // invalid
+    assertEquals(fib(1), 0)
+    assertEquals(fib(2), 1)
+    assertEquals(fib(3), 1)
+    assertEquals(fib(4), 2)
+    assertEquals(fib(5), 3)
+    assertEquals(fib(6), 5)
+    assertEquals(fib(7), 8)
   }
-}

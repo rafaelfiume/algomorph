@@ -1,81 +1,88 @@
 package fp.ds
 
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import munit.Assertions.*
+import munit.FunSuite
 
-class BinTreeSpec extends AnyFlatSpec with Matchers {
+class BinTreeSpec extends FunSuite:
 
   private val ofABinTree = Tree(List(1, 2, 3, 4, 5, 6, 7, 8))
 
-  "Tree" should "be able to build a perfect balanced tree" in {
-    Tree(List(1,2,3,4,5,6,7,8)) shouldBe Branch(
-      1,
-      Branch(2,Branch(3,Leaf,Leaf),Branch(4,Leaf,Leaf)),
-      Branch(5,Branch(6,Leaf,Leaf),Branch(7,Leaf,Branch(8,Leaf,Leaf)))
+  test("build a perfect balanced tree") {
+    assertEquals(
+      Tree(List(1, 2, 3, 4, 5, 6, 7, 8)),
+      Branch(
+        1,
+        Branch(2, Branch(3, Leaf, Leaf), Branch(4, Leaf, Leaf)),
+        Branch(5, Branch(6, Leaf, Leaf), Branch(7, Leaf, Branch(8, Leaf, Leaf)))
+      )
     )
   }
 
-  "completeTree" should "build a tree where size(tree) == 2(depth(tree))-1" in {
-    Tree.completeTree(1, 3) shouldBe Branch(
-      1,
-      Branch(2,Branch(4,Leaf,Leaf),Branch(5,Leaf,Leaf)),
-      Branch(3,Branch(6,Leaf,Leaf),Branch(7,Leaf,Leaf))
+  test("build a tree where size(tree) == 2(depth(tree))-1") {
+    assertEquals(
+      Tree.completeTree(1, 3),
+      Branch(
+        1,
+        Branch(2, Branch(4, Leaf, Leaf), Branch(5, Leaf, Leaf)),
+        Branch(3, Branch(6, Leaf, Leaf), Branch(7, Leaf, Leaf))
+      )
     )
   }
 
-  "size" should "return the number of non-leaf nodes in a binary tree" in {
-    Tree.size(ofABinTree) shouldBe 8
+  test("size returns the number of non-leaf nodes in a binary tree") {
+    assertEquals(Tree.size(ofABinTree), 8)
   }
 
-  "depth" should "return the length of the longest path from a root to a leaf" in {
-    Tree.depth(ofABinTree) shouldBe 4
+  test("depth returns the length of the longest path from a root to a leaf") {
+    assertEquals(Tree.depth(ofABinTree), 4)
   }
 
-  "equal" should "returns true if trees have the same values and same structure" in {
-    val a = Tree(List(1,2,3,4,5,6,7,8))
-    val b = Tree(List(1,2,3,5,4,6,7,8))
-    Tree.equal(a, a) shouldBe true
-    Tree.equal(a, b) shouldBe false
+  test("equal returns true if trees have the same values and same structure") {
+    val a = Tree(List(1, 2, 3, 4, 5, 6, 7, 8))
+    val b = Tree(List(1, 2, 3, 5, 4, 6, 7, 8))
+    assert(Tree.equal(a, a))
+    assert(!Tree.equal(a, b))
   }
 
-  "flip" should "flip a tree" in {
-    val t = Tree(List(1,2,3,4,5,6,7))
+  test("flip a tree") {
+    val t = Tree(List(1, 2, 3, 4, 5, 6, 7))
 
-    Tree.flip(t) shouldBe Branch(
-      1,
-      Branch(5,Branch(7,Leaf,Leaf),Branch(6,Leaf,Leaf)),
-      Branch(2,Branch(4,Leaf,Leaf),Branch(3,Leaf,Leaf))
+    assertEquals(
+      Tree.flip(t),
+      Branch(
+        1,
+        Branch(5, Branch(7, Leaf, Leaf), Branch(6, Leaf, Leaf)),
+        Branch(2, Branch(4, Leaf, Leaf), Branch(3, Leaf, Leaf))
+      )
     )
   }
 
-  "flipEqual" should "check if the second tree is in the flipped form of the first tree" in {
-    val t = Tree(List(1,2,3,4,5,6,7))
+  test("flipEqual checks if the second tree is in the flipped form of the first tree") {
+    val t = Tree(List(1, 2, 3, 4, 5, 6, 7))
+
     val flipped = Tree.flip(t)
 
-    Tree.flippedEqual(t, t) shouldBe false
-    Tree.flippedEqual(t, flipped) shouldBe true
+    assert(Tree.flippedEqual(t, flipped))
+    assert(!Tree.flippedEqual(t, t))
   }
 
-  val aTraversableTree = Branch(
+  val aTraversableTree: Branch[Int] = Branch(
     1,
-    Branch(2,Leaf,Leaf),
-    Branch(
-      5,
-      Branch(9,Leaf,Leaf), Leaf)
+    Branch(2, Leaf, Leaf),
+    Branch(5, Branch(9, Leaf, Leaf), Leaf)
   )
 
-  "preorder traversal" should "visit the tree in Root->Left->Right order" in {
-    Tree.preorder(aTraversableTree) shouldBe List(1,2,5,9)
-    Tree.preorderAcc(aTraversableTree) shouldBe List(1,2,5,9)
+  test("preorder traversal visits the tree in Root->Left->Right order") {
+    assertEquals(Tree.preorder(aTraversableTree), List(1, 2, 5, 9))
+    assertEquals(Tree.preorderAcc(aTraversableTree), List(1, 2, 5, 9))
   }
 
-  "inorder traversal" should "visit the tree in Left->Root->Right order" in {
-    Tree.inorder(aTraversableTree) shouldBe List(2,1,9,5)
-    Tree.inorderAcc(aTraversableTree) shouldBe List(2,1,9,5)
+  test("inorder traversal visits the tree in Left->Root->Right order") {
+    assertEquals(Tree.inorder(aTraversableTree), List(2, 1, 9, 5))
+    assertEquals(Tree.inorderAcc(aTraversableTree), List(2, 1, 9, 5))
   }
 
-  "postorder traversal" should "visit the tree in Left->Right->Root order" in {
-    Tree.postorder(aTraversableTree) shouldBe List(2,9,5,1)
-    Tree.postorderAcc(aTraversableTree) shouldBe List(2,9,5,1)
+  test("postorder traversal visits the tree in Left->Right->Root order") {
+    assertEquals(Tree.postorder(aTraversableTree), List(2, 9, 5, 1))
+    assertEquals(Tree.postorderAcc(aTraversableTree), List(2, 9, 5, 1))
   }
-}

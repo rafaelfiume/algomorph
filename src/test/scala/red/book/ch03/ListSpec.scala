@@ -2,7 +2,6 @@ package red.book.ch03
 
 import munit.Assertions.*
 import munit.FunSuite
-import org.scalacheck.Prop.forAll
 import red.book.ch03.List.*
 
 class ListSpec extends FunSuite:

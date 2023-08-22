@@ -4,7 +4,6 @@ import red.book.ch04.{ None, Option }
 import red.book.ch05.Stream
 import red.book.ch08.Exhaustive._
 import red.book.ch08.StreamGenerator._
-import red.book.ch08.TestInspector._
 import red.book.ch08.Gen.choose
 import red.book.ch08.Gen.boolean
 

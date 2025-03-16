@@ -1,30 +1,26 @@
 package red.book.ch13
 
-object TailRec {
+object TailRec:
 
-  def forever[A,B](a: TailRec[A]): TailRec[B] = {
-    lazy val t: TailRec[B] = a flatMap (_ => t)
+  def forever[A, B](a: TailRec[A]): TailRec[B] =
+    lazy val t: TailRec[B] = a.flatMap(_ => t)
     t
-  }
 
   @annotation.tailrec
-  def run[A](tailRec: TailRec[A]): A = tailRec match {
-    case TReturn(a) => a
+  def run[A](tailRec: TailRec[A]): A = tailRec match
+    case TReturn(a)  => a
     case TSuspend(r) => r()
-    case TFlatMap(x, f) => x match {
-      case TReturn(a) => run(f(a))
-      case TSuspend(r) => run(f(r()))
-      case TFlatMap(y, g) =>
-        run(y flatMap (a => g(a) flatMap f))
-    }
-  }
-}
+    case TFlatMap(x, f) =>
+      x match
+        case TReturn(a)  => run(f(a))
+        case TSuspend(r) => run(f(r()))
+        case TFlatMap(y, g) =>
+          run(y.flatMap(a => g(a).flatMap(f)))
 
-sealed trait TailRec[A] {
+sealed trait TailRec[A]:
 
   def flatMap[B](f: A => TailRec[B]): TailRec[B] = TFlatMap(this, f)
-  def map[B](f: A => B): TailRec[B] = flatMap(f andThen TReturn.apply)
-}
+  def map[B](f: A => B): TailRec[B] = flatMap(f.andThen(TReturn.apply))
 
 // data constructors representing the different kind of flows we want the interpreter to support
 

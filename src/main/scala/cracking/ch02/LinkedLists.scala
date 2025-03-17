@@ -2,6 +2,7 @@ package cracking.ch02
 
 import scala.collection.immutable.List.empty
 import scala.collection.mutable
+import scala.math.Ordered.given
 
 object LinkedLists:
 
@@ -42,8 +43,8 @@ object LinkedLists:
     if e == node then acc else e :: acc
   }
 
-  def partition[A](partition: A, ls: List[A])(implicit ord: Ordering[A]): List[A] =
+  def partition[A](partition: A, ls: List[A])(using ord: Ordering[A]): List[A] =
     val (less, equalOrGreater) = ls.foldRight(empty[A] -> empty[A]) { case (e, (ll, lg)) =>
-      if ord.lt(e, partition) then (e :: ll) -> lg else ll -> (e :: lg)
+      if e < partition then (e :: ll) -> lg else ll -> (e :: lg)
     }
     less ++ equalOrGreater

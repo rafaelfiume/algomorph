@@ -6,7 +6,7 @@ object Strings:
 
   def isUniqueChars(s: String): Boolean = // only ASCII
     val sorted = s.toSeq.sorted
-    sorted.zip(s.tail).map { case (a: Char, b: Char) => a != b }.forall(_ == true)
+    sorted.zip(s.tail).forall { case (a: Char, b: Char) => a != b }
 
   def permutation(s1: String, s2: String): Boolean = s1.toSeq.sorted == s2.toSeq.sorted
 

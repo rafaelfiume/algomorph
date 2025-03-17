@@ -6,12 +6,12 @@ import munit.FunSuite
 
 class StringsSpec extends FunSuite:
 
-  test("isUniqueChars tells if String has unique chars only (ASCII chars only") {
+  test("check if String contains only unique ASCII chars") {
     assert(isUniqueChars("Aabcdefgh"))
     assert(!isUniqueChars("abcddefgh"))
   }
 
-  test("checkPermutation tells if two strings have the same characters in different order") {
+  test("check if two strings have the same characters in different order") {
     assert(permutation("Joana", "Joana"))
     assert(permutation("Rafael", "laefRa"))
     assert(!permutation("Joana ", "Joana"))
@@ -20,21 +20,21 @@ class StringsSpec extends FunSuite:
     assert(!permutation("Amelind", "Nicolas"))
   }
 
-  test("encodeSpace replaces ' ' by '%20'") {
+  test("replace ' ' by '%20'") {
     assertEquals(
       encodeSpace("Mr 3ohn Smith                    Mrs Joanna"),
       "Mr%203ohn%20Smith%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Mrs%20Joanna"
     )
   }
 
-  test("palindrome says if string is a permutation of a palindrome") {
+  test("check if string is a permutation of a palindrome") {
     assert(isPalindrome("Tact Coa"))
     assert(isPalindrome("Red rum, sir, is murder"))
     assert(isPalindrome("Was it a cat I saw"))
     assert(!isPalindrome("Rafael"))
   }
 
-  test("isOneWay tells if a string is one edit (insert, delete, replace) away from another") {
+  test("check if a string is one edit (insert, delete, replace) away from another") {
     assert(isOneWay("pale", "pae"))
     assert(isOneWay("pale", "pales"))
     assert(isOneWay("pale", "bale"))
@@ -50,7 +50,7 @@ class StringsSpec extends FunSuite:
 
   // skipping rotateMatrix (1.8) here
 
-  test("isRotation says is a string is a rotation of the other") {
+  test("check whether one string is a rotation of another") {
     assert(isRotation("waterbottle", "erbottlewat"))
     assert(isRotation("abracadabra", "abracadabra"))
     assert(!isRotation("bla", "bli"))

@@ -15,7 +15,7 @@ object Fibonacci:
           case n => fib0(n - 2, memo) + fib0(n - 1, memo)
         memo(n) = r
         r
-      
+
     fib0(n, memo = ArrayBuffer.fill[BigInt](n + 1)(-1))
 
 object PlayFib:

@@ -196,23 +196,29 @@ object traversal:
         WithEdges(state.visited.reverse, state.parents, state.edges.classification())
 
       private def dfsVisit[V <: Vertex](state: TraversalState[V])(graph: Graph[V], start: V): TraversalState[V] =
-        // @annotation.tailrec TODO
+        @annotation.tailrec
         def loop(state: TraversalState[V]): TraversalState[V] =
           state.time_++.pop() match
             case (None, poppedState) => poppedState
+
+            case (Some(vertex -> Some(marker)), poppedState) if vertex == marker =>
+               loop { poppedState.finished(vertex) }
+
             case (Some(vertex -> Some(parent)), poppedState) if !poppedState.firstTimeVisited(vertex) =>
               poppedState.addEdge(parent, vertex, false)
+
             case (Some(vertex -> parent), poppedState) =>
               loop {
                 val nextState = parent
                   .fold(ifEmpty = poppedState) { parent => poppedState.addParent(parent, vertex).addEdge(parent, vertex, true) }
                   .discovered(vertex)
                   .addVisited(vertex)
+                  .push(vertex -> Some(vertex)) // marker to trigger the finish phase enabling tailrec
                 graph.adjacent(vertex).foldRight(nextState) { (neighbour, state) =>
                   if state.firstTimeVisited(neighbour) then state.push(neighbour -> Some(vertex))
                   else state.addEdge(vertex, neighbour, false)
                 }
-              }.finished(vertex)
+              }
         loop(state.push(start -> None))
 
       private object TraversalState:

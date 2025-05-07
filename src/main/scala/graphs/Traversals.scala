@@ -38,7 +38,8 @@ object Traversals:
 
     case class WithEdges[V <: Vertex](
       visited: List[V],
-      parents: Map[V, V],
+      private val topOrder: List[V],
+      parents: Map[V, V], // TODO Make it private
       private val edgeClassifier: EdgeClassifier[V]
     ) extends TraversalResult[V]:
       def treeEdges(): Set[Edge[V]] = filterEdges(byType = TreeEdge)
@@ -56,16 +57,16 @@ object Traversals:
       def hasNoCycles(): Boolean = !hasCycle()
 
       /*
-       * Topologically sorts the vertices of a graph if there are no cycles.
-       * Return the back edges, otherwise.
+       * Topologically sorts the vertices of a graph if there are no cycles. Return the back edges, otherwise.
        *
        * A vertex `u` is before `v` if there is an edge `(u, v)` and `v` finishes before `u`.
+       * topological_order = reverse(finishing_order)
        *
-       * Time complexity is O(n log n).
-       * Note: can be done in O(V + E).
+       * Time complexity is O(V + E) during dfs traversal (`traverse`),
+       * and O(1) afterwards at the cost of O(V) space.
        */
-      def sort(): Either[Set[Edge[V]], List[V]] =
-        Either.cond(hasNoCycles(), right = edgeClassifier.sort(), left = backEdges())
+      def topoligicalSort(): Either[Set[Edge[V]], List[V]] =
+        Either.cond(hasNoCycles(), right = topOrder, left = backEdges())
 
       private def filterEdges(byType: Classification): Set[Edge[V]] =
         // preserves space at the cost of traversing the map on each call: O(E)
@@ -100,12 +101,6 @@ object Traversals:
 
       def classification(): Map[Edge[V], Edge.Classification] = edges.toMap
 
-      /*
-       * Time complexity is O(n log(n)) dominated by java.util.Arrays.sort.
-       * Note: can be done in O(V + E).
-       */
-      def sort(): List[V] = finish.toSeq.sortBy(_._2).reverse.toList.map(_._1)
-
       private def hasFinishedBeingVisited(vertex: V) = finish.contains(vertex)
 
     /*
@@ -116,7 +111,7 @@ object Traversals:
     def traverse[V <: Vertex](graph: Graph[V]): TraversalResult.WithEdges[V] =
       val state = TraversalState.empty[V]()
       for v <- graph.vertices do if state.firstTimeVisited(v) then dfs(state)(graph, v, state.parents.get(v))
-      WithEdges(state.visited.toList, state.parents.toMap, state.edgesClassification)
+      WithEdges(state.visited.toList, state.topOrder.toList, state.parents.toMap, state.edgesClassification)
 
     /*
      * Single source reachability.
@@ -126,13 +121,12 @@ object Traversals:
     def traverse[V <: Vertex](graph: Graph[V], start: V): TraversalResult.WithEdges[V] =
       val state = TraversalState.empty[V]()
       dfs(state)(graph, start)
-      WithEdges(state.visited.toList, state.parents.toMap, state.edgesClassification)
+      WithEdges(state.visited.toList, state.topOrder.toList, state.parents.toMap, state.edgesClassification)
 
     /* Time complexity: O(E) */
     private def dfs[V <: Vertex](state: TraversalState[V])(graph: Graph[V], start: V, parent: Option[V] = None): Unit =
       def visit(vertex: V, parent: Option[V] = None): Unit =
         state.discovered(vertex)
-        state.addVisited(vertex)
         parent.foreach(p =>
           state.addParent(p, vertex)
           state.addEdge(p, vertex, firstTimeVisited = true)
@@ -147,10 +141,11 @@ object Traversals:
 
     private object TraversalState:
       def empty[V <: Vertex](): TraversalState[V] =
-        TraversalState[V](mutable.ArrayBuffer.empty[V], mutable.HashMap.empty[V, V], new EdgeClassifier[V]())
+        TraversalState[V](mutable.ArrayBuffer.empty, mutable.ArrayDeque.empty, mutable.HashMap.empty, new EdgeClassifier())
 
     private case class TraversalState[V <: Vertex](
-      visited: mutable.ArrayBuffer[V],
+      visited: mutable.ArrayBuffer[V], // append takes O(1) time (amortised)
+      topOrder: mutable.ArrayDeque[V], // prepend takes O(1) time (amortised)
       parents: mutable.HashMap[V, V],
       edgesClassification: EdgeClassifier[V]
     ):
@@ -159,17 +154,20 @@ object Traversals:
 
       def firstTimeVisited(vertex: V): Boolean = !parents.contains(vertex)
       def addParent(parent: V, vertex: V): Unit = parents(vertex) = parent
-      def addVisited(vertex: V): Unit = visited += vertex
 
+      /* gray coloer */
       def discovered(vertex: V): Unit =
         discoveryTime += 1
         // println(s"time $discoveryTime: discovered $vertex")
         edgesClassification.setDiscoveryTime(vertex, discoveryTime)
+        visited += vertex //
 
+      /* black color */
       def finished(vertex: V): Unit =
         finishTime += 1
         // println(s"time: $finishTime; finished $vertex")
         edgesClassification.setFinishTime(vertex, finishTime)
+        topOrder.prepend(vertex)
 
       def addEdge(u: V, v: V, firstTimeVisited: Boolean): Unit = edgesClassification.addEdge(u, v, _ => firstTimeVisited)
 
@@ -179,11 +177,11 @@ object Traversals:
           if state.firstTimeVisited(v) then dfsVisit(state)(graph, v)
           else state
         }
-        WithEdges(state.visited.toList.reverse, state.parents.toMap, state.edgesClassification)
+        WithEdges(state.visited.toList.reverse, state.topOrder.toList, state.parents.toMap, state.edgesClassification)
 
       def traverse[V <: Vertex](graph: Graph[V], start: V): TraversalResult.WithEdges[V] =
         val state = dfsVisit(TraversalState.empty[V])(graph, start)
-        WithEdges(state.visited.reverse, state.parents, state.edgesClassification)
+        WithEdges(state.visited.reverse, state.topOrder.toList, state.parents, state.edgesClassification)
 
       private def dfsVisit[V <: Vertex](state: TraversalState[V])(graph: Graph[V], start: V): TraversalState[V] =
         @annotation.tailrec
@@ -200,9 +198,10 @@ object Traversals:
             case (Some(vertex -> parent), poppedState) =>
               loop {
                 val nextState = parent
-                  .fold(ifEmpty = poppedState) { parent => poppedState.addParent(parent, vertex).addEdge(parent, vertex, true) }
+                  .fold(ifEmpty = poppedState) { p =>
+                    poppedState.addParent(p, vertex).addEdge(p, vertex, true)
+                  }
                   .discovered(vertex)
-                  .addVisited(vertex)
                   .push(vertex -> Some(vertex)) // marker to trigger the finish phase enabling tailrec
                 graph.adjacencies(vertex).foldRight(nextState) { (neighbour, state) =>
                   if state.firstTimeVisited(neighbour) then state.push(neighbour -> Some(vertex))
@@ -213,11 +212,12 @@ object Traversals:
 
       private object TraversalState:
         def empty[V <: Vertex] =
-          TraversalState[V](List.empty[(V, Option[V])], List.empty[V], Map.empty[V, V], new EdgeClassifier[V]())
+          TraversalState[V](List.empty[(V, Option[V])], List.empty, List.empty, Map.empty, new EdgeClassifier[V]())
 
       private case class TraversalState[V <: Vertex](
         private val stack: List[(V, Option[V])],
         visited: List[V],
+        topOrder: List[V],
         parents: Map[V, V],
         edgesClassification: EdgeClassifier[V], // TODO This impl. of EdgeClassifier is mutable
         private val discoveryTime: Long = 0,
@@ -229,19 +229,26 @@ object Traversals:
           case Nil     => None -> this
           case v :: vs => Some(v) -> copy(stack = vs)
         def addParent(parent: V, vertex: V): TraversalState[V] = copy(parents = parents + (vertex -> parent))
-        def addVisited(vertex: V): TraversalState[V] = copy(visited = vertex :: this.visited)
 
+        /* gray color */
         def discovered(vertex: V): TraversalState[V] =
           val updatedDiscoveryTime = discoveryTime + 1
           // println(s"time $updatedDiscoveryTime: discovered $vertex")
           edgesClassification.setDiscoveryTime(vertex, updatedDiscoveryTime)
-          this.copy(discoveryTime = updatedDiscoveryTime)
+          this.copy(
+            discoveryTime = updatedDiscoveryTime,
+            visited = vertex :: this.visited
+          )
 
+        /* black color */
         def finished(vertex: V): TraversalState[V] =
           val updatedFinishTime = finishTime + 1
           // println(s"time $updatedFinishTime: finished $vertex")
           edgesClassification.setFinishTime(vertex, updatedFinishTime)
-          this.copy(finishTime = updatedFinishTime)
+          this.copy(
+            finishTime = updatedFinishTime,
+            topOrder = vertex :: topOrder
+          )
 
         def addEdge(u: V, v: V, firstTimeVisited: Boolean): TraversalState[V] =
           edgesClassification.addEdge(u, v, _ => firstTimeVisited)

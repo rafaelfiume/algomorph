@@ -66,12 +66,12 @@ class TraversalsSpec extends FunSuite with GraphsContext:
 
   dfsVariants.foreach { (description, dfs) =>
     test(s"$description topologically sorts a graph"):
-      assertEquals(dfs(multipleDags).sort(), Right(List(i, d, e, a, b, c, f, g, h)))
+      assertEquals(dfs(multipleDags).topoligicalSort(), Right(List(i, d, e, a, b, c, f, g, h)))
   }
 
   dfsVariants.foreach { (description, dfs) =>
     test(s"$description topological sort handles cycles in a graph"):
-      assertEquals(dfs(g2WFourEdgeTypes).sort(), Left(g2BackEdges))
+      assertEquals(dfs(g2WFourEdgeTypes).topoligicalSort(), Left(g2BackEdges))
   }
 
   /**

@@ -6,6 +6,37 @@ import scala.util.boundary, boundary.break
 object Arrays:
 
   /*
+   * Nulifies in-place rows and columns of elements of an NxM matrix when set to 0.
+   *
+   * Time complexity is O(NM) - quadratic - since all elements of the matrix
+   * have to be accessed in order to implement this function.
+   * Space complexity: O(1).
+   */
+  def nullifyInPlace(matrix: Array[Array[Int]]): Unit =
+    val n = matrix.size
+    require(n > 0, "requires a non-empty matrix")
+    val m = matrix(0).size
+    require(matrix.forall(_.size == m), "matrix must be NxM")
+
+    def findRemainingZeros(): Unit =
+      for i <- 1 until n; j <- 1 until m do
+        if matrix(i)(j) == 0 then
+          matrix(i)(0) = 0
+          matrix(0)(j) = 0
+
+    def nullifyRow(i: Int) = for j <- 0 until m do matrix(i)(j) = 0
+    def nullifyColumn(j: Int) = for i <- 0 until n do matrix(i)(j) = 0
+
+    val firstRowHasZeros = matrix(0).exists(_ == 0) // O(m)
+    val firstColumnHasZeros = matrix.exists(row => row(0) == 0) // O(n)
+    findRemainingZeros()
+
+    for i <- 1 until n do if matrix(i)(0) == 0 then nullifyRow(i)
+    for j <- 1 until m do if matrix(0)(j) == 0 then nullifyColumn(j)
+    if firstRowHasZeros then nullifyRow(0)
+    if firstColumnHasZeros then nullifyColumn(0)
+
+  /*
    * 90-degress clockwise rotation of an NxN matrix.
    *
    * Use this function for reference or if there are no space constraints.
@@ -14,7 +45,7 @@ object Arrays:
    * Space complexity: O(n^2).
    */
   def rotate(matrix: Array[Array[Int]]): Array[Array[Int]] =
-    val n = matrix(0).size
+    val n = matrix.size
     require(matrix.forall(_.size == n), "matrix must be NxN")
 
     val output: Array[Array[Int]] = Array.ofDim(n, n)
@@ -33,7 +64,7 @@ object Arrays:
    * Space complexity: O(1).
    */
   def rotateInPlace(matrix: Array[Array[Int]]): Unit =
-    val n = matrix(0).size
+    val n = matrix.size
     require(matrix.forall(_.size == n), "matrix must be NxN")
 
     for layer <- 0 until n / 2 do
@@ -46,6 +77,18 @@ object Arrays:
         matrix(last - offset)(first) = matrix(last)(last - offset) // left <- bottom
         matrix(last)(last - offset) = matrix(offset)(last) // bottom <- right
         matrix(offset)(last) = tmp // right <- tmp
+
+  /*
+   * Checks if s2 is a rotation of s1.
+   *
+   * Time complexity is O(n) - bounded by String concatanation (`+``) and `contains`.
+
+   * Let s1 = xy, where x and y are substrings. A rotation of s1 would be yx.
+   * If s2 is a rotation of s1, then s2 = yx and s1 = x2.
+   * s1 + s1 equals xyxy, and s2 is a substring of s2.
+   */
+  def isRotation(s1: String, s2: String): Boolean =
+    s1.nonEmpty && s1.size == s2.size && (s1 + s1).contains(s2)
 
   /*
    * Time complexity: O(n), where n is the size of string.

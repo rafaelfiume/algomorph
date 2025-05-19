@@ -1,6 +1,6 @@
 package red.book.ch08
 
-import red.book.ch03.{Branch, Leaf, Tree}
+import data.{Branch, Leaf, Tree}
 import red.book.ch04.{Option, *}
 import red.book.ch05.Stream
 import red.book.ch08.Dsl.*

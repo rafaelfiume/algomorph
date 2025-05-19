@@ -1,6 +1,6 @@
 package red.book.ch10
 
-import red.book.ch03.{Branch, Leaf, Tree}
+import data.{Branch, Leaf, Tree}
 import red.book.ch10.Monoids.endoMonoid
 
 import scala.collection.immutable.List.empty

@@ -1,6 +1,6 @@
 package red.book.ch10
 
-import red.book.ch03.{Branch, Leaf, Tree}
+import data.{Branch, Leaf, Tree}
 import red.book.ch08.Gen.{choose, stringN}
 import red.book.ch08.Prop.forAll
 import red.book.ch08.{Gen, Prop}

@@ -1,8 +1,8 @@
-package red.book.ch03
+package data
 
 import munit.Assertions.*
 import munit.FunSuite
-import red.book.ch03.Tree.*
+import data.Tree.*
 
 class TreeSpec extends FunSuite:
 

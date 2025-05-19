@@ -1,4 +1,4 @@
-package red.book.ch03
+package data
 
 import Ordering.Implicits.*
 

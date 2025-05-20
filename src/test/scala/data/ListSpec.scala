@@ -54,18 +54,28 @@ class ListSpec extends FunSuite:
   }
 
   test("foldLeft is left-associative"):
-      // (((0 - 1) - 2) - 3) = -6
-      val input = List(1, 2, 3)
-      val result = foldLeft(input, 0)(_ - _)
-      assertEquals(result, -6)
+    // ((0 - 1) - 2) - 3 = -6
+    val input = List(1, 2, 3)
+    val result = foldLeft(input, 0)(_ - _)
+    assertEquals(result, -6)
+
+  test("foldLeft is stack-safe"):
+    val largeInput = fill(100_000)(1)
+    val result = foldLeft(largeInput, 0)(_ + _)
+    assertEquals(result, 100_000)
 
   test("foldRight reconstructs the original list"):
     val input = List(1, 2, 3, 4)
     val result = foldRight(input, List.empty[Int])(Cons(_, _))
     assertEquals(result, input)
 
+  test("foldRight is stack-safe"):
+    val largeInput = fill(100_000)(1)
+    val result = foldRight(largeInput, 0)(_ + _)
+    assertEquals(result, 100_000)
+
   test("foldRight is right-associative (ops applied in reverse order)"):
-    // (1 - (2 - (3 - 0))) = 2
+    // 1 - (2 - (3 - 0)) = 2
     val input = List(1, 2, 3)
     val result = foldRight(input, 0)(_ - _)
     assertEquals(result, 2)

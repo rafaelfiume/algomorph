@@ -107,7 +107,7 @@ class MonadSpec extends FunSuite:
   }
 
   // 11.12
-  test("join flats a list") {
+  test("join flattens a list") {
     val listOfLists = List(List(1, 2, 3), List(4), List(5, 6))
 
     val res = listMonad.join(listOfLists)

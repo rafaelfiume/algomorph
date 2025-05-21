@@ -30,15 +30,19 @@ class ListSpec extends FunSuite:
     assertEquals(append(Nil, List(1)), List(1))
   }
 
-  test("concat flats the list"):
-    assertEquals(concat(List(List(1, 2), List(3, 4), List(5, 6, 7))), List(1, 2, 3, 4, 5, 6, 7))
-    assertEquals(concat(List(Nil, List(3, 4))), List(3, 4))
-    assertEquals(concat(Nil), Nil)
+  test("flattens the list"):
+    assertEquals(flatten(List(List(1, 2), List(3, 4), List(5, 6, 7))), List(1, 2, 3, 4, 5, 6, 7))
+    assertEquals(flatten(List(Nil, List(3, 4))), List(3, 4))
+    assertEquals(flatten(Nil), Nil)
 
   test("reverses the list"):
     assertEquals(reverse(List(1, 2, 3, 4)), List(4, 3, 2, 1))
     assertEquals(reverse(List(1)), List(1))
     assertEquals(reverse(Nil), Nil)
+
+  test("map transforms the list preserving its structure"):
+    assertEquals(map(List(1, 2, 3, 4))(_.toString), List("1", "2", "3", "4"))
+    assertEquals(map(List(1, 2, 3, 4))(_ - 1), List(0, 1, 2, 3))
 
   test("drops the nth element of a list") {
     assert(drop(List(1, 2, 3, 4), 2) == List(3, 4))
@@ -56,59 +60,37 @@ class ListSpec extends FunSuite:
   test("foldLeft is left-associative"):
     // ((0 - 1) - 2) - 3 = -6
     val input = List(1, 2, 3)
-    val result = foldLeft(input, 0)(_ - _)
+    val result = foldl(input, 0)(_ - _)
     assertEquals(result, -6)
 
   test("foldLeft is stack-safe"):
     val largeInput = fill(100_000)(1)
-    val result = foldLeft(largeInput, 0)(_ + _)
+    val result = foldl(largeInput, 0)(_ + _)
     assertEquals(result, 100_000)
 
   test("foldRight reconstructs the original list"):
     val input = List(1, 2, 3, 4)
-    val result = foldRight(input, List.empty[Int])(Cons(_, _))
+    val result = foldr(input, List.empty[Int])(Cons(_, _))
     assertEquals(result, input)
 
   test("foldRight is stack-safe"):
     val largeInput = fill(100_000)(1)
-    val result = foldRight(largeInput, 0)(_ + _)
+    val result = foldr(largeInput, 0)(_ + _)
     assertEquals(result, 100_000)
 
   test("foldRight is right-associative (ops applied in reverse order)"):
     // 1 - (2 - (3 - 0)) = 2
     val input = List(1, 2, 3)
-    val result = foldRight(input, 0)(_ - _)
+    val result = foldr(input, 0)(_ - _)
     assertEquals(result, 2)
 
-  test("map generalizes each element in a list while preserving its structure") {
-    assertEquals(
-      map(List(1, 2, 3, 4))(_.toString),
-      List("1", "2", "3", "4")
-    )
-    assertEquals(
-      map(List(1, 2, 3, 4))(_ - 1),
-      List(0, 1, 2, 3)
-    )
-  }
-
-  test("filter removes all elements that don't satisfy a predicate") {
-    assertEquals(
-      filter(List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))(_ % 2 == 0),
-      List(0, 2, 4, 6, 8)
-    )
-  }
+  test("filter builds a new list containing only elements that satisfy the predicate"):
+    assertEquals(filter(List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))(_ % 2 == 0), List(0, 2, 4, 6, 8))
 
   test("flatMap works like a map, but take a function that returns a list, and append that list in the final result") {
     assertEquals(
       flatMap(List(1, 2, 3, 4))(e => List(e, e)),
       List(1, 1, 2, 2, 3, 3, 4, 4)
-    )
-  }
-
-  test("filterWithFlatMap removes all elements that don't satisfy a predicate") {
-    assertEquals(
-      filterWithFlatMap(List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))(_ % 2 == 0),
-      List(0, 2, 4, 6, 8)
     )
   }
 

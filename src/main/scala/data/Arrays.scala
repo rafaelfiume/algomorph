@@ -8,9 +8,13 @@ object Arrays:
   /*
    * Nulifies in-place rows and columns of elements of an NxM matrix when set to 0.
    *
-   * Time complexity is O(NM) - quadratic - since all elements of the matrix
-   * have to be accessed in order to implement this function.
-   * Space complexity: O(1).
+   * ===Complexity===
+   *   - Time: Θ(NM)
+   *   - Space: Θ(1)
+   *
+   * Performance Notes:
+   *   - The best we can come up with is a quadratic time complexity,
+   * since all elements of the matrix have to be accessed in order to implement this function.
    */
   def nullifyInPlace(matrix: Array[Array[Int]]): Unit =
     val n = matrix.size
@@ -41,8 +45,9 @@ object Arrays:
    *
    * Use this function for reference or if there are no space constraints.
    *
-   * Time complexity: n * n = O(n^2).
-   * Space complexity: O(n^2).
+   * ===Complexity===
+   *   - Time: Θ(n^2).
+   *   - Space: Θ(n^2).
    */
   def rotate(matrix: Array[Array[Int]]): Array[Array[Int]] =
     val n = matrix.size
@@ -57,11 +62,13 @@ object Arrays:
    *
    * Use this function if memory space is restricted, for example, if the matrix is very large.
    *
-   * As a trade off for changing the matrix in-place and achieving O(1) space complexity,
-   * it will mutate the array passed as input.
+   * ===Complexity===
+   *   - Time: Θ(n^2)
+   *   - Space: Θ(1)
    *
-   * Time complexity: n * n = O(n^2).
-   * Space complexity: O(1).
+   * Performance Notes:
+   *   - As a trade off for changing the matrix in-place and achieving O(1) space complexity,
+   * it will mutate the array passed as input.
    */
   def rotateInPlace(matrix: Array[Array[Int]]): Unit =
     val n = matrix.size
@@ -81,17 +88,19 @@ object Arrays:
   /*
    * Checks if s2 is a rotation of s1.
    *
-   * Time complexity is O(n) - bounded by String concatanation (`+``) and `contains`.
-
    * Let s1 = xy, where x and y are substrings. A rotation of s1 would be yx.
    * If s2 is a rotation of s1, then s2 = yx and s1 = x2.
    * s1 + s1 equals xyxy, and s2 is a substring of s2.
+   *
+   * ===Complexities===
+   *   - Time: Θ(n) - bounded by String concatanation (`+``) and `contains`
    */
   def isRotation(s1: String, s2: String): Boolean =
     s1.nonEmpty && s1.size == s2.size && (s1 + s1).contains(s2)
 
   /*
-   * Time complexity: O(n), where n is the size of string.
+   * ===Complexity===
+   *   - Time: Θ(n) - where n is the size of string
    */
   def compress(s: String): String =
     var counter = 0
@@ -104,7 +113,8 @@ object Arrays:
     if compressed.length() > s.size then s else compressed.toString()
 
   /*
-   * Time complexity is O(s) where s is the size of the smallest string.
+   * ===Complexity===
+   *   - Time: Θ(s) - where s is the size of the smallest string
    */
   def isAtMostOneAway(s1: String, s2: String): Boolean =
     def checkReplacements(one: String, another: String): Boolean =
@@ -133,7 +143,8 @@ object Arrays:
         case _                => checkInsertion(s2, s1)
 
   /*
-   * Time complexity: O(|s1| + |s2|)
+   * ===Complexity===
+   *   - Time: Θ(|s1| + |s2|)
    */
   def isPermutation(s1: String, s2: String): Boolean =
     if s1.size != s2.size then false
@@ -157,6 +168,36 @@ object Arrays:
           decreaseFrequency(c)
           if isNegative then break(false)
       !isNegative && frequencies.size == 0
+
+  /**
+   * Find the smallest positive integer not present in the array.
+   *
+   * ===Evaluation Semantics===
+   * {{{
+   * findSmallestMissingPositive(Array(5, 3, 9, 1, 4, 7, 2))
+   * - Sort: [1, 2, 3, 4, 5, 7, 9]
+   * - Find gap between 5 and 7: Return 6
+   * }}}
+   *
+   * ===Real-World Use Cases===
+   *   - Database ID allocation (find the next ID available)
+   *   - Scheduling systems (find first available time slot)
+   *   - Inventory management (find missing item codes)
+   *
+   * ===Complexity===
+   *   - Time: Θ(n log n) - dominated by sorting
+   *   - Space: Θ(n) - for the sorted copy
+   */
+  def findSmallestMissingPositive(a: Array[Int]): Int =
+    if a.isEmpty then -1
+    else
+      val sorted = a.sorted
+      var result = 1
+      boundary:
+        for i <- sorted do
+          if result == i then result += 1
+          if result < i then break(result)
+      result
 
   object Fp:
     def isPermutation(s1: String, s2: String): Boolean =

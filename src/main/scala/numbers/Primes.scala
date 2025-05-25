@@ -1,6 +1,7 @@
 package numbers
 
 import Math.sqrt
+import scala.collection.mutable
 
 object Primes:
 
@@ -47,19 +48,16 @@ object Primes:
    *
    * ===Complexity===
    *   - Time: Θ(n log log n) - to the best of my knowledge
-   *   - Space: Θ(n)
+   *   - Space: Θ(n) - constant factor improved ~8x by replacing `Array[Boolean]` with `BitSet` (i.e. bits vs. bytes)
    */
   def sieve(n: Int): Vector[Int] =
     require(n > 1)
-
-    val sieve = Array.fill(n + 1)(true)
-    sieve(0) = false
-    sieve(1) = false
+    val sieve = mutable.BitSet(2 to n*)
 
     for
       p <- 2 to sqrt(n).toInt
       if sieve(p)
       multiple <- p * p to n by p
-    do sieve(multiple) = false
+    do sieve -= multiple
 
     (2 to n).filter(sieve).toVector

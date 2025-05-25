@@ -28,5 +28,5 @@ class PrimesSpec extends FunSuite:
     assert(sieve(1000).forall { prime => (2 until prime).forall(prime % _ != 0) }) // no composites
 
   test("sieve is stack-safe"):
-    // completes in around 3s!! `sives` is many order of magnitude faster than `primes` (see above)
+    // completes in around 1.2s! `sives` is many order of magnitude faster than `primes` (see above)
     assertEquals(sieve(10_000_000).length, expected = 664_579)

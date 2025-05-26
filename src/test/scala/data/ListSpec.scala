@@ -87,6 +87,10 @@ class ListSpec extends FunSuite:
   test("filter builds a new list containing only elements that satisfy the predicate"):
     assertEquals(filter(List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))(_ % 2 == 0), List(0, 2, 4, 6, 8))
 
+  test("finds the largest element"):
+    assertEquals(max(List(5)), expected = 5)
+    assertEquals(max(List(1, 5, 3, 4, -1)), expected = 5)
+
   test("flatMap works like a map, but take a function that returns a list, and append that list in the final result") {
     assertEquals(
       flatMap(List(1, 2, 3, 4))(e => List(e, e)),

@@ -1,5 +1,6 @@
 package data
 
+import Ordering.Implicits.*
 import scala.annotation.tailrec
 import scala.util.control.TailCalls.*
 
@@ -36,7 +37,11 @@ object List:
    *   - Time: Θ(n)
    *   - Space: Θ(1) - tail recursive via `foldl`
    */
-  def size[A](numbers: List[A]): Int = foldl(numbers, 0) { (acc, _) => acc + 1 }
+  def size[A](list: List[A]): Int = foldl(list, 0) { (acc, _) => acc + 1 }
+
+  def isEmpty[A](list: List[A]): Boolean = size(list) == 0
+
+  def nonEmpty[A](list: List[A]): Boolean = !isEmpty(list)
 
   /**
    * ===Complexity===
@@ -85,9 +90,7 @@ object List:
 
   /**
    * ===Complexity===
-   *
-   * Let n = size of outer list Let m = length of longest inner list
-   *
+   * Let n = size of outer list Let m = length of longest inner list:
    *   - Time: Θ(n²m)
    *   - Space: Θ(n * m) - creates a new list
    *
@@ -133,6 +136,22 @@ object List:
     case Nil                 => Nil
     case Cons(x, xs) if f(x) => dropWhile(xs, f)
     case _                   => ns
+
+  /**
+   * Reduces a non-empty list using a binary operator.
+   *
+   * ===Complexity===
+   *   - Time: Θ(n)
+   *   - Space: Θ(1)
+   */
+  def reduce[A](list: List[A])(f: (A, A) => A): A =
+    @tailrec
+    def loop(remaining: List[A], acc: A): A = remaining match
+      case Nil         => acc
+      case Cons(x, xs) => loop(xs, f(x, acc))
+    list match
+      case Nil              => throw IllegalArgumentException("reduce of empty list")
+      case Cons(head, tail) => loop(tail, head)
 
   /**
    * Folds a list from left to right using tail recursion with strict (immediate) evaluation.
@@ -208,8 +227,7 @@ object List:
 
   /**
    * ===Complexity===
-   *
-   * Let n = length of `list``, and m = the average length of the list produced by `f`. Then:
+   * Let n = length of `list``, and m = the average length of the list produced by `f`:
    *   - Time: Θ(n * m)
    *   - Space: Θ(n * m)
    */
@@ -249,6 +267,17 @@ object List:
     case Nil                  => b == Nil
     case _ if startWith(a, b) => true
     case Cons(_, t)           => hasSubsequence(t, b)
+
+  /**
+   * Finds the maximum element in a non-empty list.
+   *
+   * ===Complexity===
+   *   - Time: Θ(n)
+   *   - Space: Θ(1)
+   */
+  def max[A: Ordering](list: List[A]): A =
+    require(nonEmpty(list), "max of empty list")
+    reduce(list)(Ordering[A].max)
 
   /**
    * Removes duplicates preserving their original order of occurrence.
@@ -326,8 +355,6 @@ object List:
    *   - Space: Θ(n)
    */
   def partition[A: Ordering](list: List[A], pivot: A): List[A] =
-    import Ordering.Implicits.*
-
     @tailrec
     def loop(remaining: List[A], left: List[A], right: List[A]): List[A] =
       remaining match
@@ -362,8 +389,7 @@ object List:
    *   - Cryptographic Operations
    *
    * ===Complexity===
-   *
-   * Let n = length of left, and m = length of right. Then:
+   * Let n = length of left, and m = length of right:
    *   - Time: Θ(max(n, m))
    *   - Space: Θ(max(n, m))
    */
@@ -431,8 +457,7 @@ object List:
    * Finds the first shared node between two lists (by reference).
    *
    * ===Complexity===
-   *
-   * Let n = length of left, and m = length of right. Then:
+   * Let n = length of left, and m = length of right:
    *   - Time: Θ(m + n)
    *   - Space: Θ(1) - only uses pointers
    */

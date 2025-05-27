@@ -6,7 +6,8 @@ object Outliers:
   import numbers.Outliers.Result.*
 
   /**
-   * Finds the index of the heaviest ball (the outlier) using a balance scale with the least amount of weighings.
+   * Finds the the outlier by recursively comparing groups (like using a balance scale) with the least amount of weighings - the
+   * "heaviest ball" problem.
    *
    * The key idea is in Information Theory:
    *   - There are three possible outcomes when weighting the balls: left heavier, right heavier or balanced.
@@ -14,9 +15,9 @@ object Outliers:
    *
    * For 9 balls, 3^2 = 9, so 2 weighings suffice.
    *
-   * Note:
-   *   - This function assumes that exactly one ball is heavier than the others (the outlier). If the input contains multiple
-   *     unequal weights, the result will be nondeterministic.
+   * Requirements:
+   *   - Exactly one candidate is *heavier* than the others (the outlier). If the input contains multiple unequal weights, the
+   *     result will be nondeterministic.
    *   - For general purpose maximum selection, @see `List#max` function.
    *
    * ===Algorithm===
@@ -36,7 +37,7 @@ object Outliers:
    *   - The ternary-grouping strategy matches the information-theoretic lower bound.
    *
    * ===Complexity===
-   *   - Time: Θ(n) - where n = size of balls
+   *   - Time: Θ(n) - where n = size of the sample
    *   - Space: Θ(1)
    *
    * Performance Notes:
@@ -45,8 +46,8 @@ object Outliers:
    *   - Uses `Vector` instead of `List` for fast random access and avoiding time complexity of Θ(n) due to `splitAt`,
    * improving constant factor.
    */
-  def find(balls: Vector[Int]): Int =
-    require(balls.nonEmpty, "balls can't be empty")
+  def findByWeighing(sample: Vector[Int]): Int =
+    require(sample.nonEmpty, "empty sample")
 
     @tailrec
     def loop(candidates: Vector[(Int, Int)]): Int = candidates match
@@ -64,7 +65,43 @@ object Outliers:
           case Balanced     => third
         loop(next)
 
-    loop(balls.zipWithIndex)
+    loop(sample.zipWithIndex)
+
+  /**
+   * Finds the outlier by taking a unique number of candidates from the sample and measuring the total weight once - the "heaviest
+   * pill" problem. The outlier can be either heavier or lighter than the normal pills.
+   *
+   * Requirements:
+   *   - Exactly one candidate in the sample (the outlier) has a different known weight (e.g. 1.1g instead of the normal 1g).
+   *
+   * ===Algorithm===
+   * Let samples be 20 bottles, where 19 contain pills weighing 1.0g, and 1 bottle has pills weighing 1.1g. Therefore, the known
+   * weight delta between normal and outlier pills is 0.1. The goal is to find the outlier bottle k.
+   *
+   *   - Take a unique number of pills from each bottle (e.g., 1 pill from Bottle 1, 2 pills from Bottle 2, ..., 20 pills from
+   *     Bottle 20), and weigh them together once.
+   *   - Compute the expected weight if there were no outliers:
+   *     - W_expected = Σ (from i=1 to 20) i × 1g = (20 × 21)/2 = 210g
+   *   - Calculate the delta between actual and expected weights:
+   *     - ΔW = W_actual − W_expected
+   *   - Find k:
+   *     - k = ΔW / weightDelta => k = ΔW / 0.1
+   *
+   * ===Complexity===
+   *   - Time: Θ(n) - where n = size of the sample
+   *   - Space: Θ(1)
+   */
+  def findByEncodedSum(sample: Vector[Double], weightDelta: Double): Int =
+    require(sample.nonEmpty, "empty sample")
+    require(weightDelta > 0, "known weight delta must be provided")
+
+    val normalWeight = if sample.count(_ == sample.max) == 1 then sample.min else sample.max
+    val expectedWeight = (1 to sample.size).sum * normalWeight
+    val actualWeight = sample.zipWithIndex.map { (w, i) => (i + 1) * w }.sum
+    val excessWeight = actualWeight - expectedWeight
+    val signum = math.signum(excessWeight)
+    val k = excessWeight / weightDelta * signum
+    math.round(k).toInt - 1 // 0-based index
 
   private def compare(firstGroup: Vector[Int], secondGroup: Vector[Int]): Result =
     val fstTotalWeight = firstGroup.sum

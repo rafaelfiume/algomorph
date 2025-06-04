@@ -1,9 +1,75 @@
 package data
 
+import Ordering.Implicits.*
 import scala.collection.mutable
 import scala.util.boundary, boundary.break
+import scala.annotation.tailrec
+import scala.reflect.ClassTag
 
 object Arrays:
+
+  /**
+   * 1D peak-finding algorithm.
+   *
+   * It leverages local monotonicity of a rising slope on either side of the array to ensure progress towards a peak and return
+   * it.
+   *
+   * ===Algorithm===
+   *   - Find the mid element A[i]
+   *   - Compare mid A[i] with its left A[i-1] and right A[i+1] neighbours
+   *   - If left neighbour is greater than mid, recurse left (left..mid-1)
+   *   - If right neighbour is greater than i, recurse right (mid+1..right)
+   *   - Otherwise, A[i] is the 1D peak.
+   *
+   * ===Complexity===
+   *   - Time: Θ(log n) - where n = length of array
+   *   - Space: Θ(log n)
+   */
+  def findPeak[A: Ordering](array: Array[A]): Int =
+    require(array.nonEmpty, "provide a non-empty array")
+    @tailrec
+    def search(left: Int, right: Int): Int =
+      (right - left) match
+        case 1 => left
+        case 2 => if array(left) >= array(right - 1) then left else right - 1
+        case size =>
+          val mid = (right + left) / 2
+          if array(mid) >= array(mid - 1) && array(mid) >= array(mid + 1) then mid
+          else if array(mid - 1) > array(mid) then search(left, mid)
+          else search(mid + 1, right)
+
+    search(0, array.size)
+
+  /**
+   * 2D peak-finding algorithm.
+   *
+   * ===Algorithm===
+   *   - Find the mid column j
+   *   - Find the global max A[i, j]
+   *     - A[i, j] is greater than its top A[i-1, j] and bottom A[i+1, j] neighbours
+   *   - Compare A[i, j] with its left A[i, j-1] and right A[i, j+1] neighbours
+   *     - If A[i, j-1] > A[i, j], recurse left (columns left...mid-1)
+   *     - If A[i, j+1] > A[i, j], recurse right (columns mid+1...right)
+   *     - Otherwise, A[i, j] is the 2D peak.
+   *
+   * ===Complexity===
+   * Let n = number of rows, m = number of columns:
+   *   - Time: Θ(n log m) - T(m/2) * T(n)
+   *   - Space: Θ(log m)
+   */
+  def findPeak[A: Ordering](matrix: Array[Array[A]]): (Int, Int) =
+    require(matrix.nonEmpty && matrix(0).nonEmpty, "provide a non-empty NxM array")
+    val numCols = matrix(0).size
+
+    @tailrec
+    def search(left: Int, right: Int): (Int, Int) =
+      val midCol = (left + right) / 2
+      val maxRow = matrix.indices.maxBy(row => matrix(row)(midCol))
+      if midCol - 1 >= 0 && matrix(maxRow)(midCol - 1) > matrix(maxRow)(midCol) then search(left, midCol - 1)
+      else if midCol + 1 < numCols && matrix(maxRow)(midCol + 1) > matrix(maxRow)(midCol) then search(midCol + 1, right)
+      else (maxRow, midCol)
+
+    search(left = 0, right = matrix(0).size)
 
   /*
    * Nulifies in-place rows and columns of elements of an NxM matrix when set to 0.
@@ -84,6 +150,36 @@ object Arrays:
         matrix(last - offset)(first) = matrix(last)(last - offset) // left <- bottom
         matrix(last)(last - offset) = matrix(offset)(last) // bottom <- right
         matrix(offset)(last) = tmp // right <- tmp
+
+  /**
+   * Find the smallest positive integer not present in the array.
+   *
+   * ===Evaluation Semantics===
+   * {{{
+   * findSmallestMissingPositive(Array(5, 3, 9, 1, 4, 7, 2))
+   * - Sort: [1, 2, 3, 4, 5, 7, 9]
+   * - Find gap between 5 and 7: Return 6
+   * }}}
+   *
+   * ===Real-World Use Cases===
+   *   - Database ID allocation (find the next ID available)
+   *   - Scheduling systems (find first available time slot)
+   *   - Inventory management (find missing item codes)
+   *
+   * ===Complexity===
+   *   - Time: Θ(n log n) - dominated by sorting
+   *   - Space: Θ(n) - for the sorted copy
+   */
+  def findSmallestMissingPositive(a: Array[Int]): Int =
+    if a.isEmpty then -1
+    else
+      val sorted = a.sorted
+      var result = 1
+      boundary:
+        for i <- sorted do
+          if result == i then result += 1
+          if result < i then break(result)
+      result
 
   /*
    * Checks if s2 is a rotation of s1.
@@ -168,36 +264,6 @@ object Arrays:
           decreaseFrequency(c)
           if isNegative then break(false)
       !isNegative && frequencies.size == 0
-
-  /**
-   * Find the smallest positive integer not present in the array.
-   *
-   * ===Evaluation Semantics===
-   * {{{
-   * findSmallestMissingPositive(Array(5, 3, 9, 1, 4, 7, 2))
-   * - Sort: [1, 2, 3, 4, 5, 7, 9]
-   * - Find gap between 5 and 7: Return 6
-   * }}}
-   *
-   * ===Real-World Use Cases===
-   *   - Database ID allocation (find the next ID available)
-   *   - Scheduling systems (find first available time slot)
-   *   - Inventory management (find missing item codes)
-   *
-   * ===Complexity===
-   *   - Time: Θ(n log n) - dominated by sorting
-   *   - Space: Θ(n) - for the sorted copy
-   */
-  def findSmallestMissingPositive(a: Array[Int]): Int =
-    if a.isEmpty then -1
-    else
-      val sorted = a.sorted
-      var result = 1
-      boundary:
-        for i <- sorted do
-          if result == i then result += 1
-          if result < i then break(result)
-      result
 
   object Fp:
     def isPermutation(s1: String, s2: String): Boolean =

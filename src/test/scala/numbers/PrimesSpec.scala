@@ -30,3 +30,20 @@ class PrimesSpec extends FunSuite:
   test("sieve is stack-safe"):
     // completes in around 1.2s! `sives` is many order of magnitude faster than `primes` (see above)
     assertEquals(sieve(10_000_000).length, expected = 664_579)
+
+  test("gcd returns the greatest common divisor between two positive integers"):
+    assertEquals(gcd(24, 36).toInt, expected = 12)
+    assertEquals(gcd(120, 500).toInt, expected = 20)
+    assertEquals(gcd(17, 22).toInt, expected = 1)
+
+  test("lcm returns the lowest common multile between two positive intergers"):
+    assertEquals(lcm(4, 5).toInt, expected = 20)
+    assertEquals(lcm(60, 90).toInt, expected = 180)
+
+  test("factorise decomposites numbers into prime factors"):
+    assertEquals(factorise(1), expected = Map.empty)
+    assertEquals(factorise(2), expected = Map(BigInt(2) -> 1))
+    assertEquals(factorise(17), expected = Map(BigInt(17) -> 1))
+    assertEquals(factorise(75), expected = Map(BigInt(3) -> 1, BigInt(5) -> 2))
+    assertEquals(factorise(30), expected = Map(BigInt(2) -> 1, BigInt(3) -> 1, BigInt(5) -> 1))
+    assertEquals(factorise(8), expected = Map(BigInt(2) -> 3))

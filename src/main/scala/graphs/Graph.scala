@@ -51,15 +51,13 @@ case class Graph[V <: Vertex] private (
   val vertices: List[V],
   private val weights: Map[Edge[V], Weight] // allows querying the weight of an edge in O(1)
 ):
-  /*
-   * Per-operation time complexity is O(V) dominated by`++` and `distinct`, both O(n).
-   * Time complexity for adding E edges is O(E*V), which might become O(V^2) or even O(V^3).
+  /**
+   * ===Complexity===
+   * Per-operation time complexity is O(V) dominated by`++` and `distinct`, both O(n). Time complexity for adding E edges is
+   * O(E*V), which might become O(V^2) or even O(V^3).
    */
   def add(edge: Edge[V]): Graph[V] =
-    val updatedAdjList = adjacencyList.updatedWith(edge.u) {
-      case Some(adj) => Some(adj :+ edge.v)
-      case None      => Some(List(edge.v))
-    }
+    val updatedAdjList = adjacencyList.updatedWith(edge.u)(_.map(_ :+ edge.v).orElse(Some(List(edge.v))))
     val updatedVs = (vertices ++ List(edge.u, edge.v)).distinct
     Graph(updatedAdjList, updatedVs, weights)
 
@@ -71,6 +69,7 @@ case class Graph[V <: Vertex] private (
   // Careful with this function, yolo mode for now.
   // In particular, it will override all the edges of `vertex` that might have been added with `add(Edge)`.
   /*
+   * ===Complexity===
    * Per-operation time complexity is O(V) due to O(n) required to append vertices in a list on each `add` call.
    * Time complexity for adding V vertices is O(V^2).
    */
@@ -79,7 +78,7 @@ case class Graph[V <: Vertex] private (
 
   def contains(v: V): Boolean = adjacencyList.contains(v)
 
-  def w(u: V, v: V): Option[Long] = weights.get(Edge.directed(u, v))
+  def w(u: V, v: V): Long = weights(Edge.directed(u, v))
 
   protected[graphs] def adjacencies(v: V): List[V] = adjacencyList.get(v).fold(Nil)(identity)
 

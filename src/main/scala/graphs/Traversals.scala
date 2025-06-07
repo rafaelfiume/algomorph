@@ -10,28 +10,26 @@ import graphs.Traversals.TraversalResult.WithEdges
 import graphs.Traversals.TraversalResult.Basic
 import scala.collection.immutable.Queue
 
-/*
+/**
  * Requirements:
- *  - Deterministic Order: consistent traversal across runs
- *  - Complete coverage: visit all vertices
- *  - Component awareness: handle disconected subgraphs.
+ *   - Deterministic Order: consistent traversal across runs
+ *   - Complete coverage: visit all vertices
+ *   - Component awareness: handle disconected subgraphs.
  */
 object Traversals:
 
-  sealed trait TraversalResult[V <: Vertex]:
+  /**
+   * ===Implementation Notes===
+   * `TraversalResult` trait provides:
+   *   - Shared functionality via a small interface and intuitive semantics
+   *   - Composable total functions.
+   *
+   * It is thus not intended for dynamic behavious, making it FP-compatible.
+   */
+  trait TraversalResult[V <: Vertex]:
     def visited: List[V]
     def parents: Map[V, V]
-
-    def path(start: V, end: V): List[V] =
-      @annotation.tailrec
-      def loop(end: V, acc: List[V]): List[V] =
-        if start == end then start :: acc
-        else
-          parents.get(end) match
-            case None         => Nil
-            case Some(parent) => loop(parent, end :: acc)
-
-      loop(end, Nil)
+    def path(start: V, end: V): List[V] = Path.reconstruct(parents, start, end)
 
   object TraversalResult:
     case class Basic[V <: Vertex](visited: List[V], parents: Map[V, V]) extends TraversalResult[V]
@@ -65,7 +63,7 @@ object Traversals:
        * Time complexity is O(V + E) during dfs traversal (`traverse`),
        * and O(1) afterwards at the cost of O(V) space.
        */
-      def topoligicalSort(): Either[Set[Edge[V]], List[V]] =
+      def topologicalSort(): Either[Set[Edge[V]], List[V]] =
         Either.cond(hasNoCycles(), right = topOrder, left = backEdges())
 
       private def filterEdges(byType: Classification): Set[Edge[V]] =

@@ -12,6 +12,11 @@ class TraversalsSpec extends FunSuite with GraphsContext:
     ("Functional Dfs", graph => Dfs.Fp.traverse(graph))
   )
 
+  val dfsVariantsWithStart = List(
+    ("Imperative Dfs", (graph, start) => Dfs.traverse(graph, start)),
+    ("Functional Dfs", (graph, start) => Dfs.Fp.traverse(graph, start))
+  )
+
   val bfsVariants = List(
     ("Imperative Bfs", graph => Bfs.traverse(graph)),
     ("Functional Bfs", graph => Bfs.Fp.traverse(graph))
@@ -66,12 +71,18 @@ class TraversalsSpec extends FunSuite with GraphsContext:
 
   dfsVariants.foreach { (description, dfs) =>
     test(s"$description topologically sorts a graph"):
-      assertEquals(dfs(multipleDags).topoligicalSort(), Right(List(i, d, e, a, b, c, f, g, h)))
+      assertEquals(dfs(multipleDags).topologicalSort(), Right(List(i, d, e, a, b, c, f, g, h)))
+  }
+
+  dfsVariantsWithStart.foreach { (description, dfs) =>
+    test(s"$description limits topological sort to the subgraph reachable from start"):
+      assertEquals(dfs(multipleDags, i).topologicalSort(), Right(List(i)))
+      assertEquals(dfs(multipleDags, b).topologicalSort(), Right(List(b, c, f)))
   }
 
   dfsVariants.foreach { (description, dfs) =>
     test(s"$description topological sort handles cycles in a graph"):
-      assertEquals(dfs(g2WFourEdgeTypes).topoligicalSort(), Left(g2BackEdges))
+      assertEquals(dfs(g2WFourEdgeTypes).topologicalSort(), Left(g2BackEdges))
   }
 
   /**

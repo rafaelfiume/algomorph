@@ -32,7 +32,7 @@ object Arrays:
       (right - left) match
         case 1 => left
         case 2 => if array(left) >= array(right - 1) then left else right - 1
-        case size =>
+        case _ =>
           val mid = (right + left) / 2
           if array(mid) >= array(mid - 1) && array(mid) >= array(mid + 1) then mid
           else if array(mid - 1) > array(mid) then search(left, mid)

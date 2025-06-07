@@ -39,7 +39,7 @@ class BinomialProbabilitySpec extends ScalaCheckSuite:
     assertEquals(atLeastKSuccesses(n = 1, k = 1, p = 0.6), expected = 0.6)
     assertEqualsDouble(atLeastKSuccesses(n = 3, k = 2, p = 0.6), expected = 0.648, delta = 0.000000001)
 
-  property("probability theory to select optimal game") {
+  property("probability theory to select optimal game"):
     forAll(Gen.choose(0.0, 1.0)) { p =>
       // Game 1 (1/1 success): favours beginners - fewer chances for mistakes
       val game1 = exactlytKSuccesses(n = 1, k = 1, p)
@@ -53,4 +53,3 @@ class BinomialProbabilitySpec extends ScalaCheckSuite:
       else if p > 0.5 then (game1 < game2) :| "Select game 2 if p > 0.5 (intermediate to expert)"
       else (game1 == game2) :| "Select either game 1 or game 2 if p = 0.5 (intermediate)"
     }
-  }

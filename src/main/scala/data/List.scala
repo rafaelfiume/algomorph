@@ -373,7 +373,7 @@ object List:
    * [4, 6, 9] represents 964
    * }}}
    *
-   * ===Semantic Evaluation===
+   * ===Evaluation Semantics===
    * Input: [9, 8, 7] + [4, 6, 9]
    *
    * Add digits pairwise with carry:

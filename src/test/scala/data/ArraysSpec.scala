@@ -1,8 +1,6 @@
 package data
 
 import munit.FunSuite
-import scala.concurrent.Future
-import munit.GenericBeforeEach
 import data.Arrays.*
 
 class ArraysSpec extends FunSuite:
@@ -71,7 +69,7 @@ class ArraysSpec extends FunSuite:
     assert(isAtMostOneAway("a", ""))
     assert(isAtMostOneAway("", "a"))
 
-  override def beforeEach(context: GenericBeforeEach[Future[Any]]): Unit =
+  override def beforeEach(context: BeforeEach): Unit =
     m = Array.ofDim(3, 3)
     m(0)(0) = 1; m(0)(1) = 2; m(0)(2) = 3
     m(1)(0) = 4; m(1)(1) = 5; m(1)(2) = 6

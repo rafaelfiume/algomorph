@@ -2,7 +2,7 @@ name := "playground-scala"
 
 version := "0.1"
 
-scalaVersion := "3.6.4"
+scalaVersion := "3.7.1"
 
 scalacOptions := scalacOptions.value.filterNot(_ == "-Ykind-projector")
 

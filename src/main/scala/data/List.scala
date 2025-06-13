@@ -444,7 +444,7 @@ object List:
 
     @tailrec
     def compare(stack: List[A], secondHalf: List[A]): Boolean = (stack, secondHalf) match
-      case (Nil, Nil) => true
+      case (Nil, Nil)                                             => true
       case (Cons(stackHead, stackTail), Cons(halfHead, tailHead)) =>
         if stackHead != halfHead then false
         else compare(stackTail, tailHead)

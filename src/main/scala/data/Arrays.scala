@@ -256,7 +256,7 @@ object Arrays:
       def decreaseFrequency(c: Char): Unit = frequencies.updateWith(c) {
         case Some(1) => None
         case Some(f) => Some(f - 1)
-        case None =>
+        case None    =>
           isNegative = true
           Some(-1)
       }: Unit

@@ -46,7 +46,7 @@ object Knapsack:
         val r = toConsider match
           case Nil                                      => Nil -> 0
           case item :: is if item.weight > availability => knapsack0(is, availability, memo)
-          case item :: is =>
+          case item :: is                               =>
             val (withoutItem, withoutItemT) = knapsack0(is, availability, memo)
             val (withItem, withItemT) = knapsack0(is, availability - item.weight, memo) match
               case (selected, total) => (item :: selected, total + item.value)

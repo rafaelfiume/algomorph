@@ -53,7 +53,7 @@ object Knapsack:
             if withItemT > withoutItemT
             then withItem -> withItemT
             else withoutItem -> withoutItemT
-        memo.put(key = toConsider.size -> availability, value = r)
+        val _ = memo.put(key = toConsider.size -> availability, value = r)
         r
 
     knapsack0(toConsider, availability, mutable.Map.empty)._1

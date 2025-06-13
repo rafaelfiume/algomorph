@@ -8,6 +8,8 @@ import scala.reflect.ClassTag
 
 object Arrays:
 
+  // TODO Multiplication of matrices with Scala capabilities
+
   /**
    * 1D peak-finding algorithm.
    *
@@ -178,7 +180,7 @@ object Arrays:
       boundary:
         for i <- sorted do
           if result == i then result += 1
-          if result < i then break(result)
+          if result < i then break()
       result
 
   /*
@@ -204,7 +206,7 @@ object Arrays:
     for i <- 0 until s.size do
       counter += 1
       if i + 1 >= s.size || s(i) != s(i + 1) then
-        compressed.append(s(i)).append(counter)
+        val _ = compressed.append(s(i)).append(counter)
         counter = 0
     if compressed.length() > s.size then s else compressed.toString()
 
@@ -262,7 +264,7 @@ object Arrays:
       boundary:
         for c <- s2 do
           decreaseFrequency(c)
-          if isNegative then break(false)
+          if isNegative then break()
       !isNegative && frequencies.size == 0
 
   object Fp:

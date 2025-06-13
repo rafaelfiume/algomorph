@@ -1,7 +1,6 @@
 package graphs
 
 import munit.FunSuite
-import graphs.Graph.Vertex
 import graphs.Graph.Edge
 
 class GraphSpec extends FunSuite with GraphsContext:

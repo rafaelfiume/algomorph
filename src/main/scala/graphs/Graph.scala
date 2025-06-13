@@ -1,7 +1,6 @@
 package graphs
 
 import Graph.*
-import scala.collection.immutable
 import graphs.Graph.Edge.Weight
 
 /*

@@ -2,7 +2,6 @@ package graphs
 
 import Graph.*
 import scala.collection.mutable
-import scala.collection.immutable
 import graphs.Graph.Edge.Classification
 import graphs.Graph.Edge.Classification.*
 import graphs.Traversals.Dfs.EdgeClassifier
@@ -123,7 +122,7 @@ object Traversals:
 
     /* Time complexity: O(E) */
     private def dfs[V <: Vertex](state: TraversalState[V])(graph: Graph[V], start: V, parent: Option[V] = None): Unit =
-      def visit(vertex: V, parent: Option[V] = None): Unit =
+      def visit(vertex: V, parent: Option[V]): Unit =
         state.discovered(vertex)
         parent.foreach(p =>
           state.addParent(p, vertex)

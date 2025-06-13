@@ -1,6 +1,5 @@
 package data
 
-import munit.Assertions.*
 import munit.FunSuite
 import data.List.*
 

@@ -1,7 +1,6 @@
 package dynamic_programming
 
 import dynamic_programming.Fibonacci.fib
-import munit.Assertions.*
 import munit.FunSuite
 
 class FibonacciSpec extends FunSuite:

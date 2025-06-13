@@ -1,6 +1,5 @@
 package dynamic_programming
 
-import scala.collection.*
 import scala.collection.mutable.ArrayBuffer
 
 object Fibonacci:

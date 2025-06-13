@@ -2,7 +2,6 @@ package graphs
 
 import munit.FunSuite
 import graphs.Graph.Vertex
-import graphs.Graph.Edge
 import graphs.Traversals.*
 
 class TraversalsSpec extends FunSuite with GraphsContext:

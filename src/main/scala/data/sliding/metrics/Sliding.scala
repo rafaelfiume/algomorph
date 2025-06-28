@@ -2,6 +2,7 @@ package data.sliding.metrics
 
 import scala.reflect.ClassTag
 import data.sliding.core.GroupSlidingWindow
+import data.sliding.core.SemigroupSlidingWindow
 import scala.math.Numeric.Implicits.given
 
 object Sliding:
@@ -25,11 +26,12 @@ object Sliding:
    */
   def mean[T: ClassTag](size: Int)(using num: Numeric[T]) = new GroupSlidingWindow[T, Double](
     size,
-    zero = num.zero,
+    identity = num.zero,
     combine = num.plus,
     inverse = a => -a,
     output = (a, b) => a.toDouble / b.toDouble
   )
 
-  // implement it possibly with a different abstraction that doesn't require zero nor inverse?
-  def max[T: ClassTag](size: Int)(using num: Numeric[T]) = ???
+  def max[T: ClassTag]()(using num: Numeric[T]) = new SemigroupSlidingWindow[T](size = 3, num.max)
+
+  def min[T: ClassTag]()(using num: Numeric[T]) = new SemigroupSlidingWindow[T](size = 3, num.min)

@@ -23,3 +23,15 @@ class CircularBufferSpec extends FunSuite:
     assertEquals(buffer.add(5), expected = Some(2))
     assertEquals(buffer.add(6), expected = Some(3))
     assertEquals(buffer.add(7), expected = Some(4))
+
+  test("iterates over the buffer's elements in least-recent insertion order"):
+    val buffer = mutable.CircularBuffer.make[Int](3)
+    assert(buffer.iterator.isEmpty)
+    val _ = buffer.add(2)
+    assertEquals(buffer.iterator.toList, expected = scala.collection.immutable.List(2))
+    val _ = buffer.add(4)
+    assertEquals(buffer.iterator.toList, expected = scala.collection.immutable.List(2, 4))
+    val _ = buffer.add(6)
+    val _ = buffer.add(8)
+    val _ = buffer.add(10)
+    assertEquals(buffer.iterator.toList, expected = scala.collection.immutable.List(6, 8, 10))

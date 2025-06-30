@@ -12,21 +12,8 @@ object mutable:
     def make[T: ClassTag](size: Int): MutableCircularBuffer[T] =
       new MutableCircularBuffer[T](size)
 
-case class CircularBuffer[T] private (
-  private val counter: Int,
-  private val buffer: Queue[T],
-  capacity: Int
-):
-  def add(value: T): (CircularBuffer[T], Option[T]) =
-    if buffer.size < capacity then this.copy(counter = counter + 1, buffer.enqueue(value)) -> None
-    else
-      val (evicted, newQueue) = buffer.dequeue
-      this.copy(counter = counter + 1, newQueue.enqueue(value)) -> Some(evicted)
-
-  def filled: Int = if counter >= capacity then capacity else counter
-
 /**
- * A simple and fast non-thread safe CircularBuffer. Use it when concurrence is not a requirement or for reference purposes.
+ * A simple and fast non-thread safe CircularBuffer.
  */
 class MutableCircularBuffer[T: ClassTag] private[data] (capacity: Int):
   private val buffer = Array.ofDim[T](capacity)
@@ -39,6 +26,13 @@ class MutableCircularBuffer[T: ClassTag] private[data] (capacity: Int):
     counter += 1
     Option.when(counter > capacity)(old)
 
+  /**
+   * Returns how many elements have been added so far up to `capacity`.
+   *
+   * ===Complexity===
+   *   - Time: Θ(1)
+   *   - Space: Θ(1)
+   */
   def filled: Int =
     if counter >= capacity then capacity else counter
 
@@ -63,3 +57,16 @@ class MutableCircularBuffer[T: ClassTag] private[data] (capacity: Int):
   def iterator: Iterator[T] =
     val n = if counter < capacity then counter else capacity
     (0 until n).iterator.map(i => (counter + i) % n).map(buffer)
+
+case class CircularBuffer[T] private (
+  private val counter: Int,
+  private val buffer: Queue[T],
+  capacity: Int
+):
+  def add(value: T): (CircularBuffer[T], Option[T]) =
+    if buffer.size < capacity then this.copy(counter = counter + 1, buffer.enqueue(value)) -> None
+    else
+      val (evicted, newQueue) = buffer.dequeue
+      this.copy(counter = counter + 1, newQueue.enqueue(value)) -> Some(evicted)
+
+  def filled: Int = if counter >= capacity then capacity else counter

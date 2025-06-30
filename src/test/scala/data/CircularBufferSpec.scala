@@ -4,7 +4,7 @@ import munit.FunSuite
 
 class CircularBufferSpec extends FunSuite:
 
-  test("evicts oldest element after reaching capacity in FIFO order"):
+  test("evicts oldest element after full capacity in FIFO order"):
     val buf0 = CircularBuffer.make[Int](size = 3)
     val (buf1, e1) = buf0.add(1); assertEquals(e1, expected = None)
     val (buf2, e2) = buf1.add(2); assertEquals(e2, expected = None)

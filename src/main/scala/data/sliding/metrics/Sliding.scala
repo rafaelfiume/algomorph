@@ -4,6 +4,7 @@ import scala.reflect.ClassTag
 import data.sliding.core.GroupSlidingWindow
 import data.sliding.core.SemigroupSlidingWindow
 import scala.math.Numeric.Implicits.given
+import data.sliding.core.SlidingWindow
 
 object Sliding:
 
@@ -24,7 +25,7 @@ object Sliding:
    *   μ = (x₁ + x₂ + ⋯ + xₙ) / n
    * }}}
    */
-  def mean[T: ClassTag](size: Int)(using num: Numeric[T]) = new GroupSlidingWindow[T, Double](
+  def mean[T: ClassTag](size: Int)(using num: Numeric[T]): SlidingWindow[T, Double] = new GroupSlidingWindow[T, Double](
     size,
     identity = num.zero,
     combine = num.plus,
@@ -32,6 +33,8 @@ object Sliding:
     output = (a, b) => a.toDouble / b.toDouble
   )
 
-  def max[T: ClassTag]()(using num: Numeric[T]) = new SemigroupSlidingWindow[T](size = 3, num.max)
+  def moments[T: ClassTag: Numeric](size: Int): SlidingWindow[T, Moments] = new SlidingMoments[T](size)
 
-  def min[T: ClassTag]()(using num: Numeric[T]) = new SemigroupSlidingWindow[T](size = 3, num.min)
+  def max[T: ClassTag]()(using num: Numeric[T]): SlidingWindow[T, T] = new SemigroupSlidingWindow[T](size = 3, num.max)
+
+  def min[T: ClassTag]()(using num: Numeric[T]): SlidingWindow[T, T] = new SemigroupSlidingWindow[T](size = 3, num.min)

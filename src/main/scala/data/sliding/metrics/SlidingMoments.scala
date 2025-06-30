@@ -42,6 +42,10 @@ case class Moments(mean: Double, variance: Double, standardDeviation: Double)
  *   - The slding window is treated as the full population
  *   - This assumes that sample variance (Bessel's correction) is unnecessary in streaming applications
  *   - I believe this will lead to a more consistent local variance rather than trying to identify a global one.
+ *
+ * ===Complexity===
+ *   - Time: `add` is performed in Θ(1)
+ *   - Space: Θ(capacity) space due to a `CircularBuffer` allocation
  */
 class SlidingMoments[T: ClassTag](size: Int)(using num: Numeric[T]) extends SlidingWindow[T, Moments]:
   require(size > 0, "window size of sliding average must be positive")

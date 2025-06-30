@@ -25,7 +25,7 @@ object Sliding:
    *   μ = (x₁ + x₂ + ⋯ + xₙ) / n
    * }}}
    */
-  def mean[T: ClassTag](size: Int)(using num: Numeric[T]): SlidingWindow[T, Double] = new GroupSlidingWindow[T, Double](
+  def mean[I: ClassTag](size: Int)(using num: Numeric[I]): SlidingWindow[I, Double] = new GroupSlidingWindow[I, Double](
     size,
     identity = num.zero,
     combine = num.plus,
@@ -33,8 +33,20 @@ object Sliding:
     output = (a, b) => a.toDouble / b.toDouble
   )
 
-  def moments[T: ClassTag: Numeric](size: Int): SlidingWindow[T, Moments] = new SlidingMoments[T](size)
+  def moments[I: ClassTag: Numeric](size: Int): SlidingWindow[I, Moments] = new SlidingMoments[I](size)
 
-  def max[T: ClassTag]()(using num: Numeric[T]): SlidingWindow[T, T] = new SemigroupSlidingWindow[T](size = 3, num.max)
+  /**
+   * Computes the minimum value over a fixed-size sliding window.
+   *
+   * ===Monotonicity===
+   * This is not monotonically decreasing since the minimum value might be evicted from the window.
+   */
+  def min[I: ClassTag](size: Int)(using num: Numeric[I]): SlidingWindow[I, I] = new SemigroupSlidingWindow[I](size, num.min)
 
-  def min[T: ClassTag]()(using num: Numeric[T]): SlidingWindow[T, T] = new SemigroupSlidingWindow[T](size = 3, num.min)
+  /**
+   * Computes the maximum value over a fixed-size sliding window.
+   *
+   * ===Monotonicity===
+   * This is not monotonically increasing since the maximum value might be evicted from the window.
+   */
+  def max[I: ClassTag](size: Int)(using num: Numeric[I]): SlidingWindow[I, I] = new SemigroupSlidingWindow[I](size, num.max)

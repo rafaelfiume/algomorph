@@ -8,8 +8,8 @@ import data.mutable
  *
  * The `aggregate` in this context means combining multiple values into a single summary (e.g. sum, mean, max).
  */
-trait SlidingWindow[T, R]:
-  def add(value: T): R
+trait SlidingWindow[I, O]:
+  def add(value: I): O
 
 /**
  * A sliding window for invertible groups - i.e. types that support `identity`, `combine` and `inverse` operations.
@@ -21,22 +21,22 @@ trait SlidingWindow[T, R]:
  *   - `add` is performed in Θ(1) time per update
  *   - Space is Θ(capacity) space due to a `CircularBuffer` allocation.
  */
-class GroupSlidingWindow[@specialized(Int, Long, Float, Double) T: ClassTag, R](
+class GroupSlidingWindow[@specialized(Int, Long, Float, Double) I: ClassTag, O](
   size: Int,
   // group ops
-  identity: T,
-  combine: (T, T) => T,
-  inverse: T => T,
+  identity: I,
+  combine: (I, I) => I,
+  inverse: I => I,
   //
-  output: (T, T) => R
-)(using num: Numeric[T])
-    extends SlidingWindow[T, R]:
+  output: (I, I) => O
+)(using num: Numeric[I])
+    extends SlidingWindow[I, O]:
   require(size > 0, "window size of sliding average must be positive")
 
-  private val buffer = mutable.CircularBuffer.make[T](size)
-  private var acc: T = identity
+  private val buffer = mutable.CircularBuffer.make[I](size)
+  private var acc: I = identity
 
-  override def add(value: T): R =
+  override def add(value: I): O =
     buffer.add(value) match
       case None =>
         acc = combine(acc, value)
@@ -52,16 +52,16 @@ class GroupSlidingWindow[@specialized(Int, Long, Float, Double) T: ClassTag, R](
  *   - `add` is performed in Θ(n) time per update
  *   - Space is Θ(capacity) space due to a `CircularBuffer` allocation.
  */
-class SemigroupSlidingWindow[@specialized(Int, Long, Float, Double, Boolean) T: ClassTag](
+class SemigroupSlidingWindow[@specialized(Int, Long, Float, Double, Boolean) I: ClassTag](
   size: Int,
   // semigroup ops
-  combine: (T, T) => T
+  combine: (I, I) => I
   //
-) extends SlidingWindow[T, T]:
+) extends SlidingWindow[I, I]:
   require(size > 0, "window size of sliding average must be positive")
 
-  private val buffer = mutable.CircularBuffer.make[T](size)
+  private val buffer = mutable.CircularBuffer.make[I](size)
 
-  override def add(value: T): T =
+  override def add(value: I): I =
     val _ = buffer.add(value)
     buffer.iterator.reduce(combine)

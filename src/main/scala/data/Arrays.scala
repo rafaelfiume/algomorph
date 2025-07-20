@@ -157,8 +157,8 @@ object Arrays:
    * Find the smallest positive integer not present in the array.
    *
    * ===Evaluation Semantics===
+   * `findSmallestMissingPositive(Array(5, 3, 9, 1, 4, 7, 2))` executes as:
    * {{{
-   * findSmallestMissingPositive(Array(5, 3, 9, 1, 4, 7, 2))
    * - Sort: [1, 2, 3, 4, 5, 7, 9]
    * - Find gap between 5 and 7: Return 6
    * }}}

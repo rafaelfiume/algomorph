@@ -1,6 +1,6 @@
 # Algomorph
 
-A Scala library exploreing algorithms as morphisms: transforming inputs to outputs with functional, stack-safe, and both immutable and mutable data structures.
+A Scala library exploring algorithms as morphisms: transforming inputs to outputs with functional, stack-safe, and both immutable and mutable data structures.
 
 Includes:
  * graph algorithms

@@ -13,7 +13,7 @@ import scala.collection.immutable.Queue
  * Requirements:
  *   - Deterministic Order: consistent traversal across runs
  *   - Complete coverage: visit all vertices
- *   - Component awareness: handle disconected subgraphs.
+ *   - Component awareness: handle disconnected subgraphs.
  */
 object Traversals:
 
@@ -23,7 +23,7 @@ object Traversals:
    *   - Shared functionality via a small interface and intuitive semantics
    *   - Composable total functions.
    *
-   * It is thus not intended for dynamic behavious, making it FP-compatible.
+   * It is thus not intended for dynamic behaviours, making it FP-compatible.
    */
   trait TraversalResult[V <: Vertex]:
     def visited: List[V]
@@ -70,7 +70,7 @@ object Traversals:
         edgeClassifier.classification().filter { (_, edgeType) => edgeType == byType }.keySet.toSet
 
   /*
-   * Particularly useful for edge classification (e.g detecting cyles, topoligical sorting).
+   * Particularly useful for edge classification (e.g detecting cycles, topological sorting).
    */
   object Dfs:
 

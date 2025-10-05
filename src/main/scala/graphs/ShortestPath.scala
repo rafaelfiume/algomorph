@@ -26,9 +26,9 @@ object ShortestPath:
      *
      * - If there are no paths between s and t, then δ(s, t) = ∞
      * - Triangle inequality holds: δ(u, v) <= δ(u, x) + δ (x, v)
-     * - At the end of the algorith, the computed distance d(u, v) is equal to δ(u, v).
+     * - At the end of the algorithm, the computed distance d(u, v) is equal to δ(u, v).
      *
-     * Negative-weight cyles is a path π that starts and ends at the same vertex `s` with w(π) < 0.
+     * Negative-weight cycles is a path π that starts and ends at the same vertex `s` with w(π) < 0.
      *   - In such cases, δ(s, t) = -∞
      *   - Thus, `inf` instead of `min` since a finite-length minimum might not exists due to negative-weight cycles
      *   - This algorithm assumes a DAG, so negative-weight cycles cannot occur.

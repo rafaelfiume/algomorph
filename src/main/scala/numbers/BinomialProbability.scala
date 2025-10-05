@@ -8,7 +8,7 @@ object BinomialProbability:
    * Calculates the probability of a specific sequence with k successes and n-k failures. Let p = chance of success, and (1-p) be
    * the probability of failure. Then: p^k * (1-p)^(n-k).
    *
-   * For example, for a sequence [Success, Succuess, Failure]: p * p * (1 - p).
+   * For example, for a sequence [Success, Success, Failure]: p * p * (1 - p).
    */
   def exactlyIndependentEventsInSequence(n: Int, k: Int, p: Double): Double =
     require(p >= 0 && p <= 1, "provide: 0 <= p <= 1")
@@ -56,7 +56,7 @@ object BinomialProbability:
    * }}}
    *
    * ===Complexity===
-   *   - Time: Θ(min(k, n-k)) - explores binomial coefficient simetry C(n, k) = C(n, n-k)
+   *   - Time: Θ(min(k, n-k)) - explores binomial coefficient symmetry C(n, k) = C(n, n-k)
    *   - Space: Θ(1)
    */
   def binomialCoefficient(n: Int, k: Int): BigInt =

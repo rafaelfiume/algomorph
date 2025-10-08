@@ -1,16 +1,15 @@
 package data.interval
 
-import munit.ScalaCheckSuite
-import org.scalacheck.Prop.*
 import data.interval.*
 import data.interval.BoundedAlgebra.instances.given_BoundedAlgebra_Int
 import data.interval.DiscreteAlgebra.instances.given
-import data.interval.Interval.*
 import data.interval.Interval.AdjacencyType.*
 import data.interval.Intervals
 import data.interval.IntervalAlgebra.syntax.*
 import data.interval.IntervalAlgebra.instances.given
 import data.interval.testkit.IntervalGens.*
+import munit.ScalaCheckSuite
+import org.scalacheck.Prop.*
 
 /**
  * The Philosophical Challenge: What Are We Proving?
@@ -24,36 +23,36 @@ import data.interval.testkit.IntervalGens.*
  */
 class IntervalSpec extends ScalaCheckSuite:
 
-  checkIntervalProperties[Closed[Int]]("closed", Intervals.makeClosed[Int])
-  checkIntervalProperties[Open[Int]]("open", Intervals.makeOpen[Int])
-  checkIntervalProperties[HalfOpenRight[Int]]("half-open right", Intervals.makeHalfOpenRight[Int])
-  checkIntervalProperties[NonEmptyHalfOpenRight[Int]]("non empty half-open right", Intervals.makeNonEmptyHalfOpenRight[Int])
-  checkIntervalProperties[HalfOpenLeft[Int]]("half-open left", Intervals.makeHalfOpenLeft[Int])
+  checkIntervalProperties("closed", Intervals.makeClosed[Int])
+  checkIntervalProperties("open", Intervals.makeOpen[Int])
+  checkIntervalProperties("half-open right", Intervals.makeHalfOpenRight[Int])
+  checkIntervalProperties("non empty half-open right", Intervals.makeNonEmptyHalfOpenRight[Int])
+  checkIntervalProperties("half-open left", Intervals.makeHalfOpenLeft[Int])
 
   def checkIntervalProperties[I <: Interval[Int]](name: String, factory: Factory[Int, I])(using
-    ops: IntervalAlgebra[Int, I],
+    alg: IntervalAlgebra[Int, I],
     num: Integral[Int],
     bound: BoundedAlgebra[Int]
   ): Unit =
     given Factory[Int, I] = factory
 
-    val validIntervals = if ops.allowsDegenerate then intervals else strictIntervals
+    val validIntervals = if alg.allowsDegenerate then intervals else strictIntervals
 
-    val supportsAdjacentIntervals = ops.adjacencyType match
+    val supportsAdjacentIntervals = alg.adjacencyType match
       case Meeting     => true
       case Consecutive => true
       case NonAdjacent => false
 
     /* Smart Constructors */
 
-    if ops.allowsDegenerate then
+    if alg.allowsDegenerate then
       property(s"$name intervals are valid"):
         forAll(bounds) { case (start, end) =>
           val result = factory(start, end)
           result.start <= result.end
         }
 
-    if !ops.allowsDegenerate then
+    if !alg.allowsDegenerate then
       property(s"$name intervals are valid"):
         forAll(strictBounds) { case (start, end) =>
           val result = factory(start, end)
@@ -69,18 +68,18 @@ class IntervalSpec extends ScalaCheckSuite:
 
     /* Degenerate intervals */
 
-    if ops.allowsDegenerate then
+    if alg.allowsDegenerate then
       property(s"$name intervals can degenerate"):
         forAll(degenerateBounds) { case (start, end) =>
           val result = factory(start, end)
           result.isDegenerate
         }
 
-      property(s"degenerate $name intervals are non-overlapping"):
+      property(s"degenerate $name intervals are non-intersecting"):
         forAll(intervals) { a =>
           val b = factory(a.start, a.start)
           val c = factory(a.end, a.end)
-          !a.overlaps(b) && !a.overlaps(c)
+          !a.intersects(b) && !a.intersects(c)
         }
 
       property(s"degenerate $name intervals contain only themselves"):
@@ -102,39 +101,39 @@ class IntervalSpec extends ScalaCheckSuite:
     /* Adjacency */
 
     if supportsAdjacentIntervals then
-      property(s"adjacent (continuous) $name intervals never overlap"):
+      property(s"adjacent (continuous) $name intervals never intersect"):
         forAll(adjacentIntervals) { case (a, b) =>
-          a.isAdjacent(b) && !a.overlaps(b)
+          a.isAdjacent(b) && !a.intersects(b)
         }
 
-      property(s"adjacent $name intervals maintain ${ops.adjacencyType} relationship"):
+      property(s"adjacent $name intervals maintain ${alg.adjacencyType} relationship"):
         forAll(adjacentIntervals) { case (a, b) =>
-          b.start == (ops.adjacencyType match
+          b.start == (alg.adjacencyType match
             case Meeting     => a.end
             case Consecutive => a.end + 1
             case NonAdjacent => throw new IllegalArgumentException(s"no support for adjacent intervals"))
         }
 
-    /* Overlapping */
+    /* Intersection */
 
-    property(s"$name intervals overlap"):
-      forAll(overlappingIntervals) { case (a, b) =>
-        a.overlaps(b)
+    property(s"$name intervals intersect"):
+      forAll(intersectingIntervals) { case (a, b) =>
+        a.intersects(b)
       }
 
-    property(s"overlap is reflexive iff the $name interval is not degenerate"):
+    property(s"intersect is reflexive iff the $name interval is not degenerate"):
       forAll(validIntervals.suchThat(!_.isDegenerate)) { a =>
-        a.overlaps(a)
+        a.intersects(a)
       }
 
-    property(s"disjoint $name intervals never overlap"):
+    property(s"disjoint $name intervals never intersect"):
       forAll(disjointIntervals) { case (a, b) =>
-        !a.overlaps(b)
+        !a.intersects(b)
       }
 
-    property(s"overlap is symmetric for $name intervals"):
+    property(s"intersect is symmetric for $name intervals"):
       forAll(validIntervals, validIntervals) { case (a, b) =>
-        a.overlaps(b) == b.overlaps(a)
+        a.intersects(b) == b.intersects(a)
       }
 
     /* Containment */
@@ -166,10 +165,10 @@ class IntervalSpec extends ScalaCheckSuite:
         !(a.contains(b) && b.contains(c)) || a.contains(c)
       }
 
-    property(s"containing intervals overlap for ${name} intervals"):
+    property(s"containing intervals intersect for ${name} intervals"):
       forAll(strictIntervals, strictIntervals) { case (a, b) =>
-        // a.contains(b) ⇒ a.overlaps(b)
-        !a.contains(b) || a.overlaps(b)
+        // a.intersects(b) ⇒ a.intersects(b)
+        !a.contains(b) || a.intersects(b)
       }
 
   // --------------Special Cases ---------------- //

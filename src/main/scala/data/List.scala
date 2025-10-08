@@ -468,7 +468,7 @@ object List:
       else
         list match
           case Cons(head, tail) => advance(tail, steps - 1)
-          case Nil              => throw AssertionError("advancing an empty list violates invariants")
+          case Nil              => throw AssertionError("advancing an empty list breaks invariants")
 
     @tailrec
     def findCommon(l: List[A], r: List[A]): Option[List[A]] =

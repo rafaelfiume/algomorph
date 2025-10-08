@@ -30,6 +30,6 @@ object DiscreteAlgebra:
       override def succ(value: Long): Option[Long] = if value == Long.MaxValue then None else Some(value + 1)
 
   object syntax:
-    extension [T](value: T)(using ops: DiscreteAlgebra[T])
-      def pred(): Option[T] = ops.pred(value)
-      def succ(): Option[T] = ops.succ(value)
+    extension [T](value: T)(using alg: DiscreteAlgebra[T])
+      def pred(): Option[T] = alg.pred(value)
+      def succ(): Option[T] = alg.succ(value)

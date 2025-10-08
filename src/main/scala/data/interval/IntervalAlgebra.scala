@@ -11,7 +11,7 @@ trait IntervalAlgebra[T, I <: Interval[T]]:
   def isAdjacent(a: I, b: I): Boolean
   def contains(a: I, point: T): Boolean
   def contains(a: I, b: I): Boolean
-  def overlaps(a: I, b: I): Boolean
+  def intersects(a: I, b: I): Boolean
   def adjacencyType: AdjacencyType
 
 object IntervalAlgebra:
@@ -23,11 +23,11 @@ object IntervalAlgebra:
       override def isAdjacent(a: Closed[T], b: Closed[T]): Boolean = a.end.succ().contains(b.start)
 
       /*
-       * Closed intervals [a.start, a.end] and [b.start, b.end] do not overlap when:
+       * Closed intervals [a.start, a.end] and [b.start, b.end] do not intersect when:
        *   * a.end < b.start    ->    A entirely before B
        *   * b.end < a.start    ->    B entirely before A
        * 
-       * Negate that condition to determine overlaps:
+       * Negate that condition to determine intersection:
        * !(a.end < b.start || b.end < a.start) => a.end >= b.start && b.end >= a.start
        * 
        * Which leads to a.start <= b.end && b.start <= a.end
@@ -35,7 +35,7 @@ object IntervalAlgebra:
        * A:  [     ]        [     ]          [     ]
        * B:     [     ]       [ ]         [     ]
        */
-      override def overlaps(a: Closed[T], b: Closed[T]): Boolean =
+      override def intersects(a: Closed[T], b: Closed[T]): Boolean =
         a.start <= b.end && b.start <= a.end
 
       override def contains(a: Closed[T], point: T): Boolean =
@@ -52,16 +52,16 @@ object IntervalAlgebra:
       override def isAdjacent(a: Open[T], b: Open[T]): Boolean = a.end == b.start
 
       /*
-       * Open intervals (a.start, a.end) and (b.start, b.end) do not overlap when:
+       * Open intervals (a.start, a.end) and (b.start, b.end) do not intersect when:
        *   * a.end <= b.start    ->    A entirely before B
        *   * b.end <= a.start    ->    B entirely before A
        * 
-       * Negate that condition to determine overlaps:
+       * Negate that condition to determine intersection:
        * !(a.end <= b.start || b.end <= a.start) => a.end > b.start && b.end > a.start
        * 
        * Which leads to: a.start < b.end && b.start > a.end
        */
-      override def overlaps(a: Open[T], b: Open[T]): Boolean =
+      override def intersects(a: Open[T], b: Open[T]): Boolean =
         a.start < b.end && b.start < a.end
 
       override def contains(a: Open[T], point: T): Boolean =
@@ -78,16 +78,16 @@ object IntervalAlgebra:
       override def isAdjacent(a: HalfOpenRight[T], b: HalfOpenRight[T]): Boolean = a.end == b.start
 
       /*
-       * Half- closed intervals [a.start, a.end) and [b.start, b.end) do not overlap when:
+       * Half- closed intervals [a.start, a.end) and [b.start, b.end) do not intersect when:
        *   * a.end <= b.start    ->    A entirely before B
        *   * b.end <= a.start    ->    B entirely before A
        * 
-       * Negate that condition to determine overlaps:
+       * Negate that condition to determine intersection:
        * !(a.end <= b.start || b.end <= a.start) => a.end > b.start && b.end > a.start
        * 
        * Which leads to: a.start < b.end && b.start > a.end
        */
-      override def overlaps(a: HalfOpenRight[T], b: HalfOpenRight[T]): Boolean =
+      override def intersects(a: HalfOpenRight[T], b: HalfOpenRight[T]): Boolean =
         a.start < b.end && b.start < a.end
 
       override def contains(a: HalfOpenRight[T], point: T): Boolean =
@@ -103,7 +103,7 @@ object IntervalAlgebra:
 
       override def isAdjacent(a: NonEmptyHalfOpenRight[T], b: NonEmptyHalfOpenRight[T]): Boolean = a.end == b.start
 
-      override def overlaps(a: NonEmptyHalfOpenRight[T], b: NonEmptyHalfOpenRight[T]): Boolean =
+      override def intersects(a: NonEmptyHalfOpenRight[T], b: NonEmptyHalfOpenRight[T]): Boolean =
         a.start < b.end && b.start < a.end
 
       override def contains(a: NonEmptyHalfOpenRight[T], point: T): Boolean =
@@ -120,16 +120,16 @@ object IntervalAlgebra:
       override def isAdjacent(a: HalfOpenLeft[T], b: HalfOpenLeft[T]): Boolean = a.end == b.start
 
       /*
-       * Half-closed intervals (a.start, a.end] and (b.start, b.end] do not overlap when:
+       * Half-closed intervals (a.start, a.end] and (b.start, b.end] do not intersect when:
        *   * a.end <= b.start    ->    A entirely before B
        *   * b.end <= a.start    ->    B entirely before A
        * 
-       * Negate that condition to determine overlaps:
+       * Negate that condition to determine intersection:
        * !(a.end <= b.start || b.end <= a.start) => a.end > b.start && b.end > a.start
        * 
        * Which leads to: a.start < b.end && b.start > a.end
        */
-      override def overlaps(a: HalfOpenLeft[T], b: HalfOpenLeft[T]): Boolean =
+      override def intersects(a: HalfOpenLeft[T], b: HalfOpenLeft[T]): Boolean =
         a.end > b.start && b.end > a.start
 
       override def contains(a: HalfOpenLeft[T], point: T): Boolean =
@@ -141,8 +141,8 @@ object IntervalAlgebra:
       override def adjacencyType: AdjacencyType = AdjacencyType.Meeting
 
   object syntax:
-    extension [T, I <: Interval[T]](interval: I)(using ops: IntervalAlgebra[T, I])
-      def isAdjacent(other: I): Boolean = ops.isAdjacent(interval, other)
-      def overlaps(other: I): Boolean = ops.overlaps(interval, other)
-      def contains(point: T): Boolean = ops.contains(interval, point)
-      def contains(other: I): Boolean = ops.contains(interval, other)
+    extension [T, I <: Interval[T]](interval: I)(using alg: IntervalAlgebra[T, I])
+      def isAdjacent(other: I): Boolean = alg.isAdjacent(interval, other)
+      def intersects(other: I): Boolean = alg.intersects(interval, other)
+      def contains(point: T): Boolean = alg.contains(interval, point)
+      def contains(other: I): Boolean = alg.contains(interval, other)

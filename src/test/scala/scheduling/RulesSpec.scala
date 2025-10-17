@@ -108,12 +108,12 @@ class RulesSpec extends ScalaCheckSuite with ShrinkLowPriority with ScheduleCont
       }
 
     property("Rules.during succeeds for schedules within the allowed time ranges"):
-      forAll(schedulesWithin(frozenDate, timeRanges, utc)) { schedules =>
+      forAll(schedulesWithinTimeRange(frozenDate, timeRanges, utc)) { schedules =>
         Rules.during(timeRanges, utc)(schedules).isEmpty
       }
 
     property("Rules.during fails for schedules outside the allowed time ranges"):
-      forAll(schedulesWithin(frozenDate, outsideAllowance(timeRanges), utc)) { schedules =>
+      forAll(schedulesWithinTimeRange(frozenDate, outsideAllowance(timeRanges), utc)) { schedules =>
         assertIndividualErrors(Rules.during(timeRanges, utc), schedules)
       }
 

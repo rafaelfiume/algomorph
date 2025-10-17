@@ -12,6 +12,7 @@ import java.time.ZoneId
 import scheduling.Schedule
 import scheduling.Schedule.TimeRange
 import scheduling.Schedules
+import scheduling.testkit.ScheduleGen.SchedulesContinuityKind.*
 
 object ScheduleGen:
 
@@ -48,25 +49,55 @@ object ScheduleGen:
       }
     }
 
-  def schedulesWithin[I <: Interval[Long]](date: LocalDate, allowed: Set[TimeRange], zoneId: ZoneId)(using
+  enum SchedulesContinuityKind:
+    case Continuous
+    case Gapped
+    case Conflicting
+
+  def schedulesWithinTimeRange[I <: Interval[Long]](
+    date: LocalDate,
+    allowed: Set[TimeRange],
+    zoneId: ZoneId,
+    allowedContinuityKind: Set[SchedulesContinuityKind] = Set(Continuous, Gapped, Conflicting)
+  )(using
     Factory[Long, I],
     IntervalAlgebra[Long, I]
   ): Gen[Seq[Schedule[ResourceId]]] =
     val withinTimeRange = Gen.oneOf(allowed).flatMap { timeRange =>
-      withinDatesRange(date.atTime(timeRange.start), date.atTime(timeRange.end), zoneId)
+      withinDatesRange(date.atTime(timeRange.start), date.atTime(timeRange.end), zoneId, allowedContinuityKind)
     }
     scheduleSeq(idGen, withinTimeRange)
 
-  def schedulesWithin[I <: Interval[Long]](start: LocalDateTime, end: LocalDateTime, zoneId: ZoneId)(using
+  def schedulesWithin[I <: Interval[Long]](
+    start: LocalDateTime,
+    end: LocalDateTime,
+    zoneId: ZoneId,
+    allowedContinuityKind: Set[SchedulesContinuityKind] = Set(Continuous, Gapped, Conflicting)
+  )(using
     Factory[Long, I],
     IntervalAlgebra[Long, I]
-  ): Gen[Seq[Schedule[ResourceId]]] = scheduleSeq(idGen, withinDatesRange(start, end, zoneId))
+  ): Gen[Seq[Schedule[ResourceId]]] = scheduleSeq(idGen, withinDatesRange(start, end, zoneId, allowedContinuityKind))
 
-  private def withinDatesRange[I <: Interval[Long]](start: LocalDateTime, end: LocalDateTime, zoneId: ZoneId)(using
+  private def withinDatesRange[I <: Interval[Long]](
+    start: LocalDateTime,
+    end: LocalDateTime,
+    zoneId: ZoneId,
+    allowedContinuityKind: Set[SchedulesContinuityKind]
+  )(using
     Factory[Long, I],
     IntervalAlgebra[Long, I]
   ): Gen[Seq[I]] =
     given BoundedAlgebra[Long] = TemporalBounds.daysBound(start, end, zoneId)
-    Gen.oneOf(adjacentIntervalChain[Long, I], disjointIntervalChain[Long, I], intersectingIntervalChain[Long, I])
+
+    val intervalChainGens: List[Gen[Seq[I]]] = allowedContinuityKind.toList.collect {
+      case Continuous  => adjacentIntervalChain[Long, I]
+      case Gapped      => disjointIntervalChain[Long, I]
+      case Conflicting => intersectingIntervalChain[Long, I]
+    }
+
+    intervalChainGens match
+      case Nil              => throw new IllegalArgumentException("you must specify a continuity kind")
+      case g1 :: Nil        => g1
+      case g1 :: g2 :: tail => Gen.oneOf(g1, g2, tail*)
 
   private def idGen: Gen[ResourceId] = Gen.uuid.map(_.toString().take(8))

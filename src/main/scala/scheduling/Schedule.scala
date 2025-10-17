@@ -15,7 +15,7 @@ sealed abstract case class Schedule[R](resource: R, private val interval: Tempor
     val startTime = Instant.ofEpochMilli(interval.start)
     val endTime = Instant.ofEpochMilli(interval.end)
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    s"Schedule($resource, ${formatter.format(startTime.atZone(ZoneId.systemDefault))} -> ${formatter.format(endTime.atZone(ZoneId.systemDefault))})"
+    s"$resource: from ${formatter.format(startTime.atZone(ZoneId.systemDefault))} to ${formatter.format(endTime.atZone(ZoneId.systemDefault))}, or $interval"
 
 object Schedule:
   import data.interval.IntervalAlgebra.syntax.*

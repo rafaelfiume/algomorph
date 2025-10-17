@@ -17,18 +17,18 @@ class ScheduleSpec extends ScalaCheckSuite with ShrinkLowPriority with ScheduleC
   given Factory[Long, NonEmptyHalfOpenRight[Long]] = Intervals.makeNonEmptyHalfOpenRight[Long]
 
   property("isWithinTimeRange succeeds for all schedules in the allowed time range"):
-    forAll(schedulesWithinTimeRange) { case (schedules, allowedTimeRange, _) =>
+    forAll(schedulesWithAllowedTimeRange) { case (schedules, allowedTimeRange, _) =>
       schedules.forall { _.isWithinTimeRange(utc)(allowedTimeRange.start, allowedTimeRange.end) }
     }
 
   property("isWithinTimeRange fails for all schedules outside the allowed time range"):
-    forAll(schedulesWithinTimeRange) { case (schedules, _, disallowedRange) =>
+    forAll(schedulesWithAllowedTimeRange) { case (schedules, _, disallowedRange) =>
       schedules.forall { !_.isWithinTimeRange(utc)(disallowedRange.start, disallowedRange.end) }
     }
 
-  private def schedulesWithinTimeRange: Gen[(Seq[Schedule[ResourceId]], TimeRange, TimeRange)] =
+  private def schedulesWithAllowedTimeRange: Gen[(Seq[Schedule[ResourceId]], TimeRange, TimeRange)] =
     for
       allowedTimeRange <- Gen.oneOf(timeRanges)
-      schedules <- schedulesWithin(frozenDate, Set(allowedTimeRange), utc)
+      schedules <- schedulesWithinTimeRange(frozenDate, Set(allowedTimeRange), utc)
       disallowedRange <- Gen.oneOf(outsideAllowance(timeRanges))
     yield (schedules, allowedTimeRange, disallowedRange)

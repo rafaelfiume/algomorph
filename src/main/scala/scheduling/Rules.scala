@@ -7,17 +7,17 @@ import scala.annotation.tailrec
 import scheduling.Schedule.TimeRange
 
 enum RuleError[R]:
+  case NoSchedules[R]() extends RuleError[R]
   case Structural(a: Schedule[R], b: Schedule[R], message: String)
   case Individual(a: Schedule[R], message: String)
-
-  def involved: Seq[Schedule[R]] = this match
-    case Structural(a, b, _) => Seq(a, b)
-    case Individual(a, _)    => Seq(a)
 
 type Rule[R] = Seq[Schedule[R]] => List[RuleError[R]]
 
 object Rules:
+
   /* ------- primitives ------- */
+
+  def nonEmpty[R]: Rule[R] = schedules => if schedules.isEmpty then List(RuleError.NoSchedules[R]()) else Nil
 
   /**
    * Validates no gaps and no conflicts between schedules.
@@ -31,12 +31,12 @@ object Rules:
    */
   def continuous[R]: Rule[R] = schedules =>
     val gaps = schedules.sliding(2).collect {
-      case Seq(a, b) if !a.isContinuous(b) => RuleError.Structural(a, b, s"gap found between $a and $b")
+      case Seq(a, b) if !a.isContinuous(b) => RuleError.Structural(a, b, "non-continuous")
     }
     gaps.toList
 
   /**
-   * Validates no conflicts between schedules.
+   * Validates that schedules do not overlap in time.
    *
    * ===Preconditions===
    * `schedules` must be sorted by start time in ascending order

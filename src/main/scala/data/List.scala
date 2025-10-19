@@ -5,11 +5,11 @@ import scala.annotation.tailrec
 import scala.util.control.TailCalls.*
 
 /**
- * A recursive algebraid data type representing an immutable singly-linked list.
+ * A recursive algebraic data type representing an immutable singly-linked list.
  *
  * Performance notes:
  *   - There are a few function implementations that look neat - from a readability perspective,
- * although that is opinionated - but are unreasonably slow in terms of performace.
+ * although that is opinionated - but are unreasonably slow in terms of performance.
  *   - See: `append`, `flatten` and `flatMap`.
  */
 sealed trait List[+A]

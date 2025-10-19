@@ -74,7 +74,7 @@ object Arrays:
     search(left = 0, right = matrix(0).size)
 
   /*
-   * Nulifies in-place rows and columns of elements of an NxM matrix when set to 0.
+   * Nullifies in-place rows and columns of elements of an NxM matrix when set to 0.
    *
    * ===Complexity===
    *   - Time: Θ(NM)
@@ -109,7 +109,7 @@ object Arrays:
     if firstColumnHasZeros then nullifyColumn(0)
 
   /*
-   * 90-degress clockwise rotation of an NxN matrix.
+   * 90-degrees clockwise rotation of an NxN matrix.
    *
    * Use this function for reference or if there are no space constraints.
    *
@@ -126,7 +126,7 @@ object Arrays:
     output
 
   /*
-   * In-place 90-degress clockwise rotation of an NxN matrix.
+   * In-place 90-degrees clockwise rotation of an NxN matrix.
    *
    * Use this function if memory space is restricted, for example, if the matrix is very large.
    *

@@ -1,4 +1,4 @@
-name := "playground-scala"
+name := "algomorph"
 
 version := "0.1"
 

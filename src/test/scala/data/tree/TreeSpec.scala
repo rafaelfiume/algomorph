@@ -1,7 +1,7 @@
-package data
+package data.tree
 
 import munit.FunSuite
-import data.Tree.*
+import data.tree.Tree.*
 
 class TreeSpec extends FunSuite:
 

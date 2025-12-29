@@ -1,9 +1,8 @@
 package io.rafaelfiume.algomorph.scheduling.testkit
 
 import io.rafaelfiume.algomorph.data.interval.BoundedAlgebra
-import java.time.LocalDateTime
-import java.time.Instant
-import java.time.ZoneId
+
+import java.time.{Instant, LocalDateTime, ZoneId}
 
 /**
  * The Challenge: Testing rules operating in calendar time, such as checking a schedule is within one of the defined

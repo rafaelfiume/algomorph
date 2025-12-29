@@ -1,8 +1,8 @@
 package io.rafaelfiume.algomorph.graphs
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.graphs.Graph.Vertex
 import io.rafaelfiume.algomorph.graphs.Traversals.*
+import munit.FunSuite
 
 class TraversalsSpec extends FunSuite with GraphsContext:
 

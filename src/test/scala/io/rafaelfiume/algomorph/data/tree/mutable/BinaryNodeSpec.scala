@@ -1,8 +1,8 @@
 package io.rafaelfiume.algomorph.data.tree.mutable
 
 import io.rafaelfiume.algomorph.data.tree.mutable.testkit.TreeContext
-import munit.FunSuite
 import io.rafaelfiume.algomorph.testkit.syntax.OptionSyntax.*
+import munit.FunSuite
 
 class BinaryNodeSpec extends FunSuite with TreeContext:
 

@@ -1,22 +1,17 @@
 package io.rafaelfiume.algomorph.scheduling
 
-import io.rafaelfiume.algomorph.data.interval.BoundedAlgebra
-import io.rafaelfiume.algomorph.data.interval.Interval
-import io.rafaelfiume.algomorph.data.interval.Intervals
+import io.rafaelfiume.algomorph.data.interval.{BoundedAlgebra, Interval, IntervalAlgebra, Intervals}
 import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.instances.given
-import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra
 import io.rafaelfiume.algomorph.data.interval.testkit.IntervalGens.*
 import io.rafaelfiume.algomorph.data.interval.testkit.ToEpoch
-import munit.ScalaCheckSuite
-import org.scalacheck.Gen
-import org.scalacheck.Prop.*
-import org.scalacheck.ShrinkLowPriority
-import java.time.LocalDate
-import java.time.LocalTime
 import io.rafaelfiume.algomorph.scheduling.Rules.allOf
-import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleContext
+import io.rafaelfiume.algomorph.scheduling.testkit.{ScheduleContext, TemporalBounds}
 import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleGen.*
-import io.rafaelfiume.algomorph.scheduling.testkit.TemporalBounds
+import munit.ScalaCheckSuite
+import org.scalacheck.{Gen, ShrinkLowPriority}
+import org.scalacheck.Prop.*
+
+import java.time.{LocalDate, LocalTime}
 
 class RulesSpec extends ScalaCheckSuite with ShrinkLowPriority with ScheduleContext:
 

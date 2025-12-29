@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.numbers
 
-import org.scalacheck.Prop.*
 import munit.ScalaCheckSuite
+import org.scalacheck.Prop.*
 
 class BinaryOpsSpec extends ScalaCheckSuite:
 

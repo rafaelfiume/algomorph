@@ -1,10 +1,12 @@
 package io.rafaelfiume.algomorph.data
 
-import Ordering.Implicits.*
-import scala.collection.mutable
-import scala.util.boundary, boundary.break
 import scala.annotation.tailrec
+import scala.collection.mutable
 import scala.reflect.ClassTag
+import scala.util.boundary
+
+import Ordering.Implicits.*
+import boundary.break
 
 object Arrays:
 

@@ -1,9 +1,8 @@
 package io.rafaelfiume.algomorph.dynamic_programming
 
 import munit.ScalaCheckSuite
+import org.scalacheck.{Gen, ShrinkLowPriority}
 import org.scalacheck.Prop.*
-import org.scalacheck.Gen
-import org.scalacheck.ShrinkLowPriority
 
 class JustifierSpec extends ScalaCheckSuite with ShrinkLowPriority:
 

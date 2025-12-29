@@ -1,12 +1,10 @@
 package io.rafaelfiume.algomorph.scheduling
 
 import io.rafaelfiume.algomorph.data.interval.Interval.NonEmptyHalfOpenRight
-import java.time.Instant
 import io.rafaelfiume.algomorph.data.interval.Intervals
-import java.time.ZoneId
-import java.time.ZonedDateTime
+
+import java.time.{Instant, LocalTime, ZoneId, ZonedDateTime}
 import java.time.format.DateTimeFormatter
-import java.time.LocalTime
 
 private type TemporalInterval = NonEmptyHalfOpenRight[Long]
 

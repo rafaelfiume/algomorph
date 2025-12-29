@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.data
 
-import scala.reflect.ClassTag
 import scala.collection.immutable.Queue
+import scala.reflect.ClassTag
 
 object CircularBuffer:
   def make[T](size: Int): CircularBuffer[T] =

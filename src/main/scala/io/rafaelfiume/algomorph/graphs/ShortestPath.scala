@@ -1,9 +1,9 @@
 package io.rafaelfiume.algomorph.graphs
 
-import io.rafaelfiume.algomorph.graphs.Graph.Vertex
-import scala.collection.mutable
+import io.rafaelfiume.algomorph.graphs.Graph.{Edge, Vertex}
 import io.rafaelfiume.algomorph.graphs.Traversals.Dfs
-import io.rafaelfiume.algomorph.graphs.Graph.Edge
+
+import scala.collection.mutable
 
 case class ShortestPath[V <: Vertex](
   val parents: Map[V, V],

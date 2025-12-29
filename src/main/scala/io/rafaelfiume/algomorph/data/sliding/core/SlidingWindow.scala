@@ -1,6 +1,7 @@
 package io.rafaelfiume.algomorph.data.sliding.core
 
 import io.rafaelfiume.algomorph.data.mutable
+
 import scala.reflect.ClassTag
 
 /**

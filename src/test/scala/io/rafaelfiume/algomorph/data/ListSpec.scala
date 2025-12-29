@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.data
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.data.List.*
+import munit.FunSuite
 
 class ListSpec extends FunSuite:
 

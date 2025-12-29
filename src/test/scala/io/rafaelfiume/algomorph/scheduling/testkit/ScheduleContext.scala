@@ -1,9 +1,8 @@
 package io.rafaelfiume.algomorph.scheduling.testkit
 
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
 import io.rafaelfiume.algomorph.scheduling.Schedule.TimeRange
+
+import java.time.{LocalDate, LocalTime, ZoneId}
 
 trait ScheduleContext:
   val utc = ZoneId.of("UTC")

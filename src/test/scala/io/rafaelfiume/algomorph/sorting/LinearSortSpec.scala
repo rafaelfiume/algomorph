@@ -1,13 +1,14 @@
 package io.rafaelfiume.algomorph.sorting
 
-import munit.ScalaCheckSuite
-import Ordering.Implicits.given
-import org.scalacheck.Prop.*
-import org.scalacheck.Gen
-import org.scalacheck.ShrinkLowPriority
-import scala.reflect.ClassTag
 import io.rafaelfiume.algomorph.sorting.LinearSort.*
+import munit.ScalaCheckSuite
+import org.scalacheck.{Gen, ShrinkLowPriority}
+import org.scalacheck.Prop.*
+
+import scala.reflect.ClassTag
 import scala.util.Random
+
+import Ordering.Implicits.given
 
 class LinearSortSpec extends ScalaCheckSuite with ShrinkLowPriority:
 

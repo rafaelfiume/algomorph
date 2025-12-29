@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.data
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.data.Arrays.*
+import munit.FunSuite
 
 class ArraysSpec extends FunSuite:
 

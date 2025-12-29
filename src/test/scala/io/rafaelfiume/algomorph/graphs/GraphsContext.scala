@@ -1,7 +1,6 @@
 package io.rafaelfiume.algomorph.graphs
 
-import io.rafaelfiume.algomorph.graphs.Graph.Vertex
-import io.rafaelfiume.algomorph.graphs.Graph.Edge
+import io.rafaelfiume.algomorph.graphs.Graph.{Edge, Vertex}
 
 trait GraphsContext:
   val a = Vertex("A")

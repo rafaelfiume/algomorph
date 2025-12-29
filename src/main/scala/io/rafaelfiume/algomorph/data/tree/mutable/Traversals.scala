@@ -1,6 +1,7 @@
 package io.rafaelfiume.algomorph.data.tree.mutable
 
 import io.rafaelfiume.algomorph.data.tree.mutable.BinaryNode
+
 import scala.collection.mutable
 
 object Traversals:

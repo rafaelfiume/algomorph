@@ -1,8 +1,9 @@
 package io.rafaelfiume.algomorph.numbers
 
-import Math.sqrt
-import scala.collection.mutable
 import scala.annotation.tailrec
+import scala.collection.mutable
+
+import Math.sqrt
 
 object Primes:
 

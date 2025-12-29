@@ -4,13 +4,12 @@ import io.rafaelfiume.algomorph.data.interval.Interval.NonEmptyHalfOpenRight
 import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.instances.given
 import io.rafaelfiume.algomorph.data.interval.Intervals
 import io.rafaelfiume.algomorph.data.interval.testkit.IntervalGens.Factory
-import munit.ScalaCheckSuite
-import org.scalacheck.Gen
-import org.scalacheck.Prop.*
-import org.scalacheck.ShrinkLowPriority
+import io.rafaelfiume.algomorph.scheduling.Schedule.TimeRange
 import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleContext
 import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleGen.*
-import io.rafaelfiume.algomorph.scheduling.Schedule.TimeRange
+import munit.ScalaCheckSuite
+import org.scalacheck.{Gen, ShrinkLowPriority}
+import org.scalacheck.Prop.*
 
 class ScheduleSpec extends ScalaCheckSuite with ShrinkLowPriority with ScheduleContext:
 

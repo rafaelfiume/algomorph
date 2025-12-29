@@ -1,11 +1,9 @@
 package io.rafaelfiume.algomorph.numbers
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.numbers.BinomialProbability.*
-import munit.ScalaCheckSuite
-import org.scalacheck.Gen
+import munit.{FunSuite, ScalaCheckSuite}
+import org.scalacheck.{Gen, Prop}
 import org.scalacheck.Prop.*
-import org.scalacheck.Prop
 
 class BinomialProbabilitySpec extends ScalaCheckSuite:
 

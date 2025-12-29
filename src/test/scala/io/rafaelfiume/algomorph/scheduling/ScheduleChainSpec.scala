@@ -4,17 +4,17 @@ import io.rafaelfiume.algomorph.data.interval.Interval.NonEmptyHalfOpenRight
 import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.instances.given
 import io.rafaelfiume.algomorph.data.interval.Intervals
 import io.rafaelfiume.algomorph.data.interval.testkit.IntervalGens.Factory
-import java.time.ZoneOffset.UTC
-import munit.ScalaCheckSuite
-import org.scalacheck.Prop.*
-import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleGen.*
-import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleGen.SchedulesContinuityKind.*
-import java.time.LocalDate
-import java.time.LocalTime
 import io.rafaelfiume.algomorph.scheduling.Schedule
 import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleContext
-import org.scalacheck.Gen
+import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleGen.*
+import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleGen.SchedulesContinuityKind.*
 import io.rafaelfiume.algomorph.testkit.syntax.EitherSyntax.*
+import munit.ScalaCheckSuite
+import org.scalacheck.Gen
+import org.scalacheck.Prop.*
+
+import java.time.{LocalDate, LocalTime}
+import java.time.ZoneOffset.UTC
 
 class ScheduleChainSpec extends ScalaCheckSuite with ScheduleContext:
 

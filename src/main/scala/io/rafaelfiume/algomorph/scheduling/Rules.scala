@@ -1,10 +1,10 @@
 package io.rafaelfiume.algomorph.scheduling
 
-import java.time.DayOfWeek
-import java.time.DayOfWeek.*
-import java.time.ZoneId
-import scala.annotation.tailrec
 import io.rafaelfiume.algomorph.scheduling.Schedule.TimeRange
+
+import java.time.{DayOfWeek, ZoneId}
+import java.time.DayOfWeek.*
+import scala.annotation.tailrec
 
 enum RuleError[R]:
   case NoSchedules[R]() extends RuleError[R]

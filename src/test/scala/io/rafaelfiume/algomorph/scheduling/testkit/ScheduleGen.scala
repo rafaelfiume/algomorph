@@ -1,18 +1,14 @@
 package io.rafaelfiume.algomorph.scheduling.testkit
 
-import io.rafaelfiume.algomorph.data.interval.BoundedAlgebra
-import io.rafaelfiume.algomorph.data.interval.Interval
-import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra
+import io.rafaelfiume.algomorph.data.interval.{BoundedAlgebra, Interval, IntervalAlgebra}
 import io.rafaelfiume.algomorph.data.interval.testkit.IntervalGens.*
 import io.rafaelfiume.algomorph.data.interval.testkit.ToEpoch
-import org.scalacheck.Gen
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import io.rafaelfiume.algomorph.scheduling.Schedule
+import io.rafaelfiume.algomorph.scheduling.{Schedule, Schedules}
 import io.rafaelfiume.algomorph.scheduling.Schedule.TimeRange
-import io.rafaelfiume.algomorph.scheduling.Schedules
 import io.rafaelfiume.algomorph.scheduling.testkit.ScheduleGen.SchedulesContinuityKind.*
+import org.scalacheck.Gen
+
+import java.time.{LocalDate, LocalDateTime, ZoneId}
 
 object ScheduleGen:
 

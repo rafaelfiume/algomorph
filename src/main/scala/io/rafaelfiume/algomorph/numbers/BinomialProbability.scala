@@ -60,7 +60,7 @@ object BinomialProbability:
    *   - Space: Θ(1)
    */
   def binomialCoefficient(n: Int, k: Int): BigInt =
-    require(k <= n, s"provide: 0 <= k <= n")
+    require(k <= n, "provide: 0 <= k <= n")
     val r = if k <= n / 2 then k else n - k
     @tailrec
     def loop(acc: BigInt, i: Int): BigInt =
@@ -73,7 +73,7 @@ object BinomialProbability:
    *   - Space: Θ(1)
    */
   def factorial(n: Int): BigInt =
-    require(n >= 0, s"provide: n >= 0")
+    require(n >= 0, "provide: n >= 0")
     @tailrec
     def loop(acc: BigInt, number: BigInt): BigInt =
       if number == 0 || number == 1 then acc

@@ -1,10 +1,9 @@
 package io.rafaelfiume.algomorph.numbers
 
 import munit.ScalaCheckSuite
-import org.scalacheck.Prop.*
+import org.scalacheck.{Gen, ShrinkLowPriority}
 import org.scalacheck.Gen.*
-import org.scalacheck.Gen
-import org.scalacheck.ShrinkLowPriority
+import org.scalacheck.Prop.*
 
 class RadixSpec extends ScalaCheckSuite with ShrinkLowPriority:
 

@@ -1,9 +1,6 @@
 package io.rafaelfiume.algomorph.data.tree.mutable.testkit
 
-import io.rafaelfiume.algomorph.data.tree.mutable.BinaryNode
-import io.rafaelfiume.algomorph.data.tree.mutable.BstNode
-import io.rafaelfiume.algomorph.data.tree.mutable.Traversals
-import io.rafaelfiume.algomorph.data.tree.mutable.BstTree
+import io.rafaelfiume.algomorph.data.tree.mutable.{BinaryNode, BstNode, BstTree, Traversals}
 
 trait TreeContext:
 

@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.graphs
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.graphs.Graph.Edge
+import munit.FunSuite
 
 class GraphSpec extends FunSuite with GraphsContext:
 

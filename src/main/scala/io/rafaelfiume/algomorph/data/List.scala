@@ -1,8 +1,9 @@
 package io.rafaelfiume.algomorph.data
 
-import Ordering.Implicits.*
 import scala.annotation.tailrec
 import scala.util.control.TailCalls.*
+
+import Ordering.Implicits.*
 
 /**
  * A recursive algebraic data type representing an immutable singly-linked list.

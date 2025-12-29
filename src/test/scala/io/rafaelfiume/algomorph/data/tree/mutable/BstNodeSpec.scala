@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.data.tree.mutable
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.data.tree.mutable.testkit.TreeContext
+import munit.FunSuite
 
 class BstNodeSpec extends FunSuite with TreeContext:
 

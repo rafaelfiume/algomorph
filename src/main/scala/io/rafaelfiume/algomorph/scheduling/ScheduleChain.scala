@@ -1,9 +1,10 @@
 package io.rafaelfiume.algomorph.scheduling
 
-import ChainContinuity.*
-import Rules.*
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
+
+import ChainContinuity.*
+import Rules.*
 
 /**
  * Phantom types encoding chain continuity invariants at the type level.

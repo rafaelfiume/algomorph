@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.data.tree
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.data.tree.Tree.*
+import munit.FunSuite
 
 class TreeSpec extends FunSuite:
 

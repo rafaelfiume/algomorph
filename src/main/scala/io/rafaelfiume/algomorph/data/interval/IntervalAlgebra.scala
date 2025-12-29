@@ -2,6 +2,7 @@ package io.rafaelfiume.algomorph.data.interval
 
 import io.rafaelfiume.algomorph.data.interval.DiscreteAlgebra.syntax.*
 import io.rafaelfiume.algomorph.data.interval.Interval.*
+
 import Ordering.Implicits.*
 
 // Type class for ad-hoc polymorphism

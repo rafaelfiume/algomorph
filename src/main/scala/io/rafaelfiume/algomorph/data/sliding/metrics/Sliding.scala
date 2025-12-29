@@ -1,10 +1,9 @@
 package io.rafaelfiume.algomorph.data.sliding.metrics
 
-import scala.reflect.ClassTag
-import io.rafaelfiume.algomorph.data.sliding.core.GroupSlidingWindow
-import io.rafaelfiume.algomorph.data.sliding.core.SemigroupSlidingWindow
+import io.rafaelfiume.algomorph.data.sliding.core.{GroupSlidingWindow, SemigroupSlidingWindow, SlidingWindow}
+
 import scala.math.Numeric.Implicits.given
-import io.rafaelfiume.algomorph.data.sliding.core.SlidingWindow
+import scala.reflect.ClassTag
 
 object Sliding:
 

@@ -1,6 +1,6 @@
 package io.rafaelfiume.algomorph.scheduling
 
-import java.time.{Instant, LocalDateTime, ZonedDateTime, ZoneId}
+import java.time.{Instant, LocalDateTime, ZoneId, ZonedDateTime}
 
 /**
  * Demonstrates how to build and merge schedules chain.

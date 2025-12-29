@@ -1,12 +1,11 @@
 package io.rafaelfiume.algomorph.data.interval
 
-import io.rafaelfiume.algomorph.data.interval.*
+import io.rafaelfiume.algomorph.data.interval.{Intervals, *}
 import io.rafaelfiume.algomorph.data.interval.BoundedAlgebra.instances.given_BoundedAlgebra_Int
 import io.rafaelfiume.algomorph.data.interval.DiscreteAlgebra.instances.given
 import io.rafaelfiume.algomorph.data.interval.Interval.AdjacencyType.*
-import io.rafaelfiume.algomorph.data.interval.Intervals
-import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.syntax.*
 import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.instances.given
+import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.syntax.*
 import io.rafaelfiume.algomorph.data.interval.testkit.IntervalGens.*
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.*
@@ -111,7 +110,7 @@ class IntervalSpec extends ScalaCheckSuite:
           b.start == (alg.adjacencyType match
             case Meeting     => a.end
             case Consecutive => a.end + 1
-            case NonAdjacent => throw new IllegalArgumentException(s"no support for adjacent intervals"))
+            case NonAdjacent => throw new IllegalArgumentException("no support for adjacent intervals"))
         }
 
     /* Intersection */

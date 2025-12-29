@@ -1,7 +1,7 @@
 package io.rafaelfiume.algomorph.sorting
 
-import scala.reflect.ClassTag
 import scala.annotation.tailrec
+import scala.reflect.ClassTag
 
 object LinearSort:
 
@@ -208,7 +208,7 @@ object LinearSort:
       else
         val (min, max) = findMinMax(numbers)
         val range = max.toLong - min.toLong + 1
-        require(range < Int.MaxValue, s"range must be < Int.MaxValue")
+        require(range < Int.MaxValue, "range must be < Int.MaxValue")
 
         val k = range.toInt
 

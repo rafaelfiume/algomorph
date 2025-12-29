@@ -1,8 +1,8 @@
 package io.rafaelfiume.algomorph.graphs
 
-import munit.FunSuite
 import io.rafaelfiume.algomorph.graphs.Graph.Edge
 import io.rafaelfiume.algomorph.testkit.syntax.EitherSyntax.*
+import munit.FunSuite
 
 class ShortestPathSpec extends FunSuite with GraphsContext:
 

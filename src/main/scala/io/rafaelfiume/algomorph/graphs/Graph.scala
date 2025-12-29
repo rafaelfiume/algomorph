@@ -1,7 +1,8 @@
 package io.rafaelfiume.algomorph.graphs
 
-import Graph.*
 import io.rafaelfiume.algomorph.graphs.Graph.Edge.Weight
+
+import Graph.*
 
 /*
  * Useful links:

@@ -1,12 +1,11 @@
 package io.rafaelfiume.algomorph.numbers
 
 import io.rafaelfiume.algomorph.numbers.Primes.*
-import munit.FunSuite
-import munit.ScalaCheckSuite
+import io.rafaelfiume.algomorph.numbers.Primes.Reference.isPrime
+import munit.{FunSuite, ScalaCheckSuite}
+import org.scalacheck.Gen.*
 import org.scalacheck.Prop.*
 import org.scalacheck.ShrinkLowPriority
-import org.scalacheck.Gen.*
-import io.rafaelfiume.algomorph.numbers.Primes.Reference.isPrime
 
 class PrimesSpec extends ScalaCheckSuite with ShrinkLowPriority:
 

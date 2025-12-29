@@ -1,8 +1,9 @@
 package io.rafaelfiume.algomorph.data.sliding.metrics
 
-import io.rafaelfiume.algomorph.data.sliding.metrics.Sliding
-import scala.reflect.ClassTag
 import io.rafaelfiume.algomorph.data.sliding.core.SlidingWindow
+import io.rafaelfiume.algomorph.data.sliding.metrics.Sliding
+
+import scala.reflect.ClassTag
 
 case class Moments(mean: Double, variance: Double, standardDeviation: Double)
 

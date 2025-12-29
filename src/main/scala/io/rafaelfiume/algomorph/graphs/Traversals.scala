@@ -1,13 +1,14 @@
 package io.rafaelfiume.algomorph.graphs
 
-import Graph.*
-import scala.collection.mutable
 import io.rafaelfiume.algomorph.graphs.Graph.Edge.Classification
 import io.rafaelfiume.algomorph.graphs.Graph.Edge.Classification.*
 import io.rafaelfiume.algomorph.graphs.Traversals.Dfs.EdgeClassifier
-import io.rafaelfiume.algomorph.graphs.Traversals.TraversalResult.WithEdges
-import io.rafaelfiume.algomorph.graphs.Traversals.TraversalResult.Basic
+import io.rafaelfiume.algomorph.graphs.Traversals.TraversalResult.{Basic, WithEdges}
+
 import scala.collection.immutable.Queue
+import scala.collection.mutable
+
+import Graph.*
 
 /**
  * Requirements:

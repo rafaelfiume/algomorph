@@ -1,10 +1,10 @@
 package io.rafaelfiume.algomorph.data.interval.testkit
 
-import io.rafaelfiume.algomorph.data.interval.*
+import io.rafaelfiume.algomorph.data.interval.{BoundedAlgebra, *}
 import io.rafaelfiume.algomorph.data.interval.Interval.*
 import io.rafaelfiume.algomorph.data.interval.Interval.AdjacencyType.*
-import io.rafaelfiume.algomorph.data.interval.BoundedAlgebra
 import org.scalacheck.Gen
+
 import scala.math.Integral.Implicits.given
 import scala.math.Ordering.Implicits.given
 
@@ -205,7 +205,7 @@ object IntervalGens:
     alg.adjacencyType match
       case Meeting     => adjacentAt
       case Consecutive => adjacentAt + one
-      case NonAdjacent => throw new IllegalArgumentException(s"no support for adjacent intervals")
+      case NonAdjacent => throw new IllegalArgumentException("no support for adjacent intervals")
 
   private def zero[T](using num: Integral[T]) = num.fromInt(0)
   private def one[T](using num: Integral[T]) = num.fromInt(1)

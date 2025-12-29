@@ -1,8 +1,8 @@
 package io.rafaelfiume.algomorph.data.sliding.metrics
 
 import munit.ScalaCheckSuite
-import org.scalacheck.Prop.*
 import org.scalacheck.Gen.*
+import org.scalacheck.Prop.*
 
 class SlidingStatisticsSpec extends ScalaCheckSuite:
 
@@ -25,7 +25,7 @@ class SlidingStatisticsSpec extends ScalaCheckSuite:
     assertEquals(result.variance, expected = 6.888888888888886)
     assertEquals(result.standardDeviation, expected = 2.62466929133727)
 
-  test(s"sliding mean and sliding moments computes the same mean"):
+  test("sliding mean and sliding moments computes the same mean"):
     forAll(nonEmptyListOf(double)) { input =>
       val slidingMean = Sliding.mean[Double](size = 3)
       val slidingMoments = Sliding.moments[Double](size = 3)

@@ -1,6 +1,6 @@
 package io.rafaelfiume.algomorph.scheduling
 
-import io.rafaelfiume.algomorph.data.interval.Interval.NonEmptyHalfOpenRight
+import io.rafaelfiume.algomorph.data.interval.Interval.HalfOpenRight
 import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.instances.given
 import io.rafaelfiume.algomorph.data.interval.Intervals
 import io.rafaelfiume.algomorph.data.interval.testkit.IntervalGens.Factory
@@ -13,7 +13,7 @@ import org.scalacheck.Prop.*
 
 class ScheduleSpec extends ScalaCheckSuite with ShrinkLowPriority with ScheduleContext:
 
-  given Factory[Long, NonEmptyHalfOpenRight[Long]] = Intervals.makeNonEmptyHalfOpenRight[Long]
+  given Factory[Long, HalfOpenRight[Long]] = Intervals.makeHalfOpenRight[Long]
 
   property("isWithinTimeRange succeeds for all schedules in the allowed time range"):
     forAll(schedulesWithAllowedTimeRange) { case (schedules, allowedTimeRange, _) =>

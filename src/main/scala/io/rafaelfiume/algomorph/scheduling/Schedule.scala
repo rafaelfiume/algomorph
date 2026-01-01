@@ -1,12 +1,12 @@
 package io.rafaelfiume.algomorph.scheduling
 
-import io.rafaelfiume.algomorph.data.interval.Interval.NonEmptyHalfOpenRight
+import io.rafaelfiume.algomorph.data.interval.Interval.HalfOpenRight
 import io.rafaelfiume.algomorph.data.interval.Intervals
 
 import java.time.{Instant, LocalTime, ZoneId, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 
-private type TemporalInterval = NonEmptyHalfOpenRight[Long]
+private type TemporalInterval = HalfOpenRight[Long]
 
 sealed abstract case class Schedule[R](resource: R, private val interval: TemporalInterval):
   override def toString: String =
@@ -59,4 +59,4 @@ object Schedules:
    * Example: start time at -851088960 = December 22, 1969, 04:35:04 UTC.
    */
   def make[R](resource: R, start: Long, end: Long): Schedule[R] =
-    new Schedule[R](resource, Intervals.makeNonEmptyHalfOpenRight(start, end)) {}
+    new Schedule[R](resource, Intervals.makeHalfOpenRight(start, end)) {}

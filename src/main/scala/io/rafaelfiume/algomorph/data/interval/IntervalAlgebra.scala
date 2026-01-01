@@ -6,22 +6,26 @@ import io.rafaelfiume.algomorph.data.interval.Interval.*
 import Ordering.Implicits.*
 
 // Type class for ad-hoc polymorphism
-// Same-shape law of type classes will ensure (or constrain, depending on your domain) to comparison between the same type of intervals.
+// Same-shape law of type classes will constrain comparisons to same type of intervals.
 trait IntervalAlgebra[T, I <: Interval[T]]:
-  def allowsDegenerate: Boolean
-  def isAdjacent(a: I, b: I): Boolean
+  def validBounds(a: T, b: T): Boolean
   def contains(a: I, point: T): Boolean
   def contains(a: I, b: I): Boolean
   def intersects(a: I, b: I): Boolean
+  // Extract the following to DiscreteIntervalAlgebra
   def adjacencyType: AdjacencyType
+  def isAdjacent(a: I, b: I): Boolean = adjacentStart(a).forall(_ == b.start)
+  def adjacentStart(a: I): Option[T]
 
 object IntervalAlgebra:
   object instances:
     given [T: Ordering](using d: DiscreteAlgebra[T]): IntervalAlgebra[T, Closed[T]] with
 
-      override def allowsDegenerate: Boolean = false
+      override def validBounds(a: T, b: T): Boolean = a <= b
 
-      override def isAdjacent(a: Closed[T], b: Closed[T]): Boolean = a.end.succ().contains(b.start)
+      override def adjacencyType: AdjacencyType = AdjacencyType.Consecutive
+
+      def adjacentStart(a: Closed[T]): Option[T] = a.end.succ()
 
       /*
        * Closed intervals [a.start, a.end] and [b.start, b.end] do not intersect when:
@@ -45,23 +49,15 @@ object IntervalAlgebra:
       override def contains(a: Closed[T], b: Closed[T]): Boolean =
         a.start <= b.start && b.end <= a.end
 
-      override def adjacencyType: AdjacencyType = AdjacencyType.Consecutive
-
     given [T: Ordering] => IntervalAlgebra[T, Open[T]]:
-      override def allowsDegenerate: Boolean = true
+      override def validBounds(a: T, b: T): Boolean = a < b
 
-      override def isAdjacent(a: Open[T], b: Open[T]): Boolean = a.end == b.start
+      override def adjacencyType: AdjacencyType = AdjacencyType.NonAdjacent
 
-      /*
-       * Open intervals (a.start, a.end) and (b.start, b.end) do not intersect when:
-       *   * a.end <= b.start    ->    A entirely before B
-       *   * b.end <= a.start    ->    B entirely before A
-       * 
-       * Negate that condition to determine intersection:
-       * !(a.end <= b.start || b.end <= a.start) => a.end > b.start && b.end > a.start
-       * 
-       * Which leads to: a.start < b.end && b.start > a.end
-       */
+      override def isAdjacent(a: Open[T], b: Open[T]): Boolean = false
+
+      def adjacentStart(a: Open[T]): Option[T] = None
+
       override def intersects(a: Open[T], b: Open[T]): Boolean =
         a.start < b.end && b.start < a.end
 
@@ -71,23 +67,13 @@ object IntervalAlgebra:
       override def contains(a: Open[T], b: Open[T]): Boolean =
         a.start <= b.start && b.end <= a.end
 
-      override def adjacencyType: AdjacencyType = AdjacencyType.NonAdjacent
-
     given [T: Ordering] => IntervalAlgebra[T, HalfOpenRight[T]]:
-      override def allowsDegenerate: Boolean = true
+      override def validBounds(a: T, b: T): Boolean = a < b
 
-      override def isAdjacent(a: HalfOpenRight[T], b: HalfOpenRight[T]): Boolean = a.end == b.start
+      override def adjacencyType: AdjacencyType = AdjacencyType.Meeting
 
-      /*
-       * Half- closed intervals [a.start, a.end) and [b.start, b.end) do not intersect when:
-       *   * a.end <= b.start    ->    A entirely before B
-       *   * b.end <= a.start    ->    B entirely before A
-       * 
-       * Negate that condition to determine intersection:
-       * !(a.end <= b.start || b.end <= a.start) => a.end > b.start && b.end > a.start
-       * 
-       * Which leads to: a.start < b.end && b.start > a.end
-       */
+      def adjacentStart(a: HalfOpenRight[T]): Option[T] = Some(a.end)
+
       override def intersects(a: HalfOpenRight[T], b: HalfOpenRight[T]): Boolean =
         a.start < b.end && b.start < a.end
 
@@ -97,49 +83,21 @@ object IntervalAlgebra:
       override def contains(a: HalfOpenRight[T], b: HalfOpenRight[T]): Boolean =
         a.start <= b.start && b.end <= a.end
 
-      override def adjacencyType: AdjacencyType = AdjacencyType.Meeting
-
-    given [T: Ordering] => IntervalAlgebra[T, NonEmptyHalfOpenRight[T]]:
-      override def allowsDegenerate: Boolean = false
-
-      override def isAdjacent(a: NonEmptyHalfOpenRight[T], b: NonEmptyHalfOpenRight[T]): Boolean = a.end == b.start
-
-      override def intersects(a: NonEmptyHalfOpenRight[T], b: NonEmptyHalfOpenRight[T]): Boolean =
-        a.start < b.end && b.start < a.end
-
-      override def contains(a: NonEmptyHalfOpenRight[T], point: T): Boolean =
-        a.start <= point && point < a.end
-
-      override def contains(a: NonEmptyHalfOpenRight[T], b: NonEmptyHalfOpenRight[T]): Boolean =
-        a.start <= b.start && b.end <= a.end
-
-      override def adjacencyType: AdjacencyType = AdjacencyType.Meeting
-
     given [T: Ordering] => IntervalAlgebra[T, HalfOpenLeft[T]]:
-      override def allowsDegenerate: Boolean = true
+      override def validBounds(a: T, b: T): Boolean = a < b
 
-      override def isAdjacent(a: HalfOpenLeft[T], b: HalfOpenLeft[T]): Boolean = a.end == b.start
+      override def adjacencyType: AdjacencyType = AdjacencyType.Meeting
 
-      /*
-       * Half-closed intervals (a.start, a.end] and (b.start, b.end] do not intersect when:
-       *   * a.end <= b.start    ->    A entirely before B
-       *   * b.end <= a.start    ->    B entirely before A
-       * 
-       * Negate that condition to determine intersection:
-       * !(a.end <= b.start || b.end <= a.start) => a.end > b.start && b.end > a.start
-       * 
-       * Which leads to: a.start < b.end && b.start > a.end
-       */
+      def adjacentStart(a: HalfOpenLeft[T]): Option[T] = Some(a.end)
+
       override def intersects(a: HalfOpenLeft[T], b: HalfOpenLeft[T]): Boolean =
-        a.end > b.start && b.end > a.start
+        a.start < b.end && b.start < a.end
 
       override def contains(a: HalfOpenLeft[T], point: T): Boolean =
         a.start < point && point <= a.end
 
       override def contains(a: HalfOpenLeft[T], b: HalfOpenLeft[T]): Boolean =
         a.start <= b.start && b.end <= a.end
-
-      override def adjacencyType: AdjacencyType = AdjacencyType.Meeting
 
   object syntax:
     extension [T, I <: Interval[T]](interval: I)(using alg: IntervalAlgebra[T, I])

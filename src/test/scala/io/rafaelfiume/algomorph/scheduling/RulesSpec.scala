@@ -31,7 +31,7 @@ class RulesSpec extends ScalaCheckSuite with ShrinkLowPriority with ScheduleCont
    * would be to define a custom type class providing the minimal arithmetic operations required (`+`, `-`)
    * to replace `Integral`.
    */
-  checkStructuralProperties(Intervals.makeNonEmptyHalfOpenRight[Long], TemporalBounds.modernDaysBound())
+  checkStructuralProperties(Intervals.makeHalfOpenRight[Long], TemporalBounds.modernDaysBound())
 
   /*
    * Time-range rules (calendar-aware):
@@ -46,13 +46,13 @@ class RulesSpec extends ScalaCheckSuite with ShrinkLowPriority with ScheduleCont
    *   - `isWithinTimeRange` handles cross-midnight cases (e.g. 22:00 -> 02:00) and other recurring time-range semantics
    *   - Time-range rules are defined in terms of local times only, independent of specific calendar dates.
    */
-  checkDateAndTimeRangeRules(Intervals.makeNonEmptyHalfOpenRight[Long])
+  checkDateAndTimeRangeRules(Intervals.makeHalfOpenRight[Long])
 
   /*
    * Combinators rules:
    * Checks that combinators obey algebraic laws ensuring predictability and composability.
    */
-  checkCombinators(Intervals.makeNonEmptyHalfOpenRight[Long], TemporalBounds.modernDaysBound())
+  checkCombinators(Intervals.makeHalfOpenRight[Long], TemporalBounds.modernDaysBound())
 
   private def checkStructuralProperties[T: Integral: ToEpoch: Gen.Choose, I <: Interval[T]](
     factory: Factory[T, I],

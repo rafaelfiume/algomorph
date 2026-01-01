@@ -16,18 +16,18 @@ object IntervalGens:
 
   def bounds[T: Integral: BoundedAlgebra: Gen.Choose]: Gen[(T, T)] =
     Gen.frequency(
-      6 -> strictBounds,
-      2 -> degenerateBounds,
-      2 -> extremeBounds
+      75 -> properBounds,
+      22 -> degenerateBounds,
+      3 -> extremeBounds
     )
 
   def reversedBounds[T: Integral: BoundedAlgebra: Gen.Choose]: Gen[(T, T)] =
-    strictBounds.map { case (start, end) => (end, start) } // start > end
+    properBounds.map { case (start, end) => (end, start) } // start > end
 
-  def strictBounds[T: Integral: BoundedAlgebra: Gen.Choose]: Gen[(T, T)] =
-    strictBounds(offsetLeft = zero, offsetRight = zero)
+  def properBounds[T: Integral: BoundedAlgebra: Gen.Choose]: Gen[(T, T)] =
+    properBounds(offsetLeft = zero, offsetRight = zero)
 
-  def strictBounds[T: Integral: BoundedAlgebra: Gen.Choose](offsetLeft: T, offsetRight: T): Gen[(T, T)] =
+  def properBounds[T: Integral: BoundedAlgebra: Gen.Choose](offsetLeft: T, offsetRight: T): Gen[(T, T)] =
     for
       maxStart <- Gen.choose(infimum + offsetLeft, supremum - offsetRight) // avoids empty intervals
       minEnd <- Gen.choose(maxStart + one, supremum) // ensures minEnd > maxStart
@@ -50,25 +50,30 @@ object IntervalGens:
   def enclosingPoints[T: Integral: Gen.Choose, I <: Interval[T]](interval: I): Gen[T] =
     require(!interval.isDegenerate)
     val (start, end) = interval match
-      case _: Closed[T]                => (interval.start, interval.end)
-      case _: Open[T]                  => (interval.start + one, interval.end - one)
-      case _: HalfOpenRight[T]         => (interval.start + one, interval.end - one)
-      case _: NonEmptyHalfOpenRight[T] => (interval.start, interval.end - one)
-      case _: HalfOpenLeft[T]          => (interval.start + one, interval.end)
+      case _: Closed[T]        => (interval.start, interval.end)
+      case _: Open[T]          => (interval.start + one, interval.end - one)
+      case _: HalfOpenRight[T] => (interval.start, interval.end - one)
+      case _: HalfOpenLeft[T]  => (interval.start + one, interval.end)
     Gen.choose(start, end)
 
   // ------------------ Intervals ------------------- //
 
-  def intervals[T: Integral: BoundedAlgebra: Gen.Choose, I <: Interval[T]](using factory: Factory[T, I]): Gen[I] =
-    bounds[T].map(factory.apply)
-
-  def strictIntervals[T: Integral: Gen.Choose: BoundedAlgebra, I <: Interval[T]](using Factory[T, I]): Gen[I] =
-    strictIntervals(offsetLeft = zero, offsetRight = zero)
-
-  def strictIntervals[T: Integral: Gen.Choose: BoundedAlgebra, I <: Interval[T]](offsetLeft: T, offsetRight: T)(using
-    factory: Factory[T, I]
+  /*
+   * Valid intervals. It may include degenerate bounds if the type of interval allows it.
+   */
+  def intervals[T: Integral: BoundedAlgebra: Gen.Choose, I <: Interval[T]](using
+    factory: Factory[T, I],
+    alg: IntervalAlgebra[T, I]
   ): Gen[I] =
-    strictBounds(offsetLeft, offsetRight).map(factory.apply)
+    bounds[T].suchThat { case (a, b) => alg.validBounds(a, b) }.map(factory.apply)
+
+  def properIntervals[T: Integral: Gen.Choose: BoundedAlgebra, IntervalAlgebra, I <: Interval[T]](using Factory[T, I]): Gen[I] =
+    properIntervals(offsetLeft = zero, offsetRight = zero)
+
+  def properIntervals[T: Integral: Gen.Choose: BoundedAlgebra, IntervalAlgebra, I <: Interval[T]](offsetLeft: T, offsetRight: T)(
+    using factory: Factory[T, I]
+  ): Gen[I] =
+    properBounds(offsetLeft, offsetRight).map(factory.apply)
 
   // ------------------ Relationships ---------------- //
 
@@ -76,7 +81,7 @@ object IntervalGens:
     factory: Factory[T, I]
   ): Gen[(I, I)] =
     for
-      a <- strictIntervals
+      a <- properIntervals
       b <- intersectingWith(a)
     yield (a, b)
 
@@ -121,7 +126,7 @@ object IntervalGens:
   ): Gen[Seq[I]] =
     for
       size <- Gen.choose(2, 99)
-      head <- strictIntervals
+      head <- properIntervals
       seq <- Gen.tailRecM(1 -> List(head)) {
         case (index, acc @ (prev :: _)) if index < size =>
           intersectingWith(prev).map { intersecting => Left((index + 1, intersecting :: acc)) }
@@ -142,7 +147,7 @@ object IntervalGens:
         endB <- Gen.choose(startB + one, startA - one)
       yield interval -> factory(startB, endB)
 
-    strictIntervals(offsetLeft = zero, offsetRight = two).flatMap(nonIntersectingWith)
+    properIntervals(offsetLeft = zero, offsetRight = two).flatMap(nonIntersectingWith)
 
   def disjointIntervalChain[T: Integral: BoundedAlgebra: Gen.Choose, I <: Interval[T]](using
     factory: Factory[T, I]
@@ -159,18 +164,22 @@ object IntervalGens:
   /*
    * [4, 6) and [6, 8) are adjacent (half open-right)
    * [4, 6] and [7, 8] are adjacent (closed intervals)
+   * empty result for open intervals
    */
   def adjacentIntervals[T: Integral: BoundedAlgebra: Gen.Choose, I <: Interval[T]](using
     factory: Factory[T, I],
     alg: IntervalAlgebra[T, I]
-  ): Gen[(I, I)] =
+  ): Gen[Option[(I, I)]] =
     def fixedStartBound(start: T) = Gen.choose(start + one, supremum).map { end => factory(start, end) }
     def fixedEndBound(end: T) = Gen.choose(infimum, end - one).map { start => factory(start, end) }
-    for
-      adjacentAt <- Gen.choose(infimum + one, supremum - one)
-      intervalA <- fixedEndBound(adjacentAt)
-      intervalB <- fixedStartBound(nextStartPoint(adjacentAt))
-    yield (intervalA, intervalB)
+    alg.adjacencyType match
+      case NonAdjacent => Gen.const(None)
+      case _           =>
+        for
+          adjacentAt <- Gen.choose(infimum + one, supremum - one)
+          intervalA <- fixedEndBound(adjacentAt)
+          intervalB <- fixedStartBound(nextStartPoint(adjacentAt))
+        yield Some(intervalA -> intervalB)
 
   /**
    * Generates a monotonic sequence of adjacent intervals bounded by infimum and supremum such as:
@@ -199,7 +208,10 @@ object IntervalGens:
   def nonIntersectingIntervals[T: Integral: BoundedAlgebra: Gen.Choose, I <: Interval[T]](using
     factory: Factory[T, I],
     alg: IntervalAlgebra[T, I]
-  ): Gen[(I, I)] = Gen.oneOf(adjacentIntervals, disjointIntervals)
+  ): Gen[(I, I)] =
+    adjacentIntervals.flatMap { adj =>
+      adj.fold(ifEmpty = disjointIntervals)(adj => Gen.oneOf(Gen.const(adj), disjointIntervals))
+    }
 
   private def nextStartPoint[T: Integral, I <: Interval[T]](adjacentAt: T)(using alg: IntervalAlgebra[T, I]): T =
     alg.adjacencyType match

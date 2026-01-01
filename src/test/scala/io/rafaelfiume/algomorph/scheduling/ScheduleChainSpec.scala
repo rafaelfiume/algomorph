@@ -1,6 +1,6 @@
 package io.rafaelfiume.algomorph.scheduling
 
-import io.rafaelfiume.algomorph.data.interval.Interval.NonEmptyHalfOpenRight
+import io.rafaelfiume.algomorph.data.interval.Interval.HalfOpenRight
 import io.rafaelfiume.algomorph.data.interval.IntervalAlgebra.instances.given
 import io.rafaelfiume.algomorph.data.interval.Intervals
 import io.rafaelfiume.algomorph.data.interval.testkit.IntervalGens.Factory
@@ -18,7 +18,7 @@ import java.time.ZoneOffset.UTC
 
 class ScheduleChainSpec extends ScalaCheckSuite with ScheduleContext:
 
-  given Factory[Long, NonEmptyHalfOpenRight[Long]] = Intervals.makeNonEmptyHalfOpenRight[Long]
+  given Factory[Long, HalfOpenRight[Long]] = Intervals.makeHalfOpenRight[Long]
 
   val isa = Schedules.make("isa", 8, 10)
   val lipe = Schedules.make("lipe", 10, 16)

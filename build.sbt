@@ -2,7 +2,7 @@ name := "algomorph"
 
 version := "0.1"
 
-scalaVersion := "3.7.4"
+scalaVersion := "3.8.4"
 
 scalacOptions := scalacOptions.value.filterNot(_ == "-Ykind-projector")
 

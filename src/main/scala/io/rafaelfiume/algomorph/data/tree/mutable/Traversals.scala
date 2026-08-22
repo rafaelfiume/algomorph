@@ -51,7 +51,7 @@ object Traversals:
       override def next(): BinaryNode[A] =
         if !hasNext then throw new NoSuchElementException("next on an empty iterator")
 
-        val node = stack.pop
+        val node = stack.pop()
         if node.nn.right != null then stack.push(node.right.nn)
         if node.nn.left != null then stack.push(node.left.nn)
         node

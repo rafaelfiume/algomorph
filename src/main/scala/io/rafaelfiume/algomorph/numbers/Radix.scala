@@ -77,6 +77,7 @@ object Radix:
       case -1 => "-" + loop(-num, Nil)
       case 0  => "0"
       case 1  => loop(num, Nil)
+      case _  => throw AssertionError("signum only returns -1, 0 or 1")
 
   /**
    * ===Evaluation Semantics===

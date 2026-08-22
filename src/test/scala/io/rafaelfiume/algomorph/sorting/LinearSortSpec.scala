@@ -43,9 +43,8 @@ class LinearSortSpec extends ScalaCheckSuite with ShrinkLowPriority:
 
   private def isSorted[T: Integral](result: Seq[T]): Boolean =
     result.sliding(2).forall {
-      case Seq(a, b)      => a <= b
-      case Seq(a)         => true
-      case s if s.isEmpty => true
+      case Seq(a, b) => a <= b
+      case _         => true
     }
 
   private def preservesElements[T: Ordering](result: Seq[T], original: Seq[T]): Boolean =

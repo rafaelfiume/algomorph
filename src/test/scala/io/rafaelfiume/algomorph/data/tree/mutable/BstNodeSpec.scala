@@ -28,6 +28,4 @@ class BstNodeSpec extends FunSuite with TreeContext:
       if exists then
         val node = result.get
         assertEquals(node.key, key)
-    }
-
-
+  }

@@ -104,11 +104,12 @@ object Rules:
    */
   def firstOf[R](rules: Rule[R]*): Rule[R] = schedules =>
     @tailrec
-    def loop(remaining: Seq[Rule[R]]): List[RuleError[R]] = remaining match
-      case Seq()        => Nil
-      case rule +: tail =>
+    def loop(remaining: Seq[Rule[R]]): List[RuleError[R]] =
+      if remaining.isEmpty then Nil
+      else
+        val rule = remaining.head
         rule(schedules) match
-          case Nil => loop(tail)
+          case Nil => loop(remaining.tail)
           case err => err
     loop(rules)
 

@@ -5,8 +5,8 @@ class BinaryTree[A](val root: BinaryNode[A])
 object BinaryTree:
 
   /**
-   * Builds a balanced binary tree from an array, where the array elements (a_0, a_1, ..., a_(n-1)) correspond to the tree in-order
-   * elements (t_0, t_1, ..., t_(n-1)).
+   * Builds a balanced binary tree from an array, where the array elements (a_0, a_1, ..., a_(n-1)) correspond to the tree
+   * in-order elements (t_0, t_1, ..., t_(n-1)).
    *
    * ===Evaluation Semantics===
    *

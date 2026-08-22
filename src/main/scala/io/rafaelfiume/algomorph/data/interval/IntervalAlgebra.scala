@@ -31,12 +31,12 @@ object IntervalAlgebra:
        * Closed intervals [a.start, a.end] and [b.start, b.end] do not intersect when:
        *   * a.end < b.start    ->    A entirely before B
        *   * b.end < a.start    ->    B entirely before A
-       * 
+       *
        * Negate that condition to determine intersection:
        * !(a.end < b.start || b.end < a.start) => a.end >= b.start && b.end >= a.start
-       * 
+       *
        * Which leads to a.start <= b.end && b.start <= a.end
-       * 
+       *
        * A:  [     ]        [     ]          [     ]
        * B:     [     ]       [ ]         [     ]
        */

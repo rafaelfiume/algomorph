@@ -39,8 +39,8 @@ class IntervalSpec extends ScalaCheckSuite:
     property(s"$name intervals handle degenerate bounds"):
       forAll(degenerateBounds) { case (start, end) =>
         Try(factory(start, end)) match
-          case Success(interval) => alg.validBounds(start, end) && (start == end)
-          case Failure(_)        => !alg.validBounds(start, end)
+          case Success(_) => alg.validBounds(start, end) && (start == end)
+          case Failure(_) => !alg.validBounds(start, end)
       }
 
     property(s"$name intervals reject invalid bounds"):

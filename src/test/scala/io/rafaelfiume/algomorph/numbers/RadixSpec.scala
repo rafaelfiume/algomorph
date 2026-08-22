@@ -57,9 +57,9 @@ class RadixSpec extends ScalaCheckSuite with ShrinkLowPriority:
   /*
    * Base62 is a solid alternative to hashing + collision resolution for generating compact,
    * short and url-safe unique identifiers.
-   * 
+   *
    * The encoded number is deterministic and reversible, making it ideal when uniqueness and shortness are required.
-   * 
+   *
    * Tipical use cases are:
    *   - Url shortner
    *   - Ticketing services, where a customer receives a short, easy-to-read ticket number.

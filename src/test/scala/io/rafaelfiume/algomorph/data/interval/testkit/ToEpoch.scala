@@ -4,7 +4,7 @@ import java.time.Instant
 
 /*
  * Conversion from generic type `T` to `Long`.
- * 
+ *
  * `Schedules.make` smart constructors only accept `Long` or `Instant`.
  * Since interval and schedule generators with a generic type `T`,
  * we must convert `T` -> `Long` when deriving `Schedule`'s from `Interval` generators.

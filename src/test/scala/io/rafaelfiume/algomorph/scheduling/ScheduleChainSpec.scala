@@ -264,8 +264,9 @@ class ScheduleChainSpec extends ScalaCheckSuite with ScheduleContext:
   property("mergeStrict preserves temporal ordering".ignore):
     forAll(schedules, overrides) { case (base, over) =>
       val result = ScheduleChain.mergeStrict(base, over).rightOrFail
-      result.schedules.sliding(2).forall { case Seq(a, b) =>
-        a.startMillis < b.startMillis
+      result.schedules.sliding(2).forall {
+        case Seq(a, b) => a.startMillis < b.startMillis
+        case _         => false
       }
     }
 

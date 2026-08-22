@@ -140,7 +140,7 @@ object IntervalGens:
   //            [------]
   def disjointIntervals[T: Integral: BoundedAlgebra: Gen.Choose, I <: Interval[T]](using factory: Factory[T, I]): Gen[(I, I)] =
     def nonIntersectingWith(interval: I) =
-      val (startA, endA) = (interval.start, interval.end)
+      val (startA, _) = (interval.start, interval.end)
       for
         // avoids both empty intervals and handles intersection between closed intervals
         startB <- Gen.choose(infimum, interval.start - two)
